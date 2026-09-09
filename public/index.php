@@ -67,7 +67,7 @@ function validateContent(string $type, array $content): void {
 }
 
 function layout(string $title, string $body, bool $public = false): void {
-    $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a>';
+    $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><span class="nav-actions"><a class="nav-link" href="/exercise/new">+ Übung anlegen</a><form method="post" action="/logout"><input type="hidden" name="csrf" value="' . h(csrf()) . '"><button class="nav-link logout">Abmelden</button></form></span>';
     echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/qrcode-generator.min.js" defer></script><script src="/assets/app.js" defer></script></body></html>';
 }
 
