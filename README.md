@@ -10,6 +10,16 @@ php -S localhost:8080 -t public public/router.php
 
 Die SQLite-Datenbank wird beim ersten Aufruf unter `data/linguacode.sqlite` angelegt. Lehransicht: `http://localhost:8080/`; veröffentlichte Übungen werden über ihre Freigabe-URL geöffnet.
 
+## Lehrerzugang
+
+Setze auf dem Server ausschließlich einen Passwort-Hash, niemals ein Klartextpasswort:
+
+```bash
+php -r 'echo password_hash("DEIN-SICHERES-PASSWORT", PASSWORD_DEFAULT), PHP_EOL;'
+```
+
+Hinterlege das Ergebnis in Plesk als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Ohne diese Variable bleibt der Lehrerbereich gesperrt; öffentliche Übungslinks funktionieren weiterhin anonym.
+
 ## Phase 1
 
 - Lehr-Dashboard mit Anlegen, Bearbeiten, Aktivieren und Deaktivieren

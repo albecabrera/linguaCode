@@ -4,6 +4,7 @@ declare(strict_types=1);
 const ROOT = __DIR__ . '/..';
 const DB_PATH = ROOT . '/data/linguacode.sqlite';
 
+
 function db(): PDO {
     static $db;
     if ($db instanceof PDO) return $db;
@@ -33,6 +34,11 @@ function seed(PDO $db): void {
 }
 
 function token(): string { return bin2hex(random_bytes(12)); }
+function csrf(): string { return $_SESSION['csrf'] ??= bin2hex(random_bytes(24)); }
+function requireCsrf(): void { if (!hash_equals(csrf(), (string)($_POST['csrf'] ?? ''))) { http_response_code(419); exit('Ungültige Anfrage. Bitte lade die Seite neu.'); } }
+function teacherHash(): string { return (string)getenv('LINGUACODE_TEACHER_PASSWORD_HASH'); }
+function isTeacher(): bool { return ($_SESSION['teacher'] ?? false) === true; }
+function requireTeacher(): void { if (!teacherHash()) { http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; } if (!isTeacher()) redirect('/login'); }
 function baseUrl(): string {
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
@@ -86,7 +92,7 @@ function form(?array $exercise = null): void {
     $content = $editing ? json_encode(exerciseContent($exercise), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : json_encode(['questions'=>[['question'=>'', 'options'=>['','','',''], 'answer'=>0]]], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     ob_start(); ?>
     <section class="page-heading"><p class="eyebrow">Lehrerbereich</p><h1><?= $editing ? 'Übung bearbeiten' : 'Neue Übung anlegen' ?></h1><p>Inhalte bleiben von der Spiel-Engine getrennt und werden als strukturierte Daten gespeichert.</p></section>
-    <form class="editor" method="post" action="<?= $editing ? '/exercise/' . $exercise['id'] : '/exercise' ?>"><label>Fach<select name="subject" required><option value="spanisch" <?= ($exercise['subject'] ?? '') === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= ($exercise['subject'] ?? '') === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Titel<input name="title" required maxlength="140" value="<?= h($exercise['title'] ?? '') ?>"></label><label>Beschreibung<textarea name="description" maxlength="500"><?= h($exercise['description'] ?? '') ?></textarea></label><label>Übungstyp<select name="type"><option value="quiz" <?= ($exercise['type'] ?? '') === 'quiz' ? 'selected' : '' ?>>Quiz</option><option value="memory" <?= ($exercise['type'] ?? '') === 'memory' ? 'selected' : '' ?>>Memory</option><option value="matching" <?= ($exercise['type'] ?? '') === 'matching' ? 'selected' : '' ?>>Zuordnung</option><option value="cloze" <?= ($exercise['type'] ?? '') === 'cloze' ? 'selected' : '' ?>>Lückentext</option></select></label><label>Status<select name="status"><option value="draft" <?= ($exercise['status'] ?? 'draft') === 'draft' ? 'selected' : '' ?>>Entwurf</option><option value="published" <?= ($exercise['status'] ?? '') === 'published' ? 'selected' : '' ?>>Veröffentlicht</option></select></label><label class="switch"><input type="checkbox" name="is_active" value="1" <?= (!$editing || $exercise['is_active']) ? 'checked' : '' ?>> Übung aktiv</label><label>Inhalte (JSON)<textarea class="code" name="content_json" required><?= h($content) ?></textarea><small>Quiz-Format: <code>{"questions":[{"question":"…","options":["…"],"answer":0}]}</code></small></label><div class="form-actions"><a class="secondary" href="/">Abbrechen</a><button>Speichern</button></div></form>
+    <form class="editor" method="post" action="<?= $editing ? '/exercise/' . $exercise['id'] : '/exercise' ?>"><input type="hidden" name="csrf" value="<?= h(csrf()) ?>"><label>Fach<select name="subject" required><option value="spanisch" <?= ($exercise['subject'] ?? '') === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= ($exercise['subject'] ?? '') === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Titel<input name="title" required maxlength="140" value="<?= h($exercise['title'] ?? '') ?>"></label><label>Beschreibung<textarea name="description" maxlength="500"><?= h($exercise['description'] ?? '') ?></textarea></label><label>Übungstyp<select name="type"><option value="quiz" <?= ($exercise['type'] ?? '') === 'quiz' ? 'selected' : '' ?>>Quiz</option><option value="memory" <?= ($exercise['type'] ?? '') === 'memory' ? 'selected' : '' ?>>Memory</option><option value="matching" <?= ($exercise['type'] ?? '') === 'matching' ? 'selected' : '' ?>>Zuordnung</option><option value="cloze" <?= ($exercise['type'] ?? '') === 'cloze' ? 'selected' : '' ?>>Lückentext</option></select></label><label>Status<select name="status"><option value="draft" <?= ($exercise['status'] ?? 'draft') === 'draft' ? 'selected' : '' ?>>Entwurf</option><option value="published" <?= ($exercise['status'] ?? '') === 'published' ? 'selected' : '' ?>>Veröffentlicht</option></select></label><label class="switch"><input type="checkbox" name="is_active" value="1" <?= (!$editing || $exercise['is_active']) ? 'checked' : '' ?>> Übung aktiv</label><label>Inhalte (JSON)<textarea class="code" name="content_json" required><?= h($content) ?></textarea><small>Quiz-Format: <code>{"questions":[{"question":"…","options":["…"],"answer":0}]}</code></small></label><div class="form-actions"><a class="secondary" href="/">Abbrechen</a><button>Speichern</button></div></form>
     <?php layout($editing ? 'Übung bearbeiten' : 'Neue Übung', (string)ob_get_clean());
 }
 
@@ -108,8 +114,17 @@ function saveExercise(?int $id = null): void {
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET'; $path = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
-if ($method === 'POST' && $path === '/exercise') { saveExercise(); }
-if ($method === 'POST' && preg_match('#^/exercise/(\d+)$#', $path, $m)) { saveExercise((int)$m[1]); }
+if (!str_starts_with($path, '/e/')) { session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off']); session_start(); }
+if ($path === '/login') {
+    if (!teacherHash()) { http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; }
+    $error = '';
+    if ($method === 'POST') { requireCsrf(); if (password_verify((string)($_POST['password'] ?? ''), teacherHash())) { session_regenerate_id(true); $_SESSION['teacher'] = true; redirect('/'); } $error = '<p class="feedback">Passwort nicht korrekt.</p>'; }
+    layout('Anmelden', '<section class="notice"><p class="eyebrow">Lehrerbereich</p><h1>Anmelden</h1>' . $error . '<form class="editor" method="post"><input type="hidden" name="csrf" value="' . h(csrf()) . '"><label>Passwort<input type="password" name="password" required autofocus autocomplete="current-password"></label><button>Anmelden</button></form></section>', true); exit;
+}
+if ($path === '/logout' && $method === 'POST') { requireCsrf(); $_SESSION = []; session_destroy(); redirect('/login'); }
+if (!str_starts_with($path, '/e/')) requireTeacher();
+if ($method === 'POST' && $path === '/exercise') { requireCsrf(); saveExercise(); }
+if ($method === 'POST' && preg_match('#^/exercise/(\d+)$#', $path, $m)) { requireCsrf(); saveExercise((int)$m[1]); }
 if ($path === '/') { dashboard(); exit; }
 if ($path === '/exercise/new') { form(); exit; }
 if (preg_match('#^/exercise/(\d+)/edit$#', $path, $m)) { $stmt=db()->prepare('SELECT e.*,c.content_json FROM exercises e JOIN exercise_contents c ON c.exercise_id=e.id WHERE e.id=?'); $stmt->execute([(int)$m[1]]); $exercise=$stmt->fetch(PDO::FETCH_ASSOC); if(!$exercise){http_response_code(404);exit('Nicht gefunden.');} form($exercise); exit; }
