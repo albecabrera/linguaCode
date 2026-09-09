@@ -44,7 +44,7 @@ function exerciseContent(array $exercise): array { return json_decode((string)$e
 
 function layout(string $title, string $body, bool $public = false): void {
     $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a>';
-    echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/app.js" defer></script></body></html>';
+    echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/qrcode-generator.min.js" defer></script><script src="/assets/app.js" defer></script></body></html>';
 }
 
 function dashboard(): void {
@@ -76,9 +76,8 @@ function publicExercise(string $token): void {
     $stmt = db()->prepare('SELECT e.*, c.content_json FROM qr_links q JOIN exercises e ON e.id=q.exercise_id JOIN exercise_contents c ON c.exercise_id=e.id WHERE q.token=? AND e.status="published" AND e.is_active=1');
     $stmt->execute([$token]); $exercise = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$exercise) { http_response_code(404); layout('Nicht verfügbar', '<section class="notice"><h1>Diese Übung ist nicht verfügbar.</h1><p>Bitte prüfe den Link oder frage deine Lehrkraft.</p></section>', true); return; }
-    if ($exercise['type'] !== 'quiz') { layout(h($exercise['title']), '<section class="notice"><p class="eyebrow">In Vorbereitung</p><h1>' . h($exercise['title']) . '</h1><p>Diese Engine wird als Nächstes freigeschaltet.</p></section>', true); return; }
-    $questions = exerciseContent($exercise)['questions'] ?? [];
-    ob_start(); ?><section class="exercise" data-quiz='<?= h(json_encode($questions, JSON_UNESCAPED_UNICODE)) ?>'><p class="eyebrow"><?= h(ucfirst($exercise['subject'])) ?> · Quiz</p><h1><?= h($exercise['title']) ?></h1><p><?= h($exercise['description']) ?></p><div id="quiz" aria-live="polite"></div></section><?php layout(h($exercise['title']), (string)ob_get_clean(), true);
+    $content = exerciseContent($exercise);
+    ob_start(); ?><section class="exercise" data-engine="<?= h($exercise['type']) ?>" data-content='<?= h(json_encode($content, JSON_UNESCAPED_UNICODE)) ?>'><p class="eyebrow"><?= h(ucfirst($exercise['subject'])) ?> · <?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$exercise['type']]) ?></p><h1><?= h($exercise['title']) ?></h1><p><?= h($exercise['description']) ?></p><div id="exercise-engine" aria-live="polite"></div></section><?php layout(h($exercise['title']), (string)ob_get_clean(), true);
 }
 
 function saveExercise(?int $id = null): void {
