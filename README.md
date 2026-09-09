@@ -27,4 +27,6 @@ Hinterlege das Ergebnis in Plesk als Umgebungsvariable `LINGUACODE_TEACHER_PASSW
 - anonyme öffentliche Freigabe-Links mit QR-Code
 - responsive Quiz-Engine als Referenz für weitere Engines
 
+Die JSON-Formate der vier Engines stehen in [`docs/content-formats.md`](docs/content-formats.md).
+
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.
