@@ -18,7 +18,26 @@
     };
     const helper = document.createElement('details'); helper.className = 'template-helper'; helper.innerHTML = '<summary>Inhaltsvorlage einsetzen</summary><p>Die Vorlage ersetzt den aktuellen JSON-Inhalt.</p>' + Object.keys(templates).map(type => `<button type="button" data-template="${type}">${({quiz:'Quiz',memory:'Memory',matching:'Zuordnung',cloze:'Lückentext'})[type]}</button>`).join('');
     contentField.closest('label').append(helper);
-    helper.querySelectorAll('[data-template]').forEach(button => button.onclick = () => { const type = button.dataset.template; document.querySelector('select[name="type"]').value = type; contentField.value = JSON.stringify(templates[type], null, 2); helper.open = false; });
+    helper.querySelectorAll('[data-template]').forEach(button => button.onclick = () => { const type = button.dataset.template; document.querySelector('select[name="type"]').value = type; contentField.value = JSON.stringify(templates[type], null, 2); helper.open = false; renderStructured(); });
+    const typeSelect = document.querySelector('select[name="type"]');
+    const structured = document.createElement('section'); structured.className = 'structured-editor';
+    const read = () => { try { return JSON.parse(contentField.value); } catch { return templates[typeSelect.value]; } };
+    const sync = () => {
+      const type = typeSelect.value;
+      if (type === 'quiz') contentField.value = JSON.stringify({ questions: [...structured.querySelectorAll('[data-question]')].map(row => ({ question: row.querySelector('[name="question"]').value, options: [...row.querySelectorAll('[name="option"]')].map(input => input.value), answer: Number(row.querySelector('[name="answer"]').value) })) }, null, 2);
+      if (type === 'memory' || type === 'matching') contentField.value = JSON.stringify({ pairs: [...structured.querySelectorAll('[data-pair]')].map(row => ({ left: row.querySelector('[name="left"]').value, right: row.querySelector('[name="right"]').value })) }, null, 2);
+      if (type === 'cloze') contentField.value = JSON.stringify({ text: structured.querySelector('[name="text"]').value, blanks: structured.querySelector('[name="blanks"]').value.split(',').map(value => value.trim()).filter(Boolean) }, null, 2);
+    };
+    const renderStructured = () => {
+      const type = typeSelect.value, content = read();
+      if (type === 'quiz') { const rows = (content.questions || templates.quiz.questions).map((q, index) => `<fieldset data-question><legend>Frage ${index + 1}</legend><input name="question" value="${esc(q.question)}" placeholder="Frage"><input name="option" value="${esc(q.options?.[0] || '')}" placeholder="Antwort 1"><input name="option" value="${esc(q.options?.[1] || '')}" placeholder="Antwort 2"><input name="option" value="${esc(q.options?.[2] || '')}" placeholder="Antwort 3"><input name="option" value="${esc(q.options?.[3] || '')}" placeholder="Antwort 4"><label>Richtig<select name="answer">${[0,1,2,3].map(i => `<option value="${i}" ${q.answer === i ? 'selected' : ''}>Antwort ${i + 1}</option>`).join('')}</select></label></fieldset>`).join(''); structured.innerHTML = `<h2>Strukturierter Editor</h2>${rows}<button type="button" data-add-question>Frage hinzufügen</button>`; }
+      if (type === 'memory' || type === 'matching') { const rows = (content.pairs || templates[type].pairs).map((pair, index) => `<fieldset data-pair><legend>Paar ${index + 1}</legend><input name="left" value="${esc(pair.left)}" placeholder="Linker Begriff"><input name="right" value="${esc(pair.right)}" placeholder="Rechter Begriff"></fieldset>`).join(''); structured.innerHTML = `<h2>Strukturierter Editor</h2>${rows}<button type="button" data-add-pair>Paar hinzufügen</button>`; }
+      if (type === 'cloze') structured.innerHTML = `<h2>Strukturierter Editor</h2><label>Text mit {{0}}, {{1}} …<textarea name="text">${esc(content.text || templates.cloze.text)}</textarea></label><label>Lösungen, durch Komma getrennt<input name="blanks" value="${esc((content.blanks || templates.cloze.blanks).join(', '))}"></label>`;
+      structured.querySelectorAll('input,select,textarea').forEach(input => input.addEventListener('input', sync));
+      structured.querySelector('[data-add-question]')?.addEventListener('click', () => { sync(); const next=read(); next.questions.push({question:'',options:['','','',''],answer:0}); contentField.value=JSON.stringify(next,null,2); renderStructured(); });
+      structured.querySelector('[data-add-pair]')?.addEventListener('click', () => { sync(); const next=read(); next.pairs.push({left:'',right:''}); contentField.value=JSON.stringify(next,null,2); renderStructured(); });
+    };
+    contentField.parentElement.before(structured); renderStructured(); typeSelect.addEventListener('change', renderStructured);
   }
   const root = document.querySelector('[data-engine]'); if (!root) return;
   const data = JSON.parse(root.dataset.content), target = document.querySelector('#exercise-engine');
