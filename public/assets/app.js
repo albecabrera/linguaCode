@@ -8,6 +8,18 @@
   });
   document.querySelector('.dialog-close')?.addEventListener('click', () => dialog.close());
   document.querySelector('#copy-url')?.addEventListener('click', async () => { await navigator.clipboard.writeText(document.querySelector('#share-url').value); document.querySelector('#copy-url').textContent = 'Kopiert'; });
+  const contentField = document.querySelector('textarea[name="content_json"]');
+  if (contentField) {
+    const templates = {
+      quiz: { questions: [{ question: 'Wie lautet die richtige Antwort?', options: ['Antwort A', 'Antwort B', 'Antwort C', 'Antwort D'], answer: 0 }] },
+      memory: { pairs: [{ left: 'hola', right: 'Hallo' }, { left: 'adiós', right: 'Tschüss' }] },
+      matching: { pairs: [{ left: 'Eingabe', right: 'Daten werden erfasst' }, { left: 'Verarbeitung', right: 'Daten werden bearbeitet' }] },
+      cloze: { text: 'Das EVA-Prinzip steht für {{0}}, {{1}} und {{2}}.', blanks: ['Eingabe', 'Verarbeitung', 'Ausgabe'] }
+    };
+    const helper = document.createElement('details'); helper.className = 'template-helper'; helper.innerHTML = '<summary>Inhaltsvorlage einsetzen</summary><p>Die Vorlage ersetzt den aktuellen JSON-Inhalt.</p>' + Object.keys(templates).map(type => `<button type="button" data-template="${type}">${({quiz:'Quiz',memory:'Memory',matching:'Zuordnung',cloze:'Lückentext'})[type]}</button>`).join('');
+    contentField.closest('label').append(helper);
+    helper.querySelectorAll('[data-template]').forEach(button => button.onclick = () => { const type = button.dataset.template; document.querySelector('select[name="type"]').value = type; contentField.value = JSON.stringify(templates[type], null, 2); helper.open = false; });
+  }
   const root = document.querySelector('[data-engine]'); if (!root) return;
   const data = JSON.parse(root.dataset.content), target = document.querySelector('#exercise-engine');
   const finish = (score,total,start) => { target.innerHTML=`<section class="result"><p class="eyebrow">Geschafft</p><h2>${score} von ${total} richtig</h2><button id="restart">Noch einmal</button></section>`; document.querySelector('#restart').onclick=start; };
