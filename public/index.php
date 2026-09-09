@@ -41,6 +41,24 @@ function h(string $value): string { return htmlspecialchars($value, ENT_QUOTES, 
 function redirect(string $path): never { header('Location: ' . $path, true, 303); exit; }
 function input(string $key, string $default = ''): string { return trim((string)($_POST[$key] ?? $default)); }
 function exerciseContent(array $exercise): array { return json_decode((string)$exercise['content_json'], true, 512, JSON_THROW_ON_ERROR); }
+function validateContent(string $type, array $content): void {
+    if ($type === 'quiz') {
+        if (empty($content['questions']) || !is_array($content['questions'])) throw new InvalidArgumentException('Ein Quiz benötigt mindestens eine Frage.');
+        foreach ($content['questions'] as $question) {
+            if (!is_array($question) || empty($question['question']) || !isset($question['options']) || !is_array($question['options']) || count($question['options']) < 2 || !isset($question['answer']) || !is_int($question['answer']) || $question['answer'] < 0 || $question['answer'] >= count($question['options'])) throw new InvalidArgumentException('Jede Quizfrage braucht mindestens zwei Antworten und einen gültigen Lösungsindex.');
+        }
+        return;
+    }
+    if (in_array($type, ['memory', 'matching'], true)) {
+        if (empty($content['pairs']) || !is_array($content['pairs'])) throw new InvalidArgumentException('Diese Übung benötigt mindestens ein Paar.');
+        foreach ($content['pairs'] as $pair) if (!is_array($pair) || empty($pair['left']) || empty($pair['right'])) throw new InvalidArgumentException('Jedes Paar benötigt einen linken und einen rechten Wert.');
+        return;
+    }
+    if ($type === 'cloze') {
+        if (!isset($content['text'], $content['blanks']) || !is_string($content['text']) || !is_array($content['blanks']) || !count($content['blanks']) || substr_count($content['text'], '{{') !== count($content['blanks'])) throw new InvalidArgumentException('Ein Lückentext benötigt Text mit {{0}}, {{1}} usw. und gleich viele Lösungen.');
+        foreach ($content['blanks'] as $blank) if (!is_string($blank) || trim($blank) === '') throw new InvalidArgumentException('Keine Lösung darf leer sein.');
+    }
+}
 
 function layout(string $title, string $body, bool $public = false): void {
     $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a>';
@@ -83,7 +101,7 @@ function publicExercise(string $token): void {
 function saveExercise(?int $id = null): void {
     $subject = input('subject'); $type = input('type'); $status = input('status'); $title = input('title'); $description = input('description');
     if (!in_array($subject, ['spanisch','informatik'], true) || !in_array($type, ['quiz','memory','matching','cloze'], true) || !in_array($status, ['draft','published'], true) || $title === '') { http_response_code(422); exit('Ungültige Eingabe.'); }
-    try { $content = json_decode(input('content_json'), true, 512, JSON_THROW_ON_ERROR); } catch (JsonException $e) { http_response_code(422); exit('Der Inhalt ist kein gültiges JSON.'); }
+    try { $content = json_decode(input('content_json'), true, 512, JSON_THROW_ON_ERROR); validateContent($type, $content); } catch (JsonException $e) { http_response_code(422); exit('Der Inhalt ist kein gültiges JSON.'); } catch (InvalidArgumentException $e) { http_response_code(422); exit(h($e->getMessage())); }
     $db = db(); $db->beginTransaction();
     try { if ($id === null) { $db->prepare('INSERT INTO exercises(subject,title,description,type,status,is_active) VALUES(?,?,?,?,?,?)')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0]); $id = (int)$db->lastInsertId(); $db->prepare('INSERT INTO qr_links(exercise_id,token) VALUES(?,?)')->execute([$id,token()]); } else { $db->prepare('UPDATE exercises SET subject=?,title=?,description=?,type=?,status=?,is_active=?,updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0,$id]); } $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json,updated_at) VALUES(?,?,CURRENT_TIMESTAMP) ON CONFLICT(exercise_id) DO UPDATE SET content_json=excluded.content_json,updated_at=CURRENT_TIMESTAMP')->execute([$id,json_encode($content, JSON_UNESCAPED_UNICODE)]); $db->commit(); } catch(Throwable $e) { $db->rollBack(); throw $e; }
     redirect('/exercise/' . $id . '/edit');
