@@ -1,0 +1,100 @@
+<?php
+declare(strict_types=1);
+
+const ROOT = __DIR__ . '/..';
+const DB_PATH = ROOT . '/data/linguacode.sqlite';
+
+function db(): PDO {
+    static $db;
+    if ($db instanceof PDO) return $db;
+    $directory = dirname(DB_PATH);
+    if (!is_dir($directory)) mkdir($directory, 0775, true);
+    $isNew = !file_exists(DB_PATH);
+    $db = new PDO('sqlite:' . DB_PATH, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $db->exec('PRAGMA foreign_keys = ON');
+    if ($isNew) {
+        $db->exec(file_get_contents(ROOT . '/database/schema.sql'));
+        seed($db);
+    }
+    return $db;
+}
+
+function seed(PDO $db): void {
+    $db->prepare('INSERT INTO exercises(subject,title,description,type,status,is_active) VALUES(?,?,?,?,?,?)')
+        ->execute(['spanisch', 'Saludos y presentaciones', 'Ein kurzer Einstieg in spanische Begrüßungen.', 'quiz', 'published', 1]);
+    $id = (int)$db->lastInsertId();
+    $content = ['questions' => [
+        ['question' => 'Wie sagt man „Guten Morgen“ auf Spanisch?', 'options' => ['Buenas noches', 'Buenos días', 'Hasta luego', 'Gracias'], 'answer' => 1],
+        ['question' => 'Was bedeutet „¿Cómo estás?“?', 'options' => ['Wo wohnst du?', 'Wie heißt du?', 'Wie geht es dir?', 'Wie alt bist du?'], 'answer' => 2],
+        ['question' => 'Welche Verabschiedung passt?', 'options' => ['Adiós', 'Por favor', 'Hola', 'Sí'], 'answer' => 0],
+    ]];
+    $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json) VALUES(?,?)')->execute([$id, json_encode($content, JSON_UNESCAPED_UNICODE)]);
+    $db->prepare('INSERT INTO qr_links(exercise_id,token) VALUES(?,?)')->execute([$id, token()]);
+}
+
+function token(): string { return bin2hex(random_bytes(12)); }
+function baseUrl(): string {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+}
+function h(string $value): string { return htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); }
+function redirect(string $path): never { header('Location: ' . $path, true, 303); exit; }
+function input(string $key, string $default = ''): string { return trim((string)($_POST[$key] ?? $default)); }
+function exerciseContent(array $exercise): array { return json_decode((string)$exercise['content_json'], true, 512, JSON_THROW_ON_ERROR); }
+
+function layout(string $title, string $body, bool $public = false): void {
+    $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a>';
+    echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/app.js" defer></script></body></html>';
+}
+
+function dashboard(): void {
+    $subject = $_GET['subject'] ?? '';
+    $type = $_GET['type'] ?? '';
+    $where = []; $values = [];
+    if (in_array($subject, ['spanisch', 'informatik'], true)) { $where[] = 'e.subject = ?'; $values[] = $subject; }
+    if (in_array($type, ['quiz', 'memory', 'matching', 'cloze'], true)) { $where[] = 'e.type = ?'; $values[] = $type; }
+    $sql = 'SELECT e.*, q.token FROM exercises e LEFT JOIN qr_links q ON q.exercise_id=e.id' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY e.updated_at DESC';
+    $stmt = db()->prepare($sql); $stmt->execute($values); $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ob_start(); ?>
+    <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
+    <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
+    <section class="cards"><?php foreach ($exercises as $e): $url = $e['token'] ? baseUrl() . '/e/' . $e['token'] : ''; ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><a href="<?= h($url) ?>" target="_blank" rel="noopener">Vorschau</a><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
+    <dialog id="share-dialog"><button class="dialog-close" aria-label="Schließen">×</button><h2>Freigabe</h2><p>Öffne oder teile diesen Link. Der QR-Code enthält keine Schülerdaten.</p><img id="qr-image" alt="QR-Code zur Übung"><input id="share-url" readonly><button id="copy-url">Link kopieren</button></dialog>
+    <?php layout('Dashboard', (string)ob_get_clean());
+}
+
+function form(?array $exercise = null): void {
+    $editing = $exercise !== null;
+    $content = $editing ? json_encode(exerciseContent($exercise), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : json_encode(['questions'=>[['question'=>'', 'options'=>['','','',''], 'answer'=>0]]], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    ob_start(); ?>
+    <section class="page-heading"><p class="eyebrow">Lehrerbereich</p><h1><?= $editing ? 'Übung bearbeiten' : 'Neue Übung anlegen' ?></h1><p>Inhalte bleiben von der Spiel-Engine getrennt und werden als strukturierte Daten gespeichert.</p></section>
+    <form class="editor" method="post" action="<?= $editing ? '/exercise/' . $exercise['id'] : '/exercise' ?>"><label>Fach<select name="subject" required><option value="spanisch" <?= ($exercise['subject'] ?? '') === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= ($exercise['subject'] ?? '') === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Titel<input name="title" required maxlength="140" value="<?= h($exercise['title'] ?? '') ?>"></label><label>Beschreibung<textarea name="description" maxlength="500"><?= h($exercise['description'] ?? '') ?></textarea></label><label>Übungstyp<select name="type"><option value="quiz" <?= ($exercise['type'] ?? '') === 'quiz' ? 'selected' : '' ?>>Quiz</option><option value="memory" <?= ($exercise['type'] ?? '') === 'memory' ? 'selected' : '' ?>>Memory</option><option value="matching" <?= ($exercise['type'] ?? '') === 'matching' ? 'selected' : '' ?>>Zuordnung</option><option value="cloze" <?= ($exercise['type'] ?? '') === 'cloze' ? 'selected' : '' ?>>Lückentext</option></select></label><label>Status<select name="status"><option value="draft" <?= ($exercise['status'] ?? 'draft') === 'draft' ? 'selected' : '' ?>>Entwurf</option><option value="published" <?= ($exercise['status'] ?? '') === 'published' ? 'selected' : '' ?>>Veröffentlicht</option></select></label><label class="switch"><input type="checkbox" name="is_active" value="1" <?= (!$editing || $exercise['is_active']) ? 'checked' : '' ?>> Übung aktiv</label><label>Inhalte (JSON)<textarea class="code" name="content_json" required><?= h($content) ?></textarea><small>Quiz-Format: <code>{"questions":[{"question":"…","options":["…"],"answer":0}]}</code></small></label><div class="form-actions"><a class="secondary" href="/">Abbrechen</a><button>Speichern</button></div></form>
+    <?php layout($editing ? 'Übung bearbeiten' : 'Neue Übung', (string)ob_get_clean());
+}
+
+function publicExercise(string $token): void {
+    $stmt = db()->prepare('SELECT e.*, c.content_json FROM qr_links q JOIN exercises e ON e.id=q.exercise_id JOIN exercise_contents c ON c.exercise_id=e.id WHERE q.token=? AND e.status="published" AND e.is_active=1');
+    $stmt->execute([$token]); $exercise = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$exercise) { http_response_code(404); layout('Nicht verfügbar', '<section class="notice"><h1>Diese Übung ist nicht verfügbar.</h1><p>Bitte prüfe den Link oder frage deine Lehrkraft.</p></section>', true); return; }
+    if ($exercise['type'] !== 'quiz') { layout(h($exercise['title']), '<section class="notice"><p class="eyebrow">In Vorbereitung</p><h1>' . h($exercise['title']) . '</h1><p>Diese Engine wird als Nächstes freigeschaltet.</p></section>', true); return; }
+    $questions = exerciseContent($exercise)['questions'] ?? [];
+    ob_start(); ?><section class="exercise" data-quiz='<?= h(json_encode($questions, JSON_UNESCAPED_UNICODE)) ?>'><p class="eyebrow"><?= h(ucfirst($exercise['subject'])) ?> · Quiz</p><h1><?= h($exercise['title']) ?></h1><p><?= h($exercise['description']) ?></p><div id="quiz" aria-live="polite"></div></section><?php layout(h($exercise['title']), (string)ob_get_clean(), true);
+}
+
+function saveExercise(?int $id = null): void {
+    $subject = input('subject'); $type = input('type'); $status = input('status'); $title = input('title'); $description = input('description');
+    if (!in_array($subject, ['spanisch','informatik'], true) || !in_array($type, ['quiz','memory','matching','cloze'], true) || !in_array($status, ['draft','published'], true) || $title === '') { http_response_code(422); exit('Ungültige Eingabe.'); }
+    try { $content = json_decode(input('content_json'), true, 512, JSON_THROW_ON_ERROR); } catch (JsonException $e) { http_response_code(422); exit('Der Inhalt ist kein gültiges JSON.'); }
+    $db = db(); $db->beginTransaction();
+    try { if ($id === null) { $db->prepare('INSERT INTO exercises(subject,title,description,type,status,is_active) VALUES(?,?,?,?,?,?)')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0]); $id = (int)$db->lastInsertId(); $db->prepare('INSERT INTO qr_links(exercise_id,token) VALUES(?,?)')->execute([$id,token()]); } else { $db->prepare('UPDATE exercises SET subject=?,title=?,description=?,type=?,status=?,is_active=?,updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0,$id]); } $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json,updated_at) VALUES(?,?,CURRENT_TIMESTAMP) ON CONFLICT(exercise_id) DO UPDATE SET content_json=excluded.content_json,updated_at=CURRENT_TIMESTAMP')->execute([$id,json_encode($content, JSON_UNESCAPED_UNICODE)]); $db->commit(); } catch(Throwable $e) { $db->rollBack(); throw $e; }
+    redirect('/exercise/' . $id . '/edit');
+}
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET'; $path = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
+if ($method === 'POST' && $path === '/exercise') { saveExercise(); }
+if ($method === 'POST' && preg_match('#^/exercise/(\d+)$#', $path, $m)) { saveExercise((int)$m[1]); }
+if ($path === '/') { dashboard(); exit; }
+if ($path === '/exercise/new') { form(); exit; }
+if (preg_match('#^/exercise/(\d+)/edit$#', $path, $m)) { $stmt=db()->prepare('SELECT e.*,c.content_json FROM exercises e JOIN exercise_contents c ON c.exercise_id=e.id WHERE e.id=?'); $stmt->execute([(int)$m[1]]); $exercise=$stmt->fetch(PDO::FETCH_ASSOC); if(!$exercise){http_response_code(404);exit('Nicht gefunden.');} form($exercise); exit; }
+if (preg_match('#^/e/([a-f0-9]{24})$#', $path, $m)) { publicExercise($m[1]); exit; }
+http_response_code(404); layout('Nicht gefunden', '<section class="notice"><h1>Seite nicht gefunden.</h1></section>');
