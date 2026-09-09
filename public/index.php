@@ -13,10 +13,9 @@ function db(): PDO {
     $isNew = !file_exists(DB_PATH);
     $db = new PDO('sqlite:' . DB_PATH, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     $db->exec('PRAGMA foreign_keys = ON');
-    if ($isNew) {
-        $db->exec(file_get_contents(ROOT . '/database/schema.sql'));
-        seed($db);
-    }
+    $db->exec(file_get_contents(ROOT . '/database/schema.sql'));
+    if ($isNew) seed($db);
+    seedExternalResources($db);
     return $db;
 }
 
@@ -31,6 +30,20 @@ function seed(PDO $db): void {
     ]];
     $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json) VALUES(?,?)')->execute([$id, json_encode($content, JSON_UNESCAPED_UNICODE)]);
     $db->prepare('INSERT INTO qr_links(exercise_id,token) VALUES(?,?)')->execute([$id, token()]);
+}
+function seedExternalResources(PDO $db): void {
+    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+        ->execute(['spanisch', 'Mapa interactivo de América Latina', 'Mapa interactivo para explorar América Latina.', 'https://albecabrera.github.io/mapa_americalatina_interactivo/', 1, 'https://albecabrera.github.io/mapa_americalatina_interactivo/']);
+    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+        ->execute(['informatik', 'Code Arena', 'App interactiva para practicar conceptos de programación.', 'https://albecabrera.github.io/code-arena-spiel/', 1, 'https://albecabrera.github.io/code-arena-spiel/']);
+    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+        ->execute(['spanisch', 'Escape Room: La composición', 'Escape room interactivo sobre la composición.', 'https://albecabrera.github.io/escape-room-lacomposicion/', 1, 'https://albecabrera.github.io/escape-room-lacomposicion/']);
+    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+        ->execute(['interdisziplinar', '5-Minuten Einmaleins-Test', 'Interaktiver Kurztest zum kleinen Einmaleins.', 'https://albecabrera.github.io/kleineseinmaleins/', 1, 'https://albecabrera.github.io/kleineseinmaleins/']);
+    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+        ->execute(['informatik', 'Caesar-Spiel', 'Interaktive Übung zur Caesar-Verschlüsselung.', 'https://albecabrera.github.io/caesar_spiel/', 1, 'https://albecabrera.github.io/caesar_spiel/']);
+    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+        ->execute(['interdisziplinar', 'Panel didáctico', 'Panel interactivo con materiales didácticos.', 'https://albecabrera.github.io/panel-didactico/', 1, 'https://albecabrera.github.io/panel-didactico/']);
 }
 
 function token(): string { return bin2hex(random_bytes(12)); }
@@ -68,7 +81,7 @@ function validateContent(string $type, array $content): void {
 
 function layout(string $title, string $body, bool $public = false): void {
     $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a>';
-    echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/qrcode-generator.min.js" defer></script><script src="/assets/app.js" defer></script></body></html>';
+    echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><link rel="stylesheet" href="/assets/dashboard.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/qrcode-generator.min.js" defer></script><script src="/assets/app.js" defer></script></body></html>';
 }
 
 function dashboard(): void {
@@ -79,10 +92,14 @@ function dashboard(): void {
     if (in_array($type, ['quiz', 'memory', 'matching', 'cloze'], true)) { $where[] = 'e.type = ?'; $values[] = $type; }
     $sql = 'SELECT e.*, q.token FROM exercises e LEFT JOIN qr_links q ON q.exercise_id=e.id' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY e.updated_at DESC';
     $stmt = db()->prepare($sql); $stmt->execute($values); $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $externalSql = 'SELECT * FROM external_resources WHERE is_active=1'; $externalValues = [];
+    if (in_array($subject, ['spanisch', 'informatik'], true)) { $externalSql .= ' AND subject=?'; $externalValues[] = $subject; }
+    $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
     ob_start(); ?>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
     <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
     <section class="cards"><?php foreach ($exercises as $e): $url = $e['token'] ? baseUrl() . '/e/' . $e['token'] : ''; ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><a href="/exercise/<?= $e['id'] ?>/preview" target="_blank" rel="noopener">Vorschau</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
+    <?php if ($external): ?><section class="external-section"><p class="eyebrow">Externe Apps</p><h2>Bestehende interaktive Angebote</h2><div class="cards"><?php foreach ($external as $resource): ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($resource['subject'])) ?></span><span class="status">Externe App</span></div><h2><?= h($resource['title']) ?></h2><p><?= h($resource['description']) ?></p><div class="card-actions"><a href="<?= h($resource['url']) ?>" target="_blank" rel="noopener">Öffnen</a><button class="link-button" data-share-url="<?= h($resource['url']) ?>">Link / QR</button></div></article><?php endforeach ?></div></section><?php endif ?>
     <dialog id="share-dialog"><button class="dialog-close" aria-label="Schließen">×</button><h2>Freigabe</h2><p>Öffne oder teile diesen Link. Der QR-Code enthält keine Schülerdaten.</p><img id="qr-image" alt="QR-Code zur Übung"><input id="share-url" readonly><button id="copy-url">Link kopieren</button></dialog>
     <?php layout('Dashboard', (string)ob_get_clean());
 }

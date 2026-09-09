@@ -37,3 +37,14 @@ CREATE TABLE IF NOT EXISTS qr_links (
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(exercise_id) REFERENCES exercises(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS external_resources (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  subject TEXT NOT NULL CHECK(subject IN ('spanisch', 'informatik', 'interdisziplinar')),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  url TEXT NOT NULL UNIQUE,
+  is_active INTEGER NOT NULL DEFAULT 1 CHECK(is_active IN (0, 1)),
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

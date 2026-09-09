@@ -7,7 +7,7 @@ if ($schema === false) throw new RuntimeException('Schema-Datei nicht lesbar.');
 $db = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 $db->exec($schema);
 $tables = $db->query("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name")->fetchAll(PDO::FETCH_COLUMN);
-$expected = ['exercise_contents', 'exercise_sessions', 'exercises', 'qr_links', 'sqlite_sequence'];
+$expected = ['exercise_contents', 'exercise_sessions', 'exercises', 'external_resources', 'qr_links', 'sqlite_sequence'];
 if ($tables !== $expected) throw new RuntimeException('Unerwartete Tabellen: ' . implode(', ', $tables));
 
 $db->prepare('INSERT INTO exercises(subject,title,type,status,is_active) VALUES(?,?,?,?,?)')->execute(['informatik', 'Test', 'quiz', 'draft', 1]);
