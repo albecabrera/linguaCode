@@ -20,6 +20,14 @@ php -r 'echo password_hash("DEIN-SICHERES-PASSWORT", PASSWORD_DEFAULT), PHP_EOL;
 
 Hinterlege das Ergebnis in Plesk als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Ohne diese Variable bleibt der Lehrerbereich gesperrt; öffentliche Übungslinks funktionieren weiterhin anonym.
 
+## Prüfung
+
+```bash
+php scripts/verify-schema.php
+```
+
+Die Prüfung validiert die SQLite-Tabellen sowie die Fremdschlüssel-Löschung von Inhalten und Freigabe-Links.
+
 ## Phase 1
 
 - Lehr-Dashboard mit Anlegen, Bearbeiten, Aktivieren und Deaktivieren
