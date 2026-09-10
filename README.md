@@ -10,6 +10,12 @@ php -S localhost:8080 -t public public/router.php
 
 Die SQLite-Datenbank wird beim ersten Aufruf unter `data/linguacode.sqlite` angelegt. Lehransicht: `http://localhost:8080/`; veröffentlichte Übungen werden über ihre Freigabe-URL geöffnet.
 
+## Öffentlicher Link: Zustandsautomaten Klasse 8
+
+Die Übung wird als reine statische Seite unter [https://albecabrera.github.io/linguaCode/](https://albecabrera.github.io/linguaCode/) veröffentlicht. Der Workflow `.github/workflows/deploy-automaten.yml` veröffentlicht dabei ausschließlich `public/automaten/`; PHP-Code und Lehrbereich bleiben auf dem eigenen Server.
+
+Falls die Zieladresse später wechselt, setzt der Server die Umgebungsvariable `LINGUACODE_AUTOMATA_PUBLIC_URL` auf die neue vollständige URL.
+
 ## Lehrerzugang
 
 Setze auf dem Server ausschließlich einen Passwort-Hash, niemals ein Klartextpasswort:
