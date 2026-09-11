@@ -14,6 +14,7 @@ function db(): PDO {
     $db = new PDO('sqlite:' . DB_PATH, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     $db->exec('PRAGMA foreign_keys = ON');
     $db->exec(file_get_contents(ROOT . '/database/schema.sql'));
+    migrateShortLinks($db);
     if ($isNew) seed($db);
     seedExternalResources($db);
     return $db;
@@ -29,30 +30,45 @@ function seed(PDO $db): void {
         ['question' => 'Welche Verabschiedung passt?', 'options' => ['Adiós', 'Por favor', 'Hola', 'Sí'], 'answer' => 0],
     ]];
     $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json) VALUES(?,?)')->execute([$id, json_encode($content, JSON_UNESCAPED_UNICODE)]);
-    $db->prepare('INSERT INTO qr_links(exercise_id,token) VALUES(?,?)')->execute([$id, token()]);
+    $db->prepare('INSERT INTO qr_links(exercise_id,token,short_code) VALUES(?,?,?)')->execute([$id, token(), shortCode()]);
 }
 function seedExternalResources(PDO $db): void {
-    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
-        ->execute(['spanisch', 'Mapa interactivo de América Latina', 'Mapa interactivo para explorar América Latina.', 'https://albecabrera.github.io/mapa_americalatina_interactivo/', 1, 'https://albecabrera.github.io/mapa_americalatina_interactivo/']);
-    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
-        ->execute(['informatik', 'Code Arena', 'App interactiva para practicar conceptos de programación.', 'https://albecabrera.github.io/code-arena-spiel/', 1, 'https://albecabrera.github.io/code-arena-spiel/']);
-    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
-        ->execute(['spanisch', 'Escape Room: La composición', 'Escape room interactivo sobre la composición.', 'https://albecabrera.github.io/escape-room-lacomposicion/', 1, 'https://albecabrera.github.io/escape-room-lacomposicion/']);
-    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
-        ->execute(['interdisziplinar', '5-Minuten Einmaleins-Test', 'Interaktiver Kurztest zum kleinen Einmaleins.', 'https://albecabrera.github.io/kleineseinmaleins/', 1, 'https://albecabrera.github.io/kleineseinmaleins/']);
-    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
-        ->execute(['informatik', 'Caesar-Spiel', 'Interaktive Übung zur Caesar-Verschlüsselung.', 'https://albecabrera.github.io/caesar_spiel/', 1, 'https://albecabrera.github.io/caesar_spiel/']);
-    $db->prepare('INSERT INTO external_resources(subject,title,description,url,is_active) SELECT ?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
-        ->execute(['interdisziplinar', 'Panel didáctico', 'Panel interactivo con materiales didácticos.', 'https://albecabrera.github.io/panel-didactico/', 1, 'https://albecabrera.github.io/panel-didactico/']);
+    foreach ([
+        ['spanisch', 'Mapa interactivo de América Latina', 'Mapa interactivo para explorar América Latina.', 'https://albecabrera.github.io/mapa_americalatina_interactivo/'],
+        ['informatik', 'Code Arena', 'App interactiva para practicar conceptos de programación.', 'https://albecabrera.github.io/code-arena-spiel/'],
+        ['spanisch', 'Escape Room: La composición', 'Escape room interactivo sobre la composición.', 'https://albecabrera.github.io/escape-room-lacomposicion/'],
+        ['interdisziplinar', '5-Minuten Einmaleins-Test', 'Interaktiver Kurztest zum kleinen Einmaleins.', 'https://albecabrera.github.io/kleineseinmaleins/'],
+        ['informatik', 'Caesar-Spiel', 'Interaktive Übung zur Caesar-Verschlüsselung.', 'https://albecabrera.github.io/caesar_spiel/'],
+        ['interdisziplinar', 'Panel didáctico', 'Panel interactivo con materiales didácticos.', 'https://albecabrera.github.io/panel-didactico/'],
+    ] as [$subject, $title, $description, $url]) {
+        $db->prepare('INSERT INTO external_resources(subject,title,description,url,short_code,is_active) SELECT ?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM external_resources WHERE url=?)')
+            ->execute([$subject, $title, $description, $url, shortCode(), 1, $url]);
+    }
 }
 
 function token(): string { return bin2hex(random_bytes(12)); }
+function shortCode(): string { return rtrim(strtr(base64_encode(random_bytes(8)), '+/', '-_'), '='); }
+function columnExists(PDO $db, string $table, string $column): bool { foreach ($db->query('PRAGMA table_info(' . $table . ')') as $field) if ($field['name'] === $column) return true; return false; }
+function migrateShortLinks(PDO $db): void {
+    if (!columnExists($db, 'qr_links', 'short_code')) $db->exec('ALTER TABLE qr_links ADD COLUMN short_code TEXT');
+    if (!columnExists($db, 'external_resources', 'short_code')) $db->exec('ALTER TABLE external_resources ADD COLUMN short_code TEXT');
+    $db->exec('CREATE UNIQUE INDEX IF NOT EXISTS qr_links_short_code_unique ON qr_links(short_code)');
+    $db->exec('CREATE UNIQUE INDEX IF NOT EXISTS external_resources_short_code_unique ON external_resources(short_code)');
+    foreach (['qr_links', 'external_resources'] as $table) {
+        $rows = $db->query('SELECT id FROM ' . $table . ' WHERE short_code IS NULL')->fetchAll(PDO::FETCH_COLUMN);
+        $update = $db->prepare('UPDATE ' . $table . ' SET short_code=? WHERE id=?');
+        foreach ($rows as $id) $update->execute([shortCode(), $id]);
+    }
+}
+function shortUrl(string $code): string { return baseUrl() . '/s/' . $code; }
 function csrf(): string { return $_SESSION['csrf'] ??= bin2hex(random_bytes(24)); }
 function requireCsrf(): void { if (!hash_equals(csrf(), (string)($_POST['csrf'] ?? ''))) { http_response_code(419); exit('Ungültige Anfrage. Bitte lade die Seite neu.'); } }
 function teacherHash(): string { return (string)getenv('LINGUACODE_TEACHER_PASSWORD_HASH'); }
 function isTeacher(): bool { return ($_SESSION['teacher'] ?? false) === true; }
 function requireTeacher(): void { if (!teacherHash()) { http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; } if (!isTeacher()) redirect('/login'); }
 function baseUrl(): string {
+    $configuredUrl = trim((string)getenv('LINGUACODE_PUBLIC_URL'));
+    if ($configuredUrl !== '') return rtrim($configuredUrl, '/');
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
     return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
 }
@@ -93,17 +109,17 @@ function dashboard(): void {
     $where = []; $values = [];
     if (in_array($subject, ['spanisch', 'informatik'], true)) { $where[] = 'e.subject = ?'; $values[] = $subject; }
     if (in_array($type, ['quiz', 'memory', 'matching', 'cloze'], true)) { $where[] = 'e.type = ?'; $values[] = $type; }
-    $sql = 'SELECT e.*, q.token FROM exercises e LEFT JOIN qr_links q ON q.exercise_id=e.id' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY e.updated_at DESC';
+    $sql = 'SELECT e.*, q.token, q.short_code FROM exercises e LEFT JOIN qr_links q ON q.exercise_id=e.id' . ($where ? ' WHERE ' . implode(' AND ', $where) : '') . ' ORDER BY e.updated_at DESC';
     $stmt = db()->prepare($sql); $stmt->execute($values); $exercises = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $externalSql = 'SELECT * FROM external_resources WHERE is_active=1'; $externalValues = [];
     if (in_array($subject, ['spanisch', 'informatik'], true)) { $externalSql .= ' AND subject=?'; $externalValues[] = $subject; }
     $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
-    $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl()];
+    $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'short_code' => 'automaten'];
     ob_start(); ?>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
     <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
-    <section class="cards"><?php foreach ($exercises as $e): $url = $e['token'] ? baseUrl() . '/e/' . $e['token'] : ''; ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><a href="/exercise/<?= $e['id'] ?>/preview" target="_blank" rel="noopener">Vorschau</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
-    <?php if ($external): ?><section class="external-section"><p class="eyebrow">Externe Apps</p><h2>Bestehende interaktive Angebote</h2><div class="cards"><?php foreach ($external as $resource): ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($resource['subject'])) ?></span><span class="status">Externe App</span></div><h2><?= h($resource['title']) ?></h2><p><?= h($resource['description']) ?></p><div class="card-actions"><a href="<?= h($resource['url']) ?>" target="_blank" rel="noopener">Öffnen</a><button class="link-button" data-share-url="<?= h($resource['url']) ?>">Link / QR</button></div></article><?php endforeach ?></div></section><?php endif ?>
+    <section class="cards"><?php foreach ($exercises as $e): $url = $e['short_code'] ? shortUrl($e['short_code']) : ''; ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><a href="/exercise/<?= $e['id'] ?>/preview" target="_blank" rel="noopener">Vorschau</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
+    <?php if ($external): ?><section class="external-section"><p class="eyebrow">Externe Apps</p><h2>Bestehende interaktive Angebote</h2><div class="cards"><?php foreach ($external as $resource): $url = shortUrl($resource['short_code']); ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($resource['subject'])) ?></span><span class="status">Externe App</span></div><h2><?= h($resource['title']) ?></h2><p><?= h($resource['description']) ?></p><div class="card-actions"><a href="<?= h($url) ?>" target="_blank" rel="noopener">Öffnen</a><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button></div></article><?php endforeach ?></div></section><?php endif ?>
     <dialog id="share-dialog"><button class="dialog-close" aria-label="Schließen">×</button><h2>Freigabe</h2><p>Öffne oder teile diesen Link. Der QR-Code enthält keine Schülerdaten.</p><img id="qr-image" alt="QR-Code zur Übung"><input id="share-url" readonly><button id="copy-url">Link kopieren</button></dialog>
     <?php layout('Dashboard', (string)ob_get_clean());
 }
@@ -121,11 +137,19 @@ function renderExercise(array $exercise): void {
     $content = exerciseContent($exercise);
     ob_start(); ?><section class="exercise" data-engine="<?= h($exercise['type']) ?>" data-content='<?= h(json_encode($content, JSON_UNESCAPED_UNICODE)) ?>'><p class="eyebrow"><?= h(ucfirst($exercise['subject'])) ?> · <?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$exercise['type']]) ?></p><h1><?= h($exercise['title']) ?></h1><p><?= h($exercise['description']) ?></p><div id="exercise-engine" aria-live="polite"></div></section><?php layout(h($exercise['title']), (string)ob_get_clean(), true);
 }
-function publicExercise(string $token): void {
-    $stmt = db()->prepare('SELECT e.*, c.content_json FROM qr_links q JOIN exercises e ON e.id=q.exercise_id JOIN exercise_contents c ON c.exercise_id=e.id WHERE q.token=? AND e.status="published" AND e.is_active=1');
-    $stmt->execute([$token]); $exercise = $stmt->fetch(PDO::FETCH_ASSOC);
+function publicExercise(string $code, bool $isShortCode = false): void {
+    $field = $isShortCode ? 'short_code' : 'token';
+    $stmt = db()->prepare('SELECT e.*, c.content_json FROM qr_links q JOIN exercises e ON e.id=q.exercise_id JOIN exercise_contents c ON c.exercise_id=e.id WHERE q.' . $field . '=? AND e.status="published" AND e.is_active=1');
+    $stmt->execute([$code]); $exercise = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$exercise) { http_response_code(404); layout('Nicht verfügbar', '<section class="notice"><h1>Diese Übung ist nicht verfügbar.</h1><p>Bitte prüfe den Link oder frage deine Lehrkraft.</p></section>', true); return; }
     renderExercise($exercise);
+}
+function publicShortLink(string $code): void {
+    if ($code === 'automaten') { header('Location: ' . automataPublicUrl(), true, 302); exit; }
+    $stmt = db()->prepare('SELECT url FROM external_resources WHERE short_code=? AND is_active=1');
+    $stmt->execute([$code]); $url = $stmt->fetchColumn();
+    if ($url !== false) { header('Location: ' . $url, true, 302); exit; }
+    publicExercise($code, true);
 }
 function previewExercise(int $id): void { $stmt = db()->prepare('SELECT e.*, c.content_json FROM exercises e JOIN exercise_contents c ON c.exercise_id=e.id WHERE e.id=?'); $stmt->execute([$id]); $exercise = $stmt->fetch(PDO::FETCH_ASSOC); if (!$exercise) { http_response_code(404); exit('Nicht gefunden.'); } renderExercise($exercise); }
 
@@ -134,18 +158,20 @@ function saveExercise(?int $id = null): void {
     if (!in_array($subject, ['spanisch','informatik'], true) || !in_array($type, ['quiz','memory','matching','cloze'], true) || !in_array($status, ['draft','published'], true) || $title === '') { http_response_code(422); exit('Ungültige Eingabe.'); }
     try { $content = json_decode(input('content_json'), true, 512, JSON_THROW_ON_ERROR); validateContent($type, $content); } catch (JsonException $e) { http_response_code(422); exit('Der Inhalt ist kein gültiges JSON.'); } catch (InvalidArgumentException $e) { http_response_code(422); exit(h($e->getMessage())); }
     $db = db(); $db->beginTransaction();
-    try { if ($id === null) { $db->prepare('INSERT INTO exercises(subject,title,description,type,status,is_active) VALUES(?,?,?,?,?,?)')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0]); $id = (int)$db->lastInsertId(); $db->prepare('INSERT INTO qr_links(exercise_id,token) VALUES(?,?)')->execute([$id,token()]); } else { $db->prepare('UPDATE exercises SET subject=?,title=?,description=?,type=?,status=?,is_active=?,updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0,$id]); } $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json,updated_at) VALUES(?,?,CURRENT_TIMESTAMP) ON CONFLICT(exercise_id) DO UPDATE SET content_json=excluded.content_json,updated_at=CURRENT_TIMESTAMP')->execute([$id,json_encode($content, JSON_UNESCAPED_UNICODE)]); $db->commit(); } catch(Throwable $e) { $db->rollBack(); throw $e; }
+    try { if ($id === null) { $db->prepare('INSERT INTO exercises(subject,title,description,type,status,is_active) VALUES(?,?,?,?,?,?)')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0]); $id = (int)$db->lastInsertId(); $db->prepare('INSERT INTO qr_links(exercise_id,token,short_code) VALUES(?,?,?)')->execute([$id,token(),shortCode()]); } else { $db->prepare('UPDATE exercises SET subject=?,title=?,description=?,type=?,status=?,is_active=?,updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$subject,$title,$description,$type,$status,isset($_POST['is_active']) ? 1 : 0,$id]); } $db->prepare('INSERT INTO exercise_contents(exercise_id,content_json,updated_at) VALUES(?,?,CURRENT_TIMESTAMP) ON CONFLICT(exercise_id) DO UPDATE SET content_json=excluded.content_json,updated_at=CURRENT_TIMESTAMP')->execute([$id,json_encode($content, JSON_UNESCAPED_UNICODE)]); $db->commit(); } catch(Throwable $e) { $db->rollBack(); throw $e; }
     redirect('/exercise/' . $id . '/edit');
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET'; $path = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
-if (!str_starts_with($path, '/e/')) { session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off']); session_start(); }
+$isPublicLink = str_starts_with($path, '/e/') || str_starts_with($path, '/s/');
+if (!$isPublicLink) { session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off']); session_start(); }
 if ($path === '/login') {
     if (!teacherHash()) { http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; }
     $error = '';
     if ($method === 'POST') { requireCsrf(); if (password_verify((string)($_POST['password'] ?? ''), teacherHash())) { session_regenerate_id(true); $_SESSION['teacher'] = true; redirect('/'); } $error = '<p class="feedback">Passwort nicht korrekt.</p>'; }
     layout('Anmelden', '<section class="notice"><p class="eyebrow">Lehrerbereich</p><h1>Anmelden</h1>' . $error . '<form class="editor" method="post"><input type="hidden" name="csrf" value="' . h(csrf()) . '"><label>Passwort<input type="password" name="password" required autofocus autocomplete="current-password"></label><button>Anmelden</button></form></section>', true); exit;
 }
+if (!$isPublicLink) requireTeacher();
 if ($path === '/logout' && $method === 'POST') { requireCsrf(); $_SESSION = []; session_destroy(); redirect('/login'); }
 if ($method === 'POST' && $path === '/exercise') { requireCsrf(); saveExercise(); }
 if ($method === 'POST' && preg_match('#^/exercise/(\d+)$#', $path, $m)) { requireCsrf(); saveExercise((int)$m[1]); }
@@ -153,5 +179,6 @@ if ($path === '/') { dashboard(); exit; }
 if ($path === '/exercise/new') { form(); exit; }
 if (preg_match('#^/exercise/(\d+)/preview$#', $path, $m)) { previewExercise((int)$m[1]); exit; }
 if (preg_match('#^/exercise/(\d+)/edit$#', $path, $m)) { $stmt=db()->prepare('SELECT e.*,c.content_json FROM exercises e JOIN exercise_contents c ON c.exercise_id=e.id WHERE e.id=?'); $stmt->execute([(int)$m[1]]); $exercise=$stmt->fetch(PDO::FETCH_ASSOC); if(!$exercise){http_response_code(404);exit('Nicht gefunden.');} form($exercise); exit; }
+if (preg_match('#^/s/([A-Za-z0-9_-]{11}|automaten)$#', $path, $m)) { publicShortLink($m[1]); exit; }
 if (preg_match('#^/e/([a-f0-9]{24})$#', $path, $m)) { publicExercise($m[1]); exit; }
 http_response_code(404); layout('Nicht gefunden', '<section class="notice"><h1>Seite nicht gefunden.</h1></section>');
