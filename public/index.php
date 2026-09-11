@@ -94,6 +94,9 @@ function baseUrl(): string {
 function automataPublicUrl(): string {
     return rtrim((string)(getenv('LINGUACODE_AUTOMATA_PUBLIC_URL') ?: 'https://albecabrera.github.io/linguaCode/'), '/') . '/';
 }
+function evaPublicUrl(): string {
+    return rtrim((string)(getenv('LINGUACODE_EVA_PUBLIC_URL') ?: 'https://albecabrera.github.io/linguaCode/eva/'), '/') . '/';
+}
 function h(string $value): string { return htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); }
 function redirect(string $path): never { header('Location: ' . $path, true, 303); exit; }
 function input(string $key, string $default = ''): string { return trim((string)($_POST[$key] ?? $default)); }
@@ -134,6 +137,7 @@ function dashboard(): void {
     if (in_array($subject, ['spanisch', 'informatik'], true)) { $externalSql .= ' AND subject=?'; $externalValues[] = $subject; }
     $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
     $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'pages_url' => studentSiteUrl('z')];
+    $external[] = ['subject' => 'informatik', 'title' => 'Der Handy-Rechner · Klasse 6', 'description' => 'Das EVA-Prinzip mit einem Smartphone-Rechner verstehen.', 'url' => evaPublicUrl(), 'pages_url' => studentSiteUrl('v')];
     ob_start(); ?>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
     <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
