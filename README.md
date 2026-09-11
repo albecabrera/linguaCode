@@ -16,6 +16,8 @@ Alle Schülerübungen werden als reine statische Seite unter [https://albecabrer
 
 Die Seite enthält nur öffentliche Übungen und keine Schülerdaten. Änderungen an `pages/` werden nach einem Push auf `main` automatisch veröffentlicht.
 
+Alle dort hinterlegten Freigaben verwenden einstellige Pages-Pfade (`/s/a/`, `/s/z/` usw.). Dadurch entstehen keine `localhost`-Links. Noch nicht als statische Schülerübung veröffentlichte Dashboard-Entwürfe erhalten bewusst keinen fehlerhaften öffentlichen Link.
+
 ## Öffentlicher PHP-Host und Kurzlinks
 
 Der Lehrerbereich benötigt PHP und SQLite und wird daher **nicht** über GitHub Pages bereitgestellt. Auf dessen öffentlichem PHP-Host müssen vor dem Deployment diese Umgebungsvariablen gesetzt sein:

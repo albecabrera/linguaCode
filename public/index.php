@@ -61,6 +61,24 @@ function migrateShortLinks(PDO $db): void {
     }
 }
 function shortUrl(string $code): string { return baseUrl() . '/s/' . $code; }
+function studentSiteUrl(string $code): string {
+    $siteUrl = rtrim((string)(getenv('LINGUACODE_STUDENT_PUBLIC_URL') ?: 'https://albecabrera.github.io/linguaCode'), '/');
+    return $siteUrl . '/s/' . $code . '/';
+}
+function studentExerciseUrl(array $exercise): ?string {
+    return (int)$exercise['id'] === 1 ? studentSiteUrl('a') : null;
+}
+function studentResourceUrl(string $url): ?string {
+    return match ($url) {
+        'https://albecabrera.github.io/mapa_americalatina_interactivo/' => studentSiteUrl('m'),
+        'https://albecabrera.github.io/code-arena-spiel/' => studentSiteUrl('c'),
+        'https://albecabrera.github.io/escape-room-lacomposicion/' => studentSiteUrl('e'),
+        'https://albecabrera.github.io/kleineseinmaleins/' => studentSiteUrl('t'),
+        'https://albecabrera.github.io/caesar_spiel/' => studentSiteUrl('x'),
+        'https://albecabrera.github.io/panel-didactico/' => studentSiteUrl('p'),
+        default => null,
+    };
+}
 function csrf(): string { return $_SESSION['csrf'] ??= bin2hex(random_bytes(24)); }
 function requireCsrf(): void { if (!hash_equals(csrf(), (string)($_POST['csrf'] ?? ''))) { http_response_code(419); exit('Ungültige Anfrage. Bitte lade die Seite neu.'); } }
 function teacherHash(): string { return (string)getenv('LINGUACODE_TEACHER_PASSWORD_HASH'); }
@@ -115,12 +133,12 @@ function dashboard(): void {
     $externalSql = 'SELECT * FROM external_resources WHERE is_active=1'; $externalValues = [];
     if (in_array($subject, ['spanisch', 'informatik'], true)) { $externalSql .= ' AND subject=?'; $externalValues[] = $subject; }
     $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
-    $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'short_code' => 'automaten'];
+    $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'pages_url' => studentSiteUrl('z')];
     ob_start(); ?>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
     <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
-    <section class="cards"><?php foreach ($exercises as $e): $url = $e['short_code'] ? shortUrl($e['short_code']) : ''; ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><a href="/exercise/<?= $e['id'] ?>/preview" target="_blank" rel="noopener">Vorschau</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
-    <?php if ($external): ?><section class="external-section"><p class="eyebrow">Externe Apps</p><h2>Bestehende interaktive Angebote</h2><div class="cards"><?php foreach ($external as $resource): $url = shortUrl($resource['short_code']); ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($resource['subject'])) ?></span><span class="status">Externe App</span></div><h2><?= h($resource['title']) ?></h2><p><?= h($resource['description']) ?></p><div class="card-actions"><a href="<?= h($url) ?>" target="_blank" rel="noopener">Öffnen</a><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button></div></article><?php endforeach ?></div></section><?php endif ?>
+    <section class="cards"><?php foreach ($exercises as $e): $url = studentExerciseUrl($e); ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><a href="/exercise/<?= $e['id'] ?>/preview" target="_blank" rel="noopener">Vorschau</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php elseif ($e['status'] === 'published' && $e['is_active']): ?><span class="meta">Noch nicht auf Schülerseite veröffentlicht</span><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
+    <?php if ($external): ?><section class="external-section"><p class="eyebrow">Externe Apps</p><h2>Bestehende interaktive Angebote</h2><div class="cards"><?php foreach ($external as $resource): $url = $resource['pages_url'] ?? studentResourceUrl($resource['url']); ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($resource['subject'])) ?></span><span class="status">Externe App</span></div><h2><?= h($resource['title']) ?></h2><p><?= h($resource['description']) ?></p><div class="card-actions"><?php if ($url): ?><a href="<?= h($url) ?>" target="_blank" rel="noopener">Öffnen</a><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php endif ?></div></article><?php endforeach ?></div></section><?php endif ?>
     <dialog id="share-dialog"><button class="dialog-close" aria-label="Schließen">×</button><h2>Freigabe</h2><p>Öffne oder teile diesen Link. Der QR-Code enthält keine Schülerdaten.</p><img id="qr-image" alt="QR-Code zur Übung"><input id="share-url" readonly><button id="copy-url">Link kopieren</button></dialog>
     <?php layout('Dashboard', (string)ob_get_clean());
 }
