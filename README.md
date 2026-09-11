@@ -35,7 +35,7 @@ Setze auf dem Server ausschließlich einen Passwort-Hash, niemals ein Klartextpa
 php -r 'echo password_hash("DEIN-SICHERES-PASSWORT", PASSWORD_DEFAULT), PHP_EOL;'
 ```
 
-Hinterlege das Ergebnis vor einem öffentlichen Plesk-Deployment als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Der aktuelle Erststart lässt den Lehrerbereich bewusst ohne Anmeldung zu, damit die App lokal getestet werden kann. Das ist nur in einer privaten Testumgebung vertretbar; vor einer öffentlichen Bereitstellung muss die Anmeldung aktiviert werden.
+Hinterlege das Ergebnis vor einem öffentlichen Plesk-Deployment als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Der integrierte lokale PHP-Entwicklungsserver lässt den Lehrerbereich bewusst ohne Anmeldung zu. Das gilt **nur** für `php -S`; auf jedem Webserver bleibt der Lehrerbereich ohne Passwort-Hash gesperrt.
 
 ## Prüfung
 

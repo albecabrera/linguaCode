@@ -64,8 +64,9 @@ function shortUrl(string $code): string { return baseUrl() . '/s/' . $code; }
 function csrf(): string { return $_SESSION['csrf'] ??= bin2hex(random_bytes(24)); }
 function requireCsrf(): void { if (!hash_equals(csrf(), (string)($_POST['csrf'] ?? ''))) { http_response_code(419); exit('Ungültige Anfrage. Bitte lade die Seite neu.'); } }
 function teacherHash(): string { return (string)getenv('LINGUACODE_TEACHER_PASSWORD_HASH'); }
+function isLocalDevelopment(): bool { return PHP_SAPI === 'cli-server'; }
 function isTeacher(): bool { return ($_SESSION['teacher'] ?? false) === true; }
-function requireTeacher(): void { if (!teacherHash()) { http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; } if (!isTeacher()) redirect('/login'); }
+function requireTeacher(): void { if (!teacherHash()) { if (isLocalDevelopment()) return; http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; } if (!isTeacher()) redirect('/login'); }
 function baseUrl(): string {
     $configuredUrl = trim((string)getenv('LINGUACODE_PUBLIC_URL'));
     if ($configuredUrl !== '') return rtrim($configuredUrl, '/');
