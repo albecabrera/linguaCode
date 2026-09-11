@@ -51,7 +51,7 @@
       const cleanNumber = input => { const value=Number(input.value); return Number.isInteger(value)&&value>=1&&value<=20 ? value : null; };
       const updateEva=(x,y,op,result)=>{ const expression=`${x} ${symbol(op)} ${y}`; $('#input-text').textContent=`Du hast ${expression} eingegeben.`; $('#process-text').textContent=`Das Smartphone rechnet ${expression}.`; $('#output-text').textContent=`Das Ergebnis ${result} erscheint auf dem Display.`; };
       const pause=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
-      const showPhase=async(id,title,detail)=>{lab.className=`lab animating phase-${id}`;phaseTitle.textContent=title;phaseDetail.textContent=detail;phaseBanner.className=`phase-banner show ${id}`;$$('.eva-block').forEach(el=>el.classList.remove('active'));$('#eva-'+id).classList.add('active');await pause(2500);phaseBanner.className='phase-banner';};
+      const showPhase=async(id,title,detail)=>{lab.className=`lab animating phase-${id}`;phaseTitle.textContent=title;phaseDetail.textContent=detail;phaseBanner.className=`phase-banner show ${id}`;$$('.eva-block').forEach(el=>el.classList.remove('active'));$('#eva-'+id).classList.add('active');await pause(5000);phaseBanner.className='phase-banner';};
       $$('.operation').forEach(button=>button.addEventListener('click',()=>{operator=button.dataset.operator;$$('.operation').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));}));
       $('#calculate').addEventListener('click',async()=>{
         const x=cleanNumber(a), y=cleanNumber(b); if(x===null||y===null){formula.textContent='Bitte Zahlen von 1 bis 20 eingeben.';answer.textContent='!';return;}
