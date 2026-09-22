@@ -27,6 +27,18 @@ if ($path === '/eva' || str_starts_with($path, '/eva/')) {
     readfile($file);
     exit;
 }
+if ($path === '/kara' || str_starts_with($path, '/kara/')) {
+    $relativePath = $path === '/kara' ? '/index.html' : substr($path, strlen('/kara'));
+    $file = realpath(__DIR__ . '/../pages/kara' . $relativePath);
+    $root = realpath(__DIR__ . '/../pages/kara');
+    if ($file === false || $root === false || !str_starts_with($file, $root . DIRECTORY_SEPARATOR) || !is_file($file)) {
+        http_response_code(404);
+        exit('Nicht gefunden.');
+    }
+    header('Content-Type: ' . (mime_content_type($file) ?: 'application/octet-stream'));
+    readfile($file);
+    exit;
+}
 $file = __DIR__ . $path;
 if ($path !== '/' && is_file($file)) {
     return false;
