@@ -5,10 +5,10 @@ Selbst gehostete, datensparsame Plattform für interaktive Übungen in Spanisch 
 ## Start (lokal)
 
 ```bash
-php -S localhost:8080 -t public public/router.php
+php -S localhost:8091 -t public public/router.php
 ```
 
-Die SQLite-Datenbank wird beim ersten Aufruf unter `data/linguacode.sqlite` angelegt. Lehransicht: `http://localhost:8080/`; veröffentlichte Übungen werden über ihre Freigabe-URL geöffnet.
+Die SQLite-Datenbank wird beim ersten Aufruf unter `data/linguacode.sqlite` angelegt. Lehransicht: `http://localhost:8091/`; veröffentlichte Übungen werden über ihre Freigabe-URL geöffnet.
 
 ## Öffentliche Schülerseite (GitHub Pages)
 
