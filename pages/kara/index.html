@@ -1,32 +1,13 @@
 <!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#163047">
-  <title>Kara-Einführung · LinguaCode</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163047"><title>Kara-Sandbox · LinguaCode</title><link rel="stylesheet" href="style.css"></head>
 <body>
-  <header class="topbar"><a class="brand" href="../">Lingua<span>Code</span></a><div class="top-stats"><span>⭐ <b id="stars">0</b></span><span id="mission-count">Mission 1 von 5</span></div></header>
-  <main>
-    <section id="intro" class="intro-card">
-      <p class="eyebrow">Informatik · Klasse 8</p>
-      <h1>Kara-Einführung</h1>
-      <p class="lead">Programmiere Kara mit Zuständen und Übergängen.</p>
-      <div class="explain"><strong>Bevor du startest:</strong> Kara reagiert auf seine Umgebung. Ein <b>Zustand</b> beschreibt, was Kara gerade macht. Ein <b>Übergang</b> sagt: Wenn etwas passiert, führt Kara eine Aktion aus und wechselt weiter.</div>
-      <button id="start-button">Mission 1 starten</button>
-    </section>
-    <section id="game" hidden>
-      <div id="mission-explanation" class="mission-explanation"></div>
-      <div class="workspace">
-        <section class="panel world-panel"><div class="panel-heading"><h2>Kara-Welt</h2><span id="run-state" class="pill">Bereit</span></div><div id="world" class="world" aria-label="Kara-Welt"></div><div class="run-info"><b id="state-label">Zustand: q0</b><span id="transition-label">Noch kein Übergang</span></div><div class="toolbar"><button id="run">▶ Start</button><button id="step">Schritt</button><button id="pause" class="secondary">Pause</button><button id="reset" class="secondary">Reset</button><button id="check">Prüfen</button></div><p id="feedback" class="feedback" aria-live="polite"></p></section>
-        <section class="panel program-panel"><div class="panel-heading"><h2>Dein Programm</h2><span class="hint">Karten anklicken</span></div><p class="explain-small">Ein Zustand ist ein Kreis im Automaten. Ziehe eine Karte in einen Zustand: „Wenn …, dann …“.</p><div id="program" class="program"></div><div class="block-bank"><b>Bausteine</b><div id="blocks" class="blocks"></div></div></section>
-        <section class="panel diagram-panel"><div class="panel-heading"><h2>Zustandsdiagramm</h2><button id="add-state" class="small-button">+ Zustand</button></div><p class="explain-small">Kreise sind Zustände. Pfeile zeigen, wohin Kara bei einer Eingabe wechselt.</p><div id="diagram" class="diagram"></div><div id="diagram-editor" class="diagram-editor"></div></section>
-      </div>
-    </section>
-  </main>
-  <dialog id="mission-dialog"><div id="dialog-content"></div><button id="dialog-close">Weiter</button></dialog>
-  <script src="script.js" defer></script>
-</body>
-</html>
+<header class="topbar"><a class="brand" href="../">Lingua<span>Code</span></a><div class="top-stats"><span>⭐ <b id="stars">0</b></span><span id="save-state">Lokal gespeichert</span></div></header>
+<main>
+<section class="intro-card" id="intro"><p class="eyebrow">Informatik · Klasse 8 · Freie Sandbox</p><h1>Kara programmieren</h1><p class="lead">Baue deinen eigenen Zustandsautomaten – ganz ohne Python oder Java.</p><div class="explain"><strong>So funktioniert es:</strong> Kara liest einen Sensor, führt eine Aktion aus und wechselt in den Zielzustand. Du kannst Welt, Karten und Diagramm jederzeit verändern.</div><button id="start-button">Sandbox öffnen</button> <button id="restore-button" class="secondary" type="button">Gespeicherten Automaten laden</button></section>
+<section id="game" hidden><div class="mission-explanation"><strong>Arbeitsauftrag:</strong> <span id="mission-explanation">Programmiere Kara so, dass er auf seine Umgebung reagiert. Nutze zuerst die Schritt-Taste.</span></div>
+<div class="workspace">
+<section class="panel world-panel"><div class="panel-heading"><h2>Kara-Welt</h2><span id="run-state" class="pill">Bereit</span></div><p class="explain-small">Werkzeug wählen und anschließend ein Feld anklicken. Mit Ziehen kannst du Kara und Gegenstände ebenfalls platzieren.</p><div class="world-tools" id="world-tools"><button class="tool selected" data-tool="kara">🐞 Kara</button><button class="tool" data-tool="turn">↻ Drehen</button><button class="tool" data-tool="tree">🌳 Baum</button><button class="tool" data-tool="clover">☘️ Kleeblatt</button><button class="tool" data-tool="erase">⌫ Entfernen</button></div><div id="world" class="world" aria-label="Kara-Welt"></div><div class="run-info"><b id="state-label">Zustand: q0</b><span id="transition-label">Noch kein Übergang</span></div><div class="toolbar"><button id="run">▶ Start</button><button id="step">Schritt</button><button id="pause" class="secondary">Pause</button><button id="reset" class="secondary">Reset</button><button id="check">Prüfen</button></div><p id="feedback" class="feedback" aria-live="polite"></p></section>
+<section class="panel program-panel"><div class="panel-heading"><h2>Visuelles Programm</h2><span class="hint">Karten bearbeiten</span></div><p class="explain-small">Jede Karte beschreibt: <b>Wenn Sensor</b>, dann <b>Aktion</b>, wechsle zu <b>Zustand</b>.</p><div id="program" class="program"></div><div class="block-bank"><b>Aktionskarten</b><div id="blocks" class="blocks"></div></div></section>
+<section class="panel diagram-panel"><div class="panel-heading"><h2>Zustandsdiagramm</h2><div><button id="add-state" class="small-button">+ Zustand</button><button id="clear-machine" class="small-button danger">Leeren</button></div></div><p class="explain-small">Ziehe Zustände. Ziehe den Punkt <b>↗</b> eines Zustands auf einen anderen, um einen Übergang anzulegen. Ein Klick auf ⚙ öffnet seine Einstellungen.</p><div id="diagram" class="diagram" aria-label="Bearbeitbares Zustandsdiagramm"></div><div id="diagram-editor" class="diagram-editor"></div></section>
+</div></section></main><script src="script.js" defer></script></body></html>
