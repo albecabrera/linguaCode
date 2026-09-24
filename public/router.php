@@ -39,6 +39,18 @@ if ($path === '/kara' || str_starts_with($path, '/kara/')) {
     readfile($file);
     exit;
 }
+if ($path === '/java' || str_starts_with($path, '/java/')) {
+    $relativePath = $path === '/java' ? '/index.html' : substr($path, strlen('/java'));
+    $file = realpath(__DIR__ . '/../pages/java' . $relativePath);
+    $root = realpath(__DIR__ . '/../pages/java');
+    if ($file === false || $root === false || !str_starts_with($file, $root . DIRECTORY_SEPARATOR) || !is_file($file)) {
+        http_response_code(404);
+        exit('Nicht gefunden.');
+    }
+    header('Content-Type: ' . (mime_content_type($file) ?: 'application/octet-stream'));
+    readfile($file);
+    exit;
+}
 $file = __DIR__ . $path;
 if ($path !== '/' && is_file($file)) {
     return false;

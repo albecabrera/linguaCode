@@ -1,0 +1,24 @@
+{
+  "course": "Java Foundations",
+  "title": "Java-Lernen",
+  "subject": "Informatik",
+  "level": "EF/Q1/Q2",
+  "lessons": [
+    {"id":"1.1","title":"Ein erstes Programm","goal":"Ausgaben schreiben, lesen und debuggen.","tasks":[
+      {"id":"java-1-1-predict","type":"predict","title":"Predict","instruction":"Was erscheint?","code":"System.out.println(\"A\");\nSystem.out.println(\"B\");","options":["A B in einer Zeile","A und danach B","Nur B"],"answer":1,"explanation":"println schreibt jede Ausgabe in eine neue Zeile."},
+      {"id":"java-1-1-completion","type":"completion","title":"Code Completion","instruction":"Ergänze den Befehl, der Text ausgibt.","starterCode":"public class Main {\n  public static void main(String[] args) {\n    System.out.________(\"Hallo Java!\");\n  }\n}","expected":"println","hints":["Du möchtest Text ausgeben.","Dafür kennst du println().","Die Lösung lautet: println"],"solution":"println"},
+      {"id":"java-1-1-output","type":"code","title":"Deine erste Ausgabe","instruction":"Gib exakt Ich lerne Java! aus.","starterCode":"public class Main {\n  public static void main(String[] args) {\n    \n  }\n}","validation":{"compile":true,"expectedOutput":"Ich lerne Java!"},"hints":["Du möchtest Text ausgeben.","Verwende System.out.println(...)."],"solution":"System.out.println(\"Ich lerne Java!\");"},
+      {"id":"java-1-1-debug","type":"code","title":"Debugging","instruction":"Finde den Fehler und gib Hallo aus.","starterCode":"public class Main {\n  public static void main(String[] args) {\n    System.out.println(\"Hallo\")\n  }\n}","validation":{"compile":true,"expectedOutput":"Hallo"},"hints":["Am Ende einer Java-Anweisung fehlt etwas.","Java erwartet häufig ein Semikolon ;"],"solution":"System.out.println(\"Hallo\");"}
+    ]},
+    {"id":"1.2","title":"Klassen und Objekte","goal":"Klasse als Bauplan und Objekt als Exemplar unterscheiden.","tasks":[
+      {"id":"java-1-2-concept","type":"text","title":"Konzept-Check","instruction":"Wie viele Klassen und wie viele Objekte entstehen?","code":"Robot robin = new Robot();\nRobot alex = new Robot();","answerText":"1 Klasse, 2 Objekte","explanation":"Robot ist der Bauplan. robin und alex sind zwei konkrete Objekte."},
+      {"id":"java-1-2-builder","type":"completion","title":"Code Builder","instruction":"Baue die Objekt-Erzeugung in der richtigen Reihenfolge.","starterCode":"__________","expected":"Robot robin = new Robot();","hints":["Der Klassenname steht zuerst.","Danach folgen Objektname und Zuweisung."],"solution":"Robot robin = new Robot();"},
+      {"id":"java-1-2-code","type":"code","title":"Zwei Objekte","instruction":"Erzeuge zwei Objekte robin und alex der Klasse Robot.","starterCode":"class Robot {}\n\npublic class Main {\n  public static void main(String[] args) {\n    \n  }\n}","validation":{"compile":true,"requiredPatterns":["Robot robin","new Robot","Robot alex"]},"hints":["Ein Objekt wird mit new erzeugt.","Erzeuge zwei Variablen vom Typ Robot."],"solution":"Robot robin = new Robot();\nRobot alex = new Robot();"}
+    ]},
+    {"id":"1.3","title":"Variablen","goal":"Variablen deklarieren, verändern und ausgeben.","tasks":[
+      {"id":"java-1-3-type","type":"completion","title":"Datentyp","instruction":"Ergänze den Datentyp für eine Ganzzahl.","starterCode":"_____ age = 16;","expected":"int","hints":["age ist eine Ganzzahl.","Der Java-Datentyp für Ganzzahlen heißt int."],"solution":"int"},
+      {"id":"java-1-3-code","type":"code","title":"Variable erstellen","instruction":"Erzeuge eine Ganzzahlvariable score mit dem Wert 100.","starterCode":"public class Main {\n  public static void main(String[] args) {\n    \n  }\n}","validation":{"compile":true,"requiredPatterns":["int score","100"]},"hints":["Beginne mit dem Datentyp int.","Der Variablenname ist score."],"solution":"int score = 100;"},
+      {"id":"java-1-3-trace","type":"code","title":"Code Trace","instruction":"Führe den Code aus und prüfe die Ausgabe 20.","starterCode":"public class Main {\n  public static void main(String[] args) {\n    int points = 5;\n    points = 10;\n    points = 20;\n    System.out.println(points);\n  }\n}","validation":{"compile":true,"expectedOutput":"20","requiredPatterns":["int points","points = 20"]},"hints":["Eine Variable kann einen neuen Wert erhalten.","Am Ende enthält points den Wert 20."],"solution":"System.out.println(points);"}
+    ]}
+  ]
+}

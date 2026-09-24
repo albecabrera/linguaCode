@@ -56,4 +56,6 @@ Die Prüfung validiert die SQLite-Tabellen sowie die Fremdschlüssel-Löschung v
 
 Die JSON-Formate der vier Engines stehen in [`docs/content-formats.md`](docs/content-formats.md).
 
+Das Java-Lab für Informatik EF/Q1/Q2 ist unter `/java` integriert. Architektur und Betrieb stehen in [`docs/java-lab.md`](docs/java-lab.md). Die sichere Java-Ausführung bleibt standardmäßig deaktiviert, bis ein administrativ geprüfter Docker-Runner eingerichtet ist.
+
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/java-runner.php';
+
 const ROOT = __DIR__ . '/..';
 const DB_PATH = ROOT . '/data/linguacode.sqlite';
 
@@ -86,6 +88,7 @@ function externalShareUrl(array $resource): string {
     return shortUrl(match ($resource['title'] ?? '') {
         'Zustandsautomaten · Klasse 8' => 'automaten',
         'Kara-Einführung' => 'kara',
+        'Java-Lernen' => 'java',
         default => '',
     });
 }
@@ -109,6 +112,9 @@ function evaPublicUrl(): string {
 }
 function karaPublicUrl(): string {
     return rtrim((string)(getenv('LINGUACODE_KARA_PUBLIC_URL') ?: 'https://albecabrera.github.io/linguaCode/kara/'), '/') . '/';
+}
+function javaPublicUrl(): string {
+    return rtrim((string)(getenv('LINGUACODE_JAVA_PUBLIC_URL') ?: baseUrl() . '/java'), '/') . '/';
 }
 function h(string $value): string { return htmlspecialchars($value, ENT_QUOTES, 'UTF-8'); }
 function redirect(string $path): never { header('Location: ' . $path, true, 303); exit; }
@@ -151,6 +157,7 @@ function dashboard(): void {
     $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
     $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'pages_url' => studentSiteUrl('z')];
     $external[] = ['subject' => 'informatik', 'title' => 'Kara-Einführung', 'description' => 'Kara mit Zuständen, Sensoren und Übergängen programmieren.', 'url' => karaPublicUrl(), 'pages_url' => studentSiteUrl('kara')];
+    $external[] = ['subject' => 'informatik', 'title' => 'Java-Lernen', 'description' => 'Java Foundations mit Editor, Compiler-Feedback und drei Grundlagenlektionen.', 'url' => javaPublicUrl(), 'pages_url' => javaPublicUrl()];
     ob_start(); ?>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
     <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
@@ -183,6 +190,7 @@ function publicExercise(string $code, bool $isShortCode = false): void {
 function publicShortLink(string $code): void {
     if ($code === 'automaten') { header('Location: ' . automataPublicUrl(), true, 302); exit; }
     if ($code === 'kara') { header('Location: ' . karaPublicUrl(), true, 302); exit; }
+    if ($code === 'java') { header('Location: ' . javaPublicUrl(), true, 302); exit; }
     $stmt = db()->prepare('SELECT url FROM external_resources WHERE short_code=? AND is_active=1');
     $stmt->execute([$code]); $url = $stmt->fetchColumn();
     if ($url !== false) { header('Location: ' . $url, true, 302); exit; }
@@ -199,9 +207,81 @@ function saveExercise(?int $id = null): void {
     redirect('/exercise/' . $id . '/edit');
 }
 
+function javaTasks(): array {
+    static $tasks;
+    if ($tasks === null) $tasks = json_decode((string)file_get_contents(ROOT . '/pages/java/tasks.json'), true, 512, JSON_THROW_ON_ERROR);
+    return $tasks;
+}
+function javaTask(string $id): ?array {
+    foreach (javaTasks()['lessons'] as $lesson) foreach ($lesson['tasks'] as $task) if ($task['id'] === $id) return $task;
+    return null;
+}
+function javaNormalizeOutput(string $value): string { return trim(str_replace(["\r\n", "\r"], "\n", $value)); }
+function javaFeedback(array $result, ?array $task = null): array {
+    if ($result['status'] === 'runner-unavailable') return ['title' => 'Java-Runner nicht aktiviert.', 'detail' => 'Der sichere Docker-Runner muss serverseitig eingerichtet werden.'];
+    if ($result['status'] === 'compile-error') return ['title' => '✕ Java kann deinen Code noch nicht kompilieren.', 'detail' => $result['stderr']];
+    if ($result['status'] === 'runtime-error') return ['title' => '✕ Laufzeitfehler.', 'detail' => $result['stderr'] ?: 'Das Programm wurde mit einem Fehler beendet.'];
+    if ($task && !empty($task['validation']['expectedOutput']) && javaNormalizeOutput($result['stdout']) !== javaNormalizeOutput((string)$task['validation']['expectedOutput'])) return ['title' => 'Der Code läuft, aber die Ausgabe stimmt noch nicht.', 'detail' => 'Erwartet: ' . $task['validation']['expectedOutput']];
+    return ['title' => '✓ Richtig!', 'detail' => 'Ausgabe und Kompilierung passen.'];
+}
+function javaConceptPresent(string $concept, string $code): bool {
+    return match ($concept) {
+        'variableDeclaration' => preg_match('/\b(?:int|double|String|boolean)\s+[A-Za-z_]\w*\s*=/', $code) === 1,
+        'int' => preg_match('/\bint\b/', $code) === 1,
+        'objectCreation' => preg_match('/\bnew\s+[A-Za-z_]\w*\s*\(/', $code) === 1,
+        'class' => preg_match('/\bclass\s+[A-Za-z_]\w*/', $code) === 1,
+        'println' => str_contains($code, 'System.out.println'),
+        default => false,
+    };
+}
+function javaJsonResponse(array $payload, int $status = 200): never {
+    http_response_code($status); header('Content-Type: application/json; charset=utf-8'); echo json_encode($payload, JSON_UNESCAPED_UNICODE); exit;
+}
+function javaRateLimit(): void {
+    $key = hash('sha256', (string)($_SERVER['REMOTE_ADDR'] ?? 'unknown') . '|' . (string)(getenv('LINGUACODE_RATE_LIMIT_SALT') ?: 'linguacode-java'));
+    $file = sys_get_temp_dir() . '/linguacode-java-rate-' . $key;
+    $now = time(); $state = ['start' => $now, 'count' => 0];
+    $handle = @fopen($file, 'c+');
+    if (!$handle) return;
+    flock($handle, LOCK_EX); $saved = json_decode(stream_get_contents($handle), true);
+    if (is_array($saved) && ($now - (int)($saved['start'] ?? 0)) < 60) $state = $saved;
+    if ($now - $state['start'] >= 60) $state = ['start' => $now, 'count' => 0];
+    $state['count']++;
+    ftruncate($handle, 0); rewind($handle); fwrite($handle, json_encode($state)); fflush($handle); flock($handle, LOCK_UN); fclose($handle);
+    if ($state['count'] > 30) javaJsonResponse(['success'=>false,'status'=>'rate-limit','message'=>'Zu viele Ausführungen. Bitte warte kurz.'], 429);
+}
+function javaApi(string $action): never {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') javaJsonResponse(['success'=>false,'message'=>'Nur POST ist erlaubt.'], 405);
+    $origin = (string)($_SERVER['HTTP_ORIGIN'] ?? '');
+    if ($origin !== '' && parse_url($origin, PHP_URL_HOST) !== parse_url(baseUrl(), PHP_URL_HOST)) javaJsonResponse(['success'=>false,'message'=>'Unzulässige Herkunft.'], 403);
+    javaRateLimit();
+    $raw = file_get_contents('php://input');
+    if (strlen($raw) > 24000) javaJsonResponse(['success'=>false,'status'=>'input-too-large','message'=>'Der Request ist zu groß.'], 413);
+    try { $input = json_decode($raw ?: '{}', true, 32, JSON_THROW_ON_ERROR); } catch (JsonException) { javaJsonResponse(['success'=>false,'message'=>'Ungültiges JSON.'], 400); }
+    $code = (string)($input['code'] ?? '');
+    if ($code === '') javaJsonResponse(['success'=>false,'message'=>'Code fehlt.'], 422);
+    $task = !empty($input['taskId']) ? javaTask((string)$input['taskId']) : null;
+    if ($action === 'check' && !$task) javaJsonResponse(['success'=>false,'message'=>'Unbekannte Aufgabe.'], 422);
+    try { $result = javaRunner()->run($code); } catch (Throwable $error) { javaJsonResponse(['success'=>false,'status'=>'server-error','message'=>'Java-Ausführung konnte nicht gestartet werden.'], 500); }
+    $result['feedback'] = javaFeedback($result, $action === 'check' ? $task : null);
+    if ($action === 'check' && $result['success'] && $task) {
+        $validation = $task['validation'] ?? [];
+        $outputOk = empty($validation['expectedOutput']) || javaNormalizeOutput($result['stdout']) === javaNormalizeOutput((string)$validation['expectedOutput']);
+        $patternsOk = true;
+        foreach (($validation['requiredPatterns'] ?? []) as $pattern) if (!str_contains($code, (string)$pattern)) $patternsOk = false;
+        foreach (($validation['forbiddenPatterns'] ?? []) as $pattern) if (str_contains($code, (string)$pattern)) $patternsOk = false;
+        foreach (($validation['requiredConcepts'] ?? []) as $concept) if (!javaConceptPresent((string)$concept, $code)) $patternsOk = false;
+        $result['success'] = $outputOk && $patternsOk;
+        if (!$result['success']) $result['feedback'] = $outputOk ? ['title'=>'⚠ Fast geschafft.', 'detail'=>'Der Code läuft, aber ein gefordertes Konzept fehlt noch.'] : javaFeedback($result, $task);
+    }
+    javaJsonResponse($result);
+}
+
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET'; $path = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
+$isJavaApi = preg_match('#^/api/java/(run|check)$#', $path, $javaMatch) === 1;
 $isPublicLink = str_starts_with($path, '/e/') || str_starts_with($path, '/s/');
 if (!$isPublicLink) { session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax', 'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off']); session_start(); }
+if ($isJavaApi) javaApi($javaMatch[1]);
 if ($path === '/login') {
     if (!teacherHash()) { http_response_code(503); layout('Einrichtung erforderlich', '<section class="notice"><h1>Lehrerbereich noch nicht eingerichtet.</h1><p>Setze auf dem Server <code>LINGUACODE_TEACHER_PASSWORD_HASH</code>.</p></section>', true); exit; }
     $error = '';
@@ -216,6 +296,6 @@ if ($path === '/') { dashboard(); exit; }
 if ($path === '/exercise/new') { form(); exit; }
 if (preg_match('#^/exercise/(\d+)/preview$#', $path, $m)) { previewExercise((int)$m[1]); exit; }
 if (preg_match('#^/exercise/(\d+)/edit$#', $path, $m)) { $stmt=db()->prepare('SELECT e.*,c.content_json FROM exercises e JOIN exercise_contents c ON c.exercise_id=e.id WHERE e.id=?'); $stmt->execute([(int)$m[1]]); $exercise=$stmt->fetch(PDO::FETCH_ASSOC); if(!$exercise){http_response_code(404);exit('Nicht gefunden.');} form($exercise); exit; }
-if (preg_match('#^/s/([A-Za-z0-9_-]{11}|automaten|kara)$#', $path, $m)) { publicShortLink($m[1]); exit; }
+if (preg_match('#^/s/([A-Za-z0-9_-]{11}|automaten|kara|java)$#', $path, $m)) { publicShortLink($m[1]); exit; }
 if (preg_match('#^/e/([a-f0-9]{24})$#', $path, $m)) { publicExercise($m[1]); exit; }
 http_response_code(404); layout('Nicht gefunden', '<section class="notice"><h1>Seite nicht gefunden.</h1></section>');
