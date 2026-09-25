@@ -8,7 +8,7 @@
   const progressValue = document.querySelector('#progress-value');
   const progressTitle = document.querySelector('#progress-title');
   const storageKey = 'linguacode-imperfecto-mastery-v1';
-  const groups = { ar: ['o','as','a','amos','áis','an'], er: ['o','es','e','emos','éis','en'], ir: ['o','es','e','imos','ís','en'] };
+  const groups = { ar: ['aba','abas','aba','ábamos','abais','aban'], er: ['ía','ías','ía','íamos','íais','ían'], ir: ['ía','ías','ía','íamos','íais','ían'] };
   const persons = { yo:0, tú:1, él:2, ella:2, usted:2, nosotros:3, nosotras:3, vosotros:4, vosotras:4, ellos:5, ellas:5, ustedes:5 };
   const level1 = [
     {kind:'input', verb:'hablar', group:'ar', person:'yo', answer:'hablaba'},
@@ -41,7 +41,7 @@
   const mistakeKey = (group, person) => `${group}-${person}`;
   const save = () => localStorage.setItem(storageKey, JSON.stringify({ mistakes:state.mistakes, level1Done:state.level1Score === level1.length }));
   const esc = (value) => String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
-  const normalize = (value) => value.trim().toLowerCase().replace(/[áéíóúü]/g, (char) => ({á:'á',é:'é',í:'í',ó:'ó',ú:'ú',ü:'ü'}[char]));
+  const normalize = (value) => value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const conjugation = (item) => { const stem = item.verb.slice(0,-2); return stem + groups[item.group][persons[item.person]]; };
   const ending = (item) => groups[item.group][persons[item.person]];
   const setProgress = (title, current, total) => { const percent = Math.round((current / total) * 100); progressTitle.textContent = title; progressValue.textContent = `${percent} %`; progressBar.style.width = `${percent}%`; };
