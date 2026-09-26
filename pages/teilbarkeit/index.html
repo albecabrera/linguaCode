@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <title>Teilbarkeitsregeln · Mathematik</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../">Lingua<span>Code</span></a>
+    <span class="subject-pill">MATHEMATIK · TEILBARKEITSREGELN</span>
+    <button class="small-button" id="sound-toggle" type="button" aria-pressed="true">🔊 Ton</button>
+  </header>
+
+  <main>
+    <section class="screen active" id="start-screen">
+      <div class="hero-copy">
+        <p class="kicker">DIE ZAHLEN-DETEKTEI</p>
+        <h1>Teilbarkeitsregeln</h1>
+        <p class="lead">Finde schnell heraus, ob eine Zahl durch <strong>2, 3, 4, 5, 6, 8, 9 oder 10</strong> teilbar ist.</p>
+      </div>
+      <div class="rule-preview" aria-label="Teilbarkeitsregeln">
+        <span><b>2</b> gerade Zahl</span><span><b>3</b> Quersumme</span><span><b>5</b> 0 oder 5</span><span><b>10</b> endet auf 0</span>
+      </div>
+      <div class="panel start-panel">
+        <h2>Wähle deinen Lernweg</h2>
+        <div class="mode-grid" role="group" aria-label="Lernweg">
+          <button class="mode-card selected" data-mode="learn" type="button"><span>📚</span><strong>Entdecken</strong><small>Regeln als Karteikarten</small></button>
+          <button class="mode-card" data-mode="practice" type="button"><span>🎯</span><strong>Trainieren</strong><small>Zahlen richtig zuordnen</small></button>
+          <button class="mode-card" data-mode="master" type="button"><span>🏆</span><strong>Meisterprüfung</strong><small>Gemischte Aufgaben</small></button>
+        </div>
+        <button class="primary" id="start-button" type="button">Lernweg starten 🚀</button>
+      </div>
+      <p class="privacy-note">Ohne Anmeldung · Fortschritt bleibt nur auf diesem Gerät.</p>
+    </section>
+
+    <section class="screen" id="activity-screen" hidden>
+      <div class="activity-head"><div><p class="kicker" id="mode-label">ENTDECKEN</p><h1 id="activity-title">Regelkarte</h1></div><button class="ghost" id="back-button" type="button">← Start</button></div>
+      <div class="progress-wrap"><div><span id="counter">Karte 1 von 8</span><span id="score">0 Punkte</span></div><div class="progress-track"><i id="progress-bar"></i></div></div>
+      <article class="card" id="card" aria-live="polite"></article>
+      <p class="feedback" id="feedback" role="status"></p>
+      <div class="activity-actions"><button class="hint" id="hint-button" type="button">💡 Tipp</button><button class="ghost" id="next-button" type="button">Weiter →</button></div>
+    </section>
+
+    <section class="screen" id="finish-screen" hidden>
+      <div class="finish-card"><div class="celebration">🎉 ⭐ 🎉</div><p class="kicker">GESCHAFFT</p><h1 id="finish-title">Starke Leistung!</h1><p id="finish-message"></p><div class="result-grid"><div><b id="finish-score">0</b><small>Punkte</small></div><div><b id="finish-correct">0/8</b><small>richtig</small></div></div><button class="primary" id="again-button" type="button">Noch einmal spielen</button><button class="ghost" id="home-button" type="button">Zur Startseite</button></div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
