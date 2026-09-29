@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#3158a6">
+  <title>Hardware oder Software? · Informatik Klasse 6</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../">Lingua<span>Code</span></a>
+    <span class="subject-pill">INFORMATIK · KLASSE 6</span>
+    <button class="small-button" id="sound-toggle" type="button" aria-pressed="true">🔊 Ton</button>
+  </header>
+
+  <main>
+    <section class="screen active" id="start-screen">
+      <div class="hero-copy">
+        <p class="kicker">INFORMATIK · KLASSE 6</p>
+        <h1>Hardware oder Software?</h1>
+        <p class="lead">Ordne Geräte, Programme und Apps richtig zu.</p>
+      </div>
+      <div class="rule-preview"><span>🖥️ <b>Hardware</b> = anfassen</span><span>💻 <b>Software</b> = Programme</span></div>
+      <div class="panel start-panel">
+        <h2>Wähle dein Level</h2>
+        <div class="level-grid" role="group" aria-label="Schwierigkeitsstufe">
+          <button class="level-card selected" data-level="1" type="button"><span>🌱</span><strong>Level 1 · Einfach</strong><small>Eindeutige Beispiele</small></button>
+          <button class="level-card" data-level="2" type="button"><span>🚀</span><strong>Level 2 · Alltag</strong><small>Geräte und Apps aus deinem Alltag</small></button>
+          <button class="level-card" data-level="3" type="button"><span>🧠</span><strong>Level 3 · Denkaufgaben</strong><small>Genauer hinschauen und erklären</small></button>
+        </div>
+        <div class="settings">
+          <label for="card-count">Karten pro Runde</label>
+          <select id="card-count"><option value="10">10 Karten</option><option value="15" selected>15 Karten</option><option value="20">20 Karten</option><option value="all">Alle Karten</option></select>
+          <label class="check"><input id="quick-mode" type="checkbox"> ⚡ Schneller Spielmodus</label>
+          <label class="check"><input id="sort-mode" type="checkbox"> 🗂️ Sortierspiel</label>
+        </div>
+        <button class="primary" id="start-button" type="button">Spiel starten 🚀</button>
+      </div>
+      <div class="memory-cards"><article><b>🖥️ Hardware</b><p>Geräte und Computerteile, die man anfassen kann.</p></article><article><b>💻 Software</b><p>Programme und Apps, die auf einem Gerät laufen.</p></article></div>
+      <p class="privacy-note">Ohne Anmeldung · Fortschritt bleibt nur auf diesem Gerät.</p>
+    </section>
+
+    <section class="screen" id="activity-screen" hidden>
+      <div class="activity-head"><div><p class="kicker" id="mode-label">LEVEL 1 · EINFACH</p><h1 id="activity-title">Hardware oder Software?</h1></div><button class="ghost" id="back-button" type="button">← Start</button></div>
+      <div class="progress-wrap"><div><span id="counter">Karte 1 von 15</span><span>⭐ <b id="score">0</b> · ✅ <b id="correct-count">0</b> · ❌ <b id="error-count">0</b></span></div><div class="progress-track"><i id="progress-bar"></i></div><p id="streak" class="streak" hidden>🔥 Serie: 0</p></div>
+      <div id="quiz-view">
+        <article class="card" id="card" aria-live="polite"></article>
+        <p class="feedback" id="feedback" role="status"></p>
+        <div class="answer-grid"><button class="answer hardware" data-answer="hardware" type="button">🖥️ HARDWARE<small>Gerät zum Anfassen</small></button><button class="answer software" data-answer="software" type="button">💻 SOFTWARE<small>Programm oder App</small></button></div>
+        <div class="activity-actions"><button class="hint" id="hint-button" type="button">💡 Tipp</button><button class="ghost" id="next-button" type="button" disabled>Weiter →</button></div>
+      </div>
+      <div id="sort-view" hidden><div class="sort-instructions">Ziehe die Karte in den passenden Bereich – oder tippe zuerst auf eine Kategorie und dann auf die Karte.</div><div class="sort-zones"><button class="sort-zone hardware-zone" data-answer="hardware" type="button"><strong>🖥️ HARDWARE</strong><small>Geräte zum Anfassen</small></button><button class="sort-zone software-zone" data-answer="software" type="button"><strong>💻 SOFTWARE</strong><small>Programme und Apps</small></button></div></div>
+    </section>
+
+    <section class="screen" id="finish-screen" hidden>
+      <div class="finish-card"><div class="celebration">🎉 ⭐ 🎉</div><p class="kicker">GESCHAFFT!</p><h1 id="finish-title">Starke Leistung!</h1><p id="finish-message"></p><div class="result-grid"><div><b id="finish-correct">0/15</b><small>richtig</small></div><div><b id="finish-score">0</b><small>Punkte</small></div></div><div class="memory-cards"><article><b>🖥️ Hardware</b><p>Geräte und Computerteile, die man anfassen kann.</p><span>⌨️ Maus · 🖥️ Bildschirm · 🖨️ Drucker</span></article><article><b>💻 Software</b><p>Programme und Apps, die auf einem Gerät laufen.</p><span>Word · Scratch · Minecraft · Browser</span></article></div><div class="final-question"><h2>Was ist der wichtigste Unterschied?</h2><div id="final-options"></div><p class="feedback" id="final-feedback" role="status"></p></div><button class="primary" id="again-button" type="button">Noch einmal spielen</button><button class="ghost" id="home-button" type="button">Zur Startseite</button></div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
