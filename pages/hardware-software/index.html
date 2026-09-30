@@ -44,13 +44,13 @@
     <section class="screen" id="activity-screen" hidden>
       <div class="activity-head"><div><p class="kicker" id="mode-label">LEVEL 1 · EINFACH</p><h1 id="activity-title">Hardware oder Software?</h1></div><button class="ghost" id="back-button" type="button">← Start</button></div>
       <div class="progress-wrap"><div><span id="counter">Karte 1 von 15</span><span>⭐ <b id="score">0</b> · ✅ <b id="correct-count">0</b> · ❌ <b id="error-count">0</b></span></div><div class="progress-track"><i id="progress-bar"></i></div><p id="streak" class="streak" hidden>🔥 Serie: 0</p></div>
+      <article class="card" id="card" aria-live="polite"></article>
+      <p class="feedback" id="feedback" role="status"></p>
       <div id="quiz-view">
-        <article class="card" id="card" aria-live="polite"></article>
-        <p class="feedback" id="feedback" role="status"></p>
         <div class="answer-grid"><button class="answer hardware" data-answer="hardware" type="button">🖥️ HARDWARE<small>Gerät zum Anfassen</small></button><button class="answer software" data-answer="software" type="button">💻 SOFTWARE<small>Programm oder App</small></button></div>
-        <div class="activity-actions"><button class="hint" id="hint-button" type="button">💡 Tipp</button><button class="ghost" id="next-button" type="button" disabled>Weiter →</button></div>
       </div>
       <div id="sort-view" hidden><div class="sort-instructions">Ziehe die Karte in den passenden Bereich – auf Touchgeräten genügt ein Tipp auf die passende Kategorie.</div><div class="sort-zones"><button class="sort-zone hardware-zone" data-answer="hardware" type="button"><strong>🖥️ HARDWARE</strong><small>Geräte zum Anfassen</small></button><button class="sort-zone software-zone" data-answer="software" type="button"><strong>💻 SOFTWARE</strong><small>Programme und Apps</small></button></div></div>
+      <div class="activity-actions"><button class="hint" id="hint-button" type="button">💡 Tipp</button><button class="ghost" id="next-button" type="button" disabled>Weiter →</button></div>
     </section>
 
     <section class="screen" id="finish-screen" hidden>
