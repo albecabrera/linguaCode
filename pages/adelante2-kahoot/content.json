@@ -1,0 +1,358 @@
+{
+  "workbook": "Vamos Adelante 2",
+  "version": 1,
+  "units": [
+    {
+      "id": "unidad-1",
+      "label": "Unidad 1",
+      "contents": [
+        {
+          "id": "u1-primer-paso-comunidad",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la comunidad autónoma",
+          "german": "die autonome Region",
+          "tags": ["geografía", "comunidad"]
+        },
+        {
+          "id": "u1-primer-paso-provincia",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la provincia",
+          "german": "die Provinz",
+          "tags": ["geografía"]
+        },
+        {
+          "id": "u1-primer-paso-situacion",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la situación",
+          "german": "die Lage; die Situation",
+          "tags": ["geografía"]
+        },
+        {
+          "id": "u1-primer-paso-norte",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "en el norte",
+          "german": "im Norden",
+          "tags": ["geografie", "Himmelsrichtung"]
+        },
+        {
+          "id": "u1-primer-paso-limitar",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "limitar con …",
+          "german": "grenzen an …",
+          "tags": ["geografía", "verb"]
+        },
+        {
+          "id": "u1-primer-paso-isla",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la isla",
+          "german": "die Insel",
+          "tags": ["geografía"]
+        },
+        {
+          "id": "u1-primer-paso-pincho",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el pincho",
+          "german": "das Häppchen",
+          "tags": ["essen"]
+        },
+        {
+          "id": "u1-primer-paso-pais-vasco",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el País Vasco",
+          "german": "das Baskenland",
+          "tags": ["region", "geografía"]
+        },
+        {
+          "id": "u1-primer-paso-beso",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el beso",
+          "german": "der Kuss",
+          "tags": ["personen"]
+        },
+        {
+          "id": "u1-primer-paso-senal",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la señal",
+          "german": "das Verkehrsschild",
+          "tags": ["verkehr"]
+        },
+        {
+          "id": "u1-primer-paso-euskera",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el euskera",
+          "german": "Baskisch; die baskische Sprache",
+          "tags": ["sprache", "region"]
+        },
+        {
+          "id": "u1-primer-paso-practicar",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "practicar deporte",
+          "displaySpanish": "practicar (c-qu) deporte",
+          "german": "Sport treiben",
+          "special": "c-qu",
+          "tags": ["sport", "verb"]
+        },
+        {
+          "id": "u1-primer-paso-remo",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el remo",
+          "german": "das Rudern",
+          "tags": ["sport"]
+        },
+        {
+          "id": "u1-primer-paso-ria",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la ría",
+          "german": "Meeresarm, der weit in das Land hineinreicht",
+          "tags": ["geografía"]
+        },
+        {
+          "id": "u1-primer-paso-puente",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el puente",
+          "german": "die Brücke",
+          "tags": ["stadt"]
+        },
+        {
+          "id": "u1-primer-paso-torre",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la torre",
+          "german": "der Turm",
+          "tags": ["stadt"]
+        },
+        {
+          "id": "u1-primer-paso-cala",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la cala",
+          "german": "die Bucht",
+          "tags": ["geografía"]
+        },
+        {
+          "id": "u1-primer-paso-ensaimada",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la ensaimada",
+          "german": "die Ensaimada",
+          "tags": ["essen"]
+        },
+        {
+          "id": "u1-primer-paso-dulce",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el dulce",
+          "german": "die Süßspeise; das Gebäckstück",
+          "tags": ["essen"]
+        },
+        {
+          "id": "u1-primer-paso-sierra",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "la sierra",
+          "german": "die Gebirgskette",
+          "tags": ["geografía"]
+        },
+        {
+          "id": "u1-primer-paso-barco",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el barco",
+          "german": "das Schiff; das Boot",
+          "tags": ["verkehr"]
+        },
+        {
+          "id": "u1-primer-paso-puerto",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el puerto",
+          "german": "der Hafen",
+          "tags": ["verkehr"]
+        },
+        {
+          "id": "u1-primer-paso-catalan",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "primer-paso",
+          "blockLabel": "Primer paso",
+          "spanish": "el catalán",
+          "german": "Katalanisch; die katalanische Sprache",
+          "tags": ["sprache", "region"]
+        },
+        {
+          "id": "u1-bloque-a-colegio",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "el colegio",
+          "german": "die Schule",
+          "tags": ["schule"]
+        },
+        {
+          "id": "u1-bloque-a-casco-viejo",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "el casco viejo",
+          "german": "die Altstadt",
+          "tags": ["stadt"]
+        },
+        {
+          "id": "u1-bloque-a-todo",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "todo el … / toda la …",
+          "german": "der/die/das ganze …",
+          "tags": ["ausdruck"]
+        },
+        {
+          "id": "u1-bloque-a-parte",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "la parte",
+          "german": "der Teil",
+          "tags": ["ausdruck"]
+        },
+        {
+          "id": "u1-bloque-a-probar",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "probar algo",
+          "displaySpanish": "probar (-ue-) algo",
+          "german": "etwas probieren",
+          "special": "-ue-",
+          "tags": ["verb"]
+        },
+        {
+          "id": "u1-bloque-a-dar",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "dar un paseo",
+          "displaySpanish": "dar (irr.) un paseo",
+          "german": "spazieren gehen",
+          "special": "irr.",
+          "tags": ["freizeit", "verb"]
+        },
+        {
+          "id": "u1-bloque-a-trafico",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "el tráfico",
+          "german": "der Verkehr",
+          "tags": ["verkehr"]
+        },
+        {
+          "id": "u1-bloque-a-zona-peatonal",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "la zona peatonal",
+          "german": "die Fußgängerzone",
+          "tags": ["stadt", "verkehr"]
+        },
+        {
+          "id": "u1-bloque-a-gritar",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "gritar",
+          "german": "schreien",
+          "tags": ["verb"]
+        },
+        {
+          "id": "u1-bloque-a-vasco",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "el vasco",
+          "german": "Baskisch; die baskische Sprache",
+          "tags": ["sprache", "region"]
+        },
+        {
+          "id": "u1-bloque-a-antes",
+          "type": "vocabulario",
+          "typeLabel": "Vokabulario",
+          "block": "bloque-a",
+          "blockLabel": "Bloque A",
+          "spanish": "antes",
+          "german": "damals; vorher",
+          "tags": ["zeit"]
+        }
+      ]
+    }
+  ]
+}

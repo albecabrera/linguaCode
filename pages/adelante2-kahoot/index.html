@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17213b">
+  <title>adelante2-Kahoot · LinguaCode</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../">Lingua<span>Code</span></a>
+    <div class="brand-module">adelante2-Kahoot</div>
+    <nav aria-label="Modusauswahl">
+      <button class="nav-button active" data-view="library">Bibliothek</button>
+      <button class="nav-button" data-view="flashcards">Karteikarten</button>
+      <button class="nav-button" data-view="quiz">Quiz</button>
+      <button class="nav-button" data-view="competition">Wettbewerb</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div>
+        <p class="eyebrow">Vamos Adelante 2 · LinguaCode</p>
+        <h1>adelante2-Kahoot</h1>
+        <p class="lead">Wähle genau die Wörter aus, die du heute lernen möchtest. Übe allein oder starte eine schnelle Runde im lokalen Klassenraum.</p>
+      </div>
+      <div class="hero-badge" aria-hidden="true"><span>¡Vamos!</span><strong>01</strong></div>
+    </section>
+
+    <section class="selection-bar" aria-label="Auswahl und Lernfortschritt">
+      <div><strong id="selection-count">0 ausgewählt</strong><span id="selection-hint">Wähle Wörter aus der Bibliothek.</span></div>
+      <div class="selection-actions">
+        <button class="secondary" id="select-visible" type="button">Sichtbare auswählen</button>
+        <button id="clear-selection" type="button">Auswahl leeren</button>
+      </div>
+    </section>
+
+    <section class="view" id="library-view" data-view-panel="library">
+      <div class="section-heading"><div><p class="eyebrow">Lernbibliothek</p><h2>Deine Inhalte</h2></div><span class="count-pill" id="result-count">0 Begriffe</span></div>
+      <div class="filters">
+        <label class="search-field"><span>Suche</span><input id="search" type="search" placeholder="Spanisch, Deutsch oder Schlagwort …" autocomplete="off"></label>
+        <label><span>Unidad</span><select id="unit-filter"><option value="">Alle Unidades</option></select></label>
+        <label><span>Inhaltstyp</span><select id="type-filter"><option value="">Alle Typen</option></select></label>
+        <label><span>Block</span><select id="block-filter"><option value="">Alle Blöcke</option></select></label>
+      </div>
+      <div class="library-note"><span class="note-icon">✓</span><p><strong>Akzente bleiben wichtig.</strong> Bei Eingabefragen werden zum Beispiel <em>ría</em> und <em>situación</em> mit korrekter Schreibweise geprüft.</p></div>
+      <div class="entry-grid" id="entry-list" aria-live="polite"></div>
+    </section>
+
+    <section class="view" id="flashcards-view" data-view-panel="flashcards" hidden></section>
+    <section class="view" id="quiz-view" data-view-panel="quiz" hidden></section>
+    <section class="view" id="competition-view" data-view-panel="competition" hidden></section>
+  </main>
+  <footer><span>LinguaCode</span><span>Inhalte: Vamos Adelante 2 · Unidad 1</span></footer>
+  <div id="live-region" class="sr-only" aria-live="polite"></div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
