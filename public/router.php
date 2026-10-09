@@ -3,6 +3,25 @@ declare(strict_types=1);
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = rtrim($path, '/') ?: '/';
+if ($path === '/java-interaktiv' || str_starts_with($path, '/java-interaktiv/')) {
+    $relativePath = $path === '/java-interaktiv' ? '/index.html' : substr($path, strlen('/java-interaktiv'));
+    $file = realpath(__DIR__ . '/../pages/java-interaktiv' . $relativePath);
+    $root = realpath(__DIR__ . '/../pages/java-interaktiv');
+    if ($file === false || $root === false || !str_starts_with($file, $root . DIRECTORY_SEPARATOR) || !is_file($file)) {
+        http_response_code(404);
+        exit('Nicht gefunden.');
+    }
+    // Explicit JS MIME: module scripts require a JavaScript Content-Type.
+    header('Content-Type: ' . match (pathinfo($file, PATHINFO_EXTENSION)) {
+        'mjs', 'js' => 'text/javascript; charset=utf-8',
+        'css' => 'text/css; charset=utf-8',
+        'html' => 'text/html; charset=utf-8',
+        'md' => 'text/plain; charset=utf-8',
+        default => 'application/octet-stream',
+    });
+    readfile($file);
+    exit;
+}
 if ($path === '/automaten' || str_starts_with($path, '/automaten/')) {
     $relativePath = $path === '/automaten' ? '/index.html' : substr($path, strlen('/automaten'));
     $file = realpath(__DIR__ . '/../pages/automaten' . $relativePath);

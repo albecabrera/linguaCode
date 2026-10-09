@@ -89,6 +89,7 @@ function externalShareUrl(array $resource): string {
         'Zustandsautomaten · Klasse 8' => 'automaten',
         'Kara-Einführung' => 'kara',
         'Java-Lernen' => 'java',
+        'Java-Interaktiv' => 'j',
         default => '',
     });
 }
@@ -157,6 +158,7 @@ function dashboard(): void {
     $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
     $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'pages_url' => studentSiteUrl('z')];
     $external[] = ['subject' => 'informatik', 'title' => 'Kara-Einführung', 'description' => 'Kara mit Zuständen, Sensoren und Übergängen programmieren.', 'url' => karaPublicUrl(), 'pages_url' => studentSiteUrl('kara')];
+    $external[] = ['subject' => 'informatik', 'title' => 'Java-Interaktiv', 'description' => 'Oberstufe · 78 Lernkarten, Quiz und begrenzte Simulationen.', 'url' => baseUrl() . '/java-interaktiv/', 'pages_url' => studentSiteUrl('j')];
     $external[] = ['subject' => 'informatik', 'title' => 'Java-Lernen', 'description' => 'Java Foundations mit Editor, Compiler-Feedback und drei Grundlagenlektionen.', 'url' => javaPublicUrl(), 'pages_url' => javaPublicUrl()];
     ob_start(); ?>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
@@ -190,6 +192,7 @@ function publicExercise(string $code, bool $isShortCode = false): void {
 function publicShortLink(string $code): void {
     if ($code === 'automaten') { header('Location: ' . automataPublicUrl(), true, 302); exit; }
     if ($code === 'kara') { header('Location: ' . karaPublicUrl(), true, 302); exit; }
+    if ($code === 'j') { header('Location: ' . studentSiteUrl('j'), true, 302); exit; }
     if ($code === 'java') { header('Location: ' . javaPublicUrl(), true, 302); exit; }
     $stmt = db()->prepare('SELECT url FROM external_resources WHERE short_code=? AND is_active=1');
     $stmt->execute([$code]); $url = $stmt->fetchColumn();
@@ -296,6 +299,6 @@ if ($path === '/') { dashboard(); exit; }
 if ($path === '/exercise/new') { form(); exit; }
 if (preg_match('#^/exercise/(\d+)/preview$#', $path, $m)) { previewExercise((int)$m[1]); exit; }
 if (preg_match('#^/exercise/(\d+)/edit$#', $path, $m)) { $stmt=db()->prepare('SELECT e.*,c.content_json FROM exercises e JOIN exercise_contents c ON c.exercise_id=e.id WHERE e.id=?'); $stmt->execute([(int)$m[1]]); $exercise=$stmt->fetch(PDO::FETCH_ASSOC); if(!$exercise){http_response_code(404);exit('Nicht gefunden.');} form($exercise); exit; }
-if (preg_match('#^/s/([A-Za-z0-9_-]{11}|automaten|kara|java)$#', $path, $m)) { publicShortLink($m[1]); exit; }
+if (preg_match('#^/s/([A-Za-z0-9_-]{11}|automaten|kara|java|j)$#', $path, $m)) { publicShortLink($m[1]); exit; }
 if (preg_match('#^/e/([a-f0-9]{24})$#', $path, $m)) { publicExercise($m[1]); exit; }
 http_response_code(404); layout('Nicht gefunden', '<section class="notice"><h1>Seite nicht gefunden.</h1></section>');

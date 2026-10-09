@@ -59,3 +59,22 @@ Die JSON-Formate der vier Engines stehen in [`docs/content-formats.md`](docs/con
 Das Java-Lab für Informatik EF/Q1/Q2 ist unter `/java` integriert. Architektur und Betrieb stehen in [`docs/java-lab.md`](docs/java-lab.md). Die sichere Java-Ausführung bleibt standardmäßig deaktiviert, bis ein administrativ geprüfter Docker-Runner eingerichtet ist.
 
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.
+
+## Java-Interaktiv · Informatik Oberstufe
+
+- Neues eigenständiges Modul: `/java-interaktiv/`, öffentlicher Pages-Kurzlink `s/j/`. Das bestehende Java-Lab bleibt unverändert.
+- 78 Karten aus `pages/java-interaktiv/cards.md`, zwölf Themen-Sets, individuelle Auswahl, Mischen, Lernmodus und vergrößerter Lehrermodus. Antworten bleiben zunächst verborgen.
+- Quiz: sechs redaktionell hinterlegte Multiple-Choice-Fragen mit jeweils drei Distraktoren; alle anderen Fragen nutzen Selbsteinschätzung.
+- Sechs begrenzte Simulationen: Array-Summe, Fakultät (0–7), lineare Suche, Bubble-Sort-Schritte, Stack/Queue, Suchaufwand. Kein beliebiger Java-Code wird ausgeführt.
+- Lernstand ausschließlich lokal im Browser (`linguacode-java-cards-v1`), ohne Namen oder Serverübertragung. Fehlender Speicherzugriff blockiert das Lernen nicht.
+- Bedienung per großen Touch-Schaltflächen, Tab, Pfeiltasten und Leertaste. Die Simulationen ersetzen keinen Java-Compiler; Originalbeispiele bleiben unverändert.
+
+Prüfung ohne Build:
+
+```bash
+node scripts/verify-java-interaktiv.mjs
+node scripts/verify-java-interaktiv-ui.mjs
+php scripts/verify-java-lab.php
+```
+
+Der DOM-Test prüft Bedienlogik, nicht Browserlayout oder echte iPad-/Smartboard-Geräte.
