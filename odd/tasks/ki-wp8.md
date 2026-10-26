@@ -1,6 +1,6 @@
 # KI WP8 feature record
 Branch: `feature/wp8-ki-lernpfad`
-Status: Inventory, public-safe course scaffold and isolated fictional teacher demo complete. No deployment or production data changes.
+Status: First two hours interactive and the KI card integrated in local catalogs; not deployed on `main`, no student tracking.
 
 ## Specs
 1. **S1** — "Beginne jetzt mit der **Bestandsaufnahme des realen LinguaCode-Repositories**."
@@ -9,6 +9,8 @@ Status: Inventory, public-safe course scaffold and isolated fictional teacher de
 4. **S4** — "Entpacke diesen .zip und nutze es für die Karteikarte '/Users/acabrera/Desktop/KI_WP8'"
 5. **S5** — "si" (reply to the explicit question whether to build a teacher prototype using only fictional data, without activating real student tracking).
 6. **S6** — "ahora guarda todos los cambios, haz un commit + push y levanta la app en el navegador para ver como se ve"; clarification: "todos".
+7. **S7** — "Ya veo el curso pero no es interactivo. Si hago clic en las dos primeras horas no pasa nada, tienen que ser interactivos. Implementa eso".
+8. **S8** — "no ve la tarjeta en mi LinguaCode. Se tiene que llamar \"UV Künstliche Intelligenz\" y estar en Informatik".
 
 ## Tasks
 - T1 (S1-S4): inventory and prioritized plan, route: parent, commit: 670b9b8
@@ -17,6 +19,8 @@ Status: Inventory, public-safe course scaffold and isolated fictional teacher de
 - T4 (S2,S5): fictional teacher dashboard, isolated from Pages and real student records, route: parent, commit: 5a8a1c1
 - T5 (S6): inspect, test and commit previously uncommitted Tastatur/Java changes in reviewable units; close discovered local teacher-data exposure, route: parent, commits: 1e77e1a (Tastatur/security), 2798ed7 (Java)
 - T6 (S6): push feature branch and open local browser preview, route: parent, commit: none (delivery evidence in L14)
+- T7 (S7): make the first two module-1 hours independently openable and interactive with public-safe authored activities and checks, route: parent, commit: 5249347
+- T8 (S8): show a linked `UV Künstliche Intelligenz` card in the Informatik catalog on the public student site and local PHP teacher dashboard, route: parent, commit: e268f48
 
 ## Log
 - L1: "Berücksichtige diese Schritte von Codex: 1. Lege in deinem Projekt einen Ordner teaching-materials/ki-wp8/source/ an und kopiere dort die hochgeladenen PDF- und ODS-Dateien hinein. Lasse sie zunächst lokal und füge den Ordner gegebenenfalls zu .gitignore hinzu, damit du nicht versehentlich fremde oder geschützte Materialien veröffentlichst."
@@ -33,3 +37,7 @@ Status: Inventory, public-safe course scaffold and isolated fictional teacher de
 - L12: Independent verifier reproduced unauthenticated teacher data disclosure on the local PHP server when no password hash is configured. Focused HTTP test RED with seeded exercise (200), GREEN after per-route auth gate (503, stored DB unchanged). Tastatur/Java/KI/schema/lab checks passed. Group Tastatur behavior, security fix, tests and README in one review unit; Java Challenge fix/tests in a separate unit. Neither work unit includes ignored source PDFs.
 - L13: Review boundaries after T5: KI inventory/scaffold 670b9b8–26bcedb (~195 lines), fictional teacher demo 5a8a1c1–3130682 (~227 lines), Tastatur/security 1e77e1a (521 lines; coupled public trainer + teacher CRUD + regression checks exceeds ~400 review target), Java Challenge 2798ed7 (25 lines). Do not review the 971-line branch as one PR. Production/Pages remain unchanged; push is feature branch only.
 - L14: User-authorized push to `origin/feature/wp8-ki-lernpfad` succeeded; not `main`. Local loopback previews on 127.0.0.1:8099 (fictional teacher demo) and :8100 (student scaffold) returned HTTP 200 for HTML/modules; source-material path returned 404. Chrome opened both URLs (exit 0), and 1440×900 headless Chrome screenshots were visually inspected; temporary profiles/images removed. No real student records or source PDFs were pushed. Local preview servers remain running for the user's inspection.
+- L15: User: "Ya veo el curso pero no es interactivo. Si hago clic en las dos primeras horas no pasa nada, tienen que ser interactivos. Implementa eso". Reproduced: `pages/ki8/app.mjs` creates a link only for module index 2; module index 0 (2 hours) renders no interactive action. Do not claim a full 18-hour course or protected progress from this fix.
+- L16: User: "no ve la tarjeta en mi LinguaCode. Se tiene que llamar \"UV Künstliche Intelligenz\" y estar en Informatik". Existing `pages/index.html` Informatik cards and `public/index.php` teacher list have no KI entry; local preview served only `pages/ki8` rather than the full catalog. New route/card must remain local until explicit publication approval.
+- L17: T7 RED: first module had zero action links; GREEN: hour 1/2 links, two graded cards per hour with answer feedback and in-page progress. T8 RED: no card in public catalog; GREEN: exact-title Informatik card, local PHP dashboard entry and `/ki8/` route. Tests: new core/DOM/catalog/isolated HTTP checks PASS, existing KI/Java/Tastatur/schema/lab checks PASS, PHP/JS lint and diff check PASS after removing one CSS EOF blank line. Independent read-only verifier: S7/S8 MET. Differential PHP routing: six existing routes byte-identical to base; requested `/ki8/` changed 404→200. Local public catalog at `http://127.0.0.1:8101/` and lesson opened in Chrome; desktop screenshots inspected, four activity forms rendered; no iPad/touch test. Native assess unassessable due to intended untracked feature files.
+- L18: Review slices: interactive hours 5249347 (243 authored lines), catalog/route/docs e268f48 (148 authored lines, high-risk item 3 isolated). The feature branch is ahead of origin; **no push, merge or production deployment was requested for S7/S8**. GitHub Pages `main` remains unchanged.
