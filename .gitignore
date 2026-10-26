@@ -2,3 +2,6 @@
 /data/*.sqlite-*
 /data/.gitkeep
 .DS_Store
+
+# Local, potentially copyrighted KI WP8 teaching materials; never publish by default.
+/teaching-materials/ki-wp8/source/
