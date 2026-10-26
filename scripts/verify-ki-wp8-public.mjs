@@ -30,6 +30,7 @@ assert.doesNotMatch(missionTwoRoute, /Lösung_02_TrainingEinesBaums|teacher-only
 const publicSources = [catalog, entry, app, missionTwoRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
 for (let module = 1; module <= 6; module += 1) {
   const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
+  if (module === 1) assert.match(html, /href="stunde-2\/"[^>]*>Mission 02 starten[^<]*<\/a>/);
   const hours = [2, 2, 4, 2, 3, 5][module - 1];
   for (let hour = 1; hour <= hours; hour += 1) {
     assert.match(html, new RegExp(`id="stunde-${hour}"`));

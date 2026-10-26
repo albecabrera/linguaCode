@@ -52,15 +52,16 @@ assert.equal(KI_MISSION_02.resourceNotes.video.status, 'unconfirmed');
 assert.match(KI_MISSION_02.resourceNotes.video.text, /[Kk]ein spezifisches Video/);
 assert.equal(KI_MISSION_02.resourceNotes.worksheet.status, 'confirmed-source');
 assert.match(KI_MISSION_02.resourceNotes.worksheet.text, /Klasse 5–8/);
-assert.deepEqual(KI_MISSION_02.phases.map((phase) => phase.minutes), [10, 15, 14, 6]);
+assert.deepEqual(KI_MISSION_02.phases.map((phase) => phase.minutes), [10, 10, 19, 6]);
+assert.ok(KI_MISSION_02.phases.every(({ blocks }) => !blocks.some(({ type }) => type === 'media') || blocks.length === 1));
 assert.equal(KI_MISSION_02.phases.at(-1).blocks[0].type, 'quiz');
 assert.equal(KI_MISSION_02.phases.at(-1).questions.length, 5);
 assert.ok(KI_MISSION_02.tasks.length >= 3);
 assert.ok(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).some((block) => block.type === 'task'));
 assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'quiz', 'task']);
-assert.deepEqual(KI_MISSION_02.phases[0].blocks.slice(0, 2), [
-  { type: 'media', mediaId: 'experienceAi' },
-  { type: 'media', mediaId: 'klickpunktSchule' },
+assert.deepEqual(KI_MISSION_02.phases.slice(0, 2).map((phase) => phase.blocks), [
+  [{ type: 'media', mediaId: 'experienceAi' }],
+  [{ type: 'media', mediaId: 'klickpunktSchule' }],
 ]);
 assert.equal(validateLessonDefinition(KI_MISSION_02), true);
 assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02']);

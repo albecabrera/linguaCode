@@ -134,9 +134,9 @@ export const KI_MISSION_02 = Object.freeze({
     'Du erklärst, warum neue, ungesehene Testdaten zum Prüfen eines Modells wichtig sind.',
   ],
   phases: [
-    { id: 'rules', title: 'Feste Regeln erkennen', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }, { type: 'media', mediaId: 'klickpunktSchule' }, { type: 'task', taskId: 'task-rules' }] },
-    { id: 'training', title: 'Muster aus Beispielen', minutes: 15, blocks: [{ type: 'task', taskId: 'task-training' }, { type: 'task', taskId: 'task-pattern' }] },
-    { id: 'testing', title: 'Ungesehene Testdaten', minutes: 14, blocks: [{ type: 'task', taskId: 'task-testing' }] },
+    { id: 'rules', title: 'Regel oder gelerntes Muster?', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }] },
+    { id: 'materials', title: 'Maschinelles Lernen entdecken', minutes: 10, blocks: [{ type: 'media', mediaId: 'klickpunktSchule' }] },
+    { id: 'practice', title: 'Training und Testdaten anwenden', minutes: 19, blocks: [{ type: 'task', taskId: 'task-rules' }, { type: 'task', taskId: 'task-training' }, { type: 'task', taskId: 'task-pattern' }, { type: 'task', taskId: 'task-testing' }] },
     { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_02_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_02_QUESTIONS },
   ],
   media: {

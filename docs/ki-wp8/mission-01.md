@@ -26,6 +26,15 @@ Die Anwendung verlinkt nur auf diese externen Quellen. Es werden keine Download-
 
 Dieser Lehrer-Link gehört ausschließlich in dieses lokale Repository-Dokument und darf nicht in öffentliche Seiten, den Renderer oder Schüleransichten übernommen werden.
 
+### Mission 02: Regeln, Training und Grenzen
+
+Die nächste Stunde ist lokal unter `/ki8/stunde-2/` verfügbar und wird aus derselben Lesson-Registry gerendert. Ihr Thema ist der Vergleich fester Regeln mit gelernten Mustern und die Rolle neuer Testdaten.
+
+- [Experience AI: Maschinelles Lernen, Modul 1 Lektion 2](https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13) – Quelle für 11- bis 14-Jährige, mit genauem Schwerpunkt auf regelbasierten und datenbasierten Verfahren.
+- [Klickpunkt Schule: Maschinelles Lernen](https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial) – Materialseite für Klassen 5–8 mit Weblektion und Materialpaket; die Seite nennt CC BY-SA 4.0.
+
+Beide Quellen werden nur verlinkt. Arbeitsblätter werden nicht kopiert oder eingebettet. Ein spezifisches, passendes Video für diese Stunde wurde nicht bestätigt und ist deshalb nicht zugewiesen. Die HubbS-Ressource zu Trainingsdaten ist für eine berufliche KI-Zusatzqualifikation beschrieben; eine Eignung für WP 8 ist nicht belegt.
+
 ## Aufgaben und Obst-Detektiv
 
 Die Aufgaben A und B sind offene Antworten. „Meine Antwort prüfen“ ist ein Selbst-Check, keine automatische Bewertung; anschließend kann die Beispielantwort angezeigt und die eigene Antwort überarbeitet werden.
@@ -61,7 +70,7 @@ Bewertungsbänder: **5/5** „Hervorragend! Du hast die Mission erfolgreich abge
 
 ## Lokaler Fortschritt und Datenschutzgrenzen
 
-Der Fortschritt wird ausschließlich lokal im Browser gespeichert. Die Speicherung ist namespaced und versioniert (`linguacode:ki-wp8:mission-01:v1`); Antworten, Phasen, Obst-Labor und Quizstatus werden nicht übertragen und es gibt kein Schülerkonto, keine Datenbank und kein zentrales Feedback.
+Der Fortschritt wird ausschließlich lokal im Browser gespeichert. Die Speicherung ist namespaced und versioniert. Die Schlüssel lauten `linguacode:ki-wp8:mission-01:v1:ki-01` und `linguacode:ki-wp8:mission-01:v1:ki-02`; die Missionen überschreiben einander nicht. Antworten, Phasen, Obst-Labor und Quizstatus werden nicht übertragen und es gibt kein Schülerkonto, keine Datenbank und kein zentrales Feedback.
 
 Wichtige Grenzen:
 
@@ -76,8 +85,9 @@ Für direkte Aufrufe auf GitHub Pages sind vorgesehen:
 
 - `/ki8/` – Kursübersicht
 - `/ki8/stunde-1/` – Mission 01
+- `/ki8/stunde-2/` – Mission 02
 
-Die Kursübersicht enthält einen QR-Code, einen kopierbaren Kurslink, sechs Modulübersichten und die lokale Fortschrittsanzeige. Bestehende 18 Stundenlinks sowie andere Fächer und Funktionen bleiben außerhalb dieser Mission unverändert. QR-Scan und echte GitHub-Pages-Auslieferung sind in diesem lokalen Arbeitsstand noch nicht als Deployment verifiziert.
+Der CTA für Mission 02 steht innerhalb von Modul 1, Stunde 2; der bisherige Abschnitt samt Aufgaben bleibt erhalten. Die Kursübersicht enthält weiterhin einen QR-Code zum Kurs, einen kopierbaren Kurslink, sechs Modulübersichten und die lokale Fortschrittsanzeige. Die bestehenden 18 Stundenlinks sowie andere Fächer bleiben erhalten. QR-Scan und echte GitHub-Pages-Auslieferung sind nicht als Deployment verifiziert.
 
 ## Wiederverwendbare Datenstruktur: aktueller Stand
 
@@ -90,15 +100,19 @@ Eine Lesson-Definition verwendet derzeit mindestens:
 
 Die Daten liegen aktuell in `pages/ki8/mission/lesson-data.mjs`; die Renderer- und Validierungsoberfläche ist **noch nicht als finale öffentliche API festgeschrieben**.
 
-### Zweite Stunde ergänzen
+### Bestehende Wiederverwendung und nächste Stunde
 
-Ein Entwickler sollte eine neue eindeutige Definition (zum Beispiel `ki-02`) im bestehenden Lesson-Registry-/Validierungspfad ergänzen, statt einen zweiten Sonder-Renderer zu bauen:
+Die Registry enthält `ki-01` und `ki-02`. Eine Lesson-ID wird durch statische Pfadzuordnung mit einer eigenen Browser-Speicherschlüsselung verbunden; beide behalten getrennten Fortschritt. Mission 02 nutzt bestehende Blocktypen (Medienlink, offene Antwort und Quiz), keine Sonderkopie des Renderers.
 
-1. dieselben Pflichtfelder und die vorhandene Datenform verwenden;
-2. eigene Phasen, Aufgaben, Lösungen, Medienquellen und Fortschritts-ID definieren;
-3. die Registry um die Lesson ergänzen;
-4. Tests für Definition, Antworten, Fortschritt und direkte Route ergänzen;
-5. erst danach prüfen, ob die bestehenden Blocktypen den Inhalt tatsächlich rendern.
+Für weitere Stunden:
+
+1. eine eindeutige Lesson-ID und eigene Daten/Phasen definieren;
+2. ausschließlich tatsächlich unterstützte Blocktypen nutzen oder den Renderer samt Tests erweitern;
+3. einen expliziten statischen Routen-Eintrag und eigenen Fortschrittsschlüssel hinzufügen;
+4. Kursübersicht und Materialstatus aktualisieren;
+5. Tests für Definition, Antworten, isolierten Fortschritt und direkte Route ergänzen.
+
+Ein automatischer Test rendert weiterhin eine synthetische zweite Stunde mit anderer Phasenfolge und eigenen Medienmetadaten. Mission 02 ist jetzt eine echte Registry-Definition; die übrigen Kursstunden bleiben über ihre bisherigen Modul-Anker erreichbar und werden nicht als neue Missionen ausgegeben, bevor sie implementiert und geprüft sind.
 
 Ein automatischer Test rendert eine synthetische zweite Stunde mit anderer Phasenfolge und eigenen Medienmetadaten. Bewiesen sind die vorhandenen Blocktypen (Medienlink, offene Antwort, Lückentext, Obst-Labor, Quiz); für neue Blocktypen oder komplexere Interaktionen müssen Renderer und Tests gezielt erweitert werden. Keine neue Stunde als fertig ausgeben, bevor ihre Inhalte und Bedienung geprüft sind.
 

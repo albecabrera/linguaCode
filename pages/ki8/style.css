@@ -30,6 +30,7 @@ h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
 .lesson { border: 1px solid var(--line); background: var(--surface); border-radius: 1rem; padding: 1.25rem; margin: 2rem 0; max-width: 800px; }
 .hour-nav { display: flex; flex-wrap: wrap; gap: .8rem; }
 .hour-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); }
+.mission-cta { display: inline-flex; align-items: center; min-height: 44px; padding: .55rem .9rem; border-radius: .5rem; background: var(--accent); color: var(--bg); font-weight: 700; text-decoration: none; }
 .activities { display: grid; gap: 1rem; }
 .activity { padding: 1rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--bg); }
 .activity fieldset { border: 0; padding: 0; margin: 0; }
