@@ -17,6 +17,14 @@ $('set').value='8';$('set').fire('change');$('next').fire('click');$('next').fir
 $('mode').value='teacher';$('mode').fire('change');assert.equal($('answer-panel').hidden,true);
 $('set').value='custom';$('set').fire('change');$('choices').children[9].children[0].checked=true;$('apply').fire('click');assert.equal($('status').textContent,'Karte 1 von 1');assert.equal($('next').disabled,true);$('mode').value='quiz';$('mode').fire('change');$('quiz').children.find(b=>b.textContent==='0').fire('click');assert.match($('feedback').textContent,/Noch üben/);
 $('choices').children[9].children[0].checked=false;$('apply').fire('click');assert.equal($('card').hidden,true);assert.match($('status').textContent,/Keine Karten/);
+// Regression: entering Code-Challenge from a set without simulations must not leave an empty deck.
+$('set').value='0';$('set').fire('change');$('mode').value='challenge';$('mode').fire('change');
+assert.equal($('card').hidden,false,'Code-Challenge must recover from an incompatible learning set');
+assert.equal($('set').value,'all');assert.match($('status').textContent,/Karte 1 von 6/);assert.match($('status').textContent,/keine Code-Challenges/);
+$('set').value='6';$('set').fire('change');assert.equal($('status').textContent,'Karte 1 von 1');assert.match($('meta').textContent,/Nr. 53/);
+$('set').value='custom';$('set').fire('change');$('choices').children[9].children[0].checked=true;$('apply').fire('click');assert.equal($('card').hidden,false);assert.equal($('set').value,'all');assert.match($('status').textContent,/Karte 1 von 6/);
+$('set').value='custom';$('set').fire('change');$('choices').children[52].children[0].checked=true;$('apply').fire('click');assert.equal($('status').textContent,'Karte 1 von 1');assert.equal($('set').value,'custom');assert.match($('meta').textContent,/Nr. 53/);
+for(let index=0;index<12;index++){$('set').value=String(index);$('set').fire('change');assert.equal($('card').hidden,false,`Challenge set ${index} must have a usable deck`);assert.equal($('simulation').hidden,false);}
 $('set').value='all';$('set').fire('change');$('mode').value='challenge';$('mode').fire('change');assert.equal($('status').textContent,'Karte 1 von 6');$('sim-input').value='3,4';$('sim-run').fire('click');assert.equal($('sim-output').textContent,'Summe: 7');$('sim-input').value='bad';$('sim-run').fire('click');assert.match($('sim-output').textContent,/ganze Zahlen/);
 for(let i=0;i<3;i++)$('next').fire('click');for(let i=0;i<6;i++)$('sim-run').fire('click');assert.match($('sim-output').textContent,/1 · 2 · 4 · 5/);assert.equal($('sim-run').disabled,true);
 $('next').fire('click');$('sim-input').value='A';$('sim-add').fire('click');$('sim-input').value='B';$('sim-add').fire('click');$('sim-remove').fire('click');assert.match($('sim-output').textContent,/Stack B · Queue A/);$('sim-reset').fire('click');$('sim-remove').fire('click');assert.match($('sim-output').textContent,/leer/);
