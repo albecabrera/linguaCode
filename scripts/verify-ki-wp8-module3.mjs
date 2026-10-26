@@ -22,9 +22,13 @@ const prompts = lessons.flatMap(({activities}) => activities).map(({prompt}) => 
 for (const term of ['Merkmal', 'Schwellenwert', 'Regel', 'Trainingsdaten', 'Testdaten', 'Fehlklassifikation']) assert.match(prompts, new RegExp(term));
 for (const lesson of lessons) {
   for (const activity of lesson.activities) {
-    assert.equal(gradeChoice(activity.id, activity.correct).correct, true);
-    assert.equal(gradeChoice(activity.id, (activity.correct + 1) % activity.options.length).correct, false);
+    const grades = activity.options.map((_, choice) => gradeChoice(activity.id, choice).correct);
+    assert.equal(grades.filter(Boolean).length, 1, `${activity.id} must have exactly one correct option`);
+    assert.equal(grades[activity.correct], true);
   }
 }
 assert.throws(() => gradeChoice('unknown', 0), RangeError);
+assert.throws(() => gradeChoice(lessons[0].activities[0].id, -1), RangeError);
+assert.throws(() => gradeChoice(lessons[0].activities[0].id, lessons[0].activities[0].options.length), RangeError);
+assert.throws(() => gradeChoice(lessons[0].activities[0].id, 0.5), RangeError);
 console.log('PASS: module 3 has four original decision-tree hours with public-safe grading rules.');

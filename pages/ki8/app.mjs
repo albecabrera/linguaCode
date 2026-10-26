@@ -7,25 +7,18 @@ for (const [index, item] of modules.entries()) {
   const heading = document.createElement('h3');
   heading.textContent = `${item.icon} ${index + 1}. ${item.title}`;
   const detail = document.createElement('p');
-  detail.textContent = `${item.hours} Unterrichtsstunden · ${index === 0 || index === 1 ? '2 interaktive Stunden verfügbar' : index === 2 ? '4 interaktive Stunden · Beispielkarte verfügbar' : 'In Vorbereitung'}`;
+  detail.textContent = `${item.hours} Unterrichtsstunden · interaktive Stunden mit direktem Einstieg`;
   card.append(heading, detail);
-  if (index === 0) {
-    for (const hour of [1, 2]) {
-      const link = document.createElement('a');
-      link.href = `./modul-1.html#stunde-${hour}`;
-      link.textContent = `Stunde ${hour} öffnen`;
-      card.append(link);
-    }
+  const hourLinks = index === 2 ? document.createElement('nav') : card;
+  if (index === 2) hourLinks.setAttribute?.('aria-label', 'Unterrichtsstunden');
+  for (let hour = 1; hour <= item.hours; hour += 1) {
+    const link = document.createElement('a');
+    link.href = `./modul-${index + 1}.html#stunde-${hour}`;
+    link.textContent = `Stunde ${hour} öffnen`;
+    hourLinks.append(link);
   }
-  if (index === 1) {
-    for (const hour of [1, 2]) {
-      const link = document.createElement('a');
-      link.href = `./modul-2.html#stunde-${hour}`;
-      link.textContent = `Stunde ${hour} öffnen`;
-      card.append(link);
-    }
-  }
-  // The module 3 lesson is linked from the course page: ./modul-3.html
+  if (index === 2) card.append(hourLinks);
+  // Module 2 lesson page: ./modul-2.html; module 3 lesson page: ./modul-3.html
   if (index === 2) {
     const sample = document.createElement('a');
     sample.href = '#beispielkarte';

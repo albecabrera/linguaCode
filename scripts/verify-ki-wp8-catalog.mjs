@@ -9,6 +9,13 @@ assert.equal(course.length, 1, 'The course must appear exactly once in the Lingu
 assert.equal(course[0][1], 'Informatik');
 assert.match(course[0][2], /href="ki8\/"/);
 assert.match(course[0][2], /data-share="ki8\/"/);
+const coursePage = readFileSync(new URL('../pages/ki8/index.html', import.meta.url), 'utf8');
+const courseApp = readFileSync(new URL('../pages/ki8/app.mjs', import.meta.url), 'utf8');
+const module3Page = readFileSync(new URL('../pages/ki8/modul-3.html', import.meta.url), 'utf8');
+assert.match(courseApp, /href = '#beispielkarte'/);
+assert.match(coursePage, /id="beispielkarte"/);
+for (const hour of [1, 2, 3, 4]) assert.match(module3Page, new RegExp(`id="stunde-${hour}"`));
+assert.match(module3Page, /src="\.\/module3-ui\.mjs"/);
 assert.ok(existsSync(new URL('../pages/ki8/index.html', import.meta.url)));
 const dashboard = readFileSync(new URL('../public/index.php', import.meta.url), 'utf8');
 const router = readFileSync(new URL('../public/router.php', import.meta.url), 'utf8');
