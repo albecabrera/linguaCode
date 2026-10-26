@@ -1,4 +1,4 @@
-import {learners, summary, addFeedback} from './model.mjs';
+import {learners, summary, addFeedback, lessonPreviews, demoGroups, createAssignmentPreview} from './model.mjs';
 
 // In-memory copies only. Refreshing discards demo feedback.
 const records = learners.map((item) => ({...item}));
@@ -10,6 +10,34 @@ const cell = (row, value) => {
   row.append(element);
   return element;
 };
+
+function renderLessons() {
+  const container = $('lessons');
+  container.replaceChildren();
+  for (const lesson of lessonPreviews) {
+    const card = document.createElement('article');
+    card.className = 'lesson-preview';
+    card.textContent = `${lesson.title} · ${lesson.minutes} Minuten — Lernziel: ${lesson.objective}`;
+    container.append(card);
+  }
+}
+
+function renderAssignmentOptions() {
+  const lessonSelect = $('assignment-lesson');
+  for (const lesson of lessonPreviews) {
+    const option = document.createElement('option');
+    option.value = lesson.id;
+    option.textContent = lesson.title;
+    lessonSelect.append(option);
+  }
+  const groupSelect = $('assignment-group');
+  for (const group of demoGroups) {
+    const option = document.createElement('option');
+    option.value = group;
+    option.textContent = group;
+    groupSelect.append(option);
+  }
+}
 
 function render() {
   const totals = summary(records);
@@ -70,4 +98,16 @@ $('feedback-form').addEventListener('submit', (event) => {
     $('feedback-status').textContent = error.message;
   }
 });
+$('assignment-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  try {
+    const preview = createAssignmentPreview($('assignment-lesson').value, $('assignment-group').value);
+    $('assignment-preview').textContent = `Vorschau: „${preview.lessonTitle}“ für ${preview.group}. Nicht gesendet und nicht gespeichert.`;
+    $('assignment-status').textContent = 'Nur Vorschau: nicht gesendet, kein Tracking und keine Schülerstatus.';
+  } catch (error) {
+    $('assignment-status').textContent = error.message;
+  }
+});
+renderLessons();
+renderAssignmentOptions();
 render();

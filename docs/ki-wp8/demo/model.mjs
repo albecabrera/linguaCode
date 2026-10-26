@@ -1,3 +1,5 @@
+import {lessons} from '../../../pages/ki8/module2-core.mjs';
+
 // Deliberately invented records. No real student identifiers or answers belong in this demo.
 export const learners = [
   {code: 'DEMO-001', completed: 3, total: 6, current: 'Entscheidungsbäume', answer: 'Ich teste den Grenzwert mit einem neuen Beispiel.', feedback: ''},
@@ -20,4 +22,22 @@ export function addFeedback(record, input) {
   const feedback = input.trim();
   if (!feedback || feedback.length > 500) throw new RangeError('Rückmeldung muss 1 bis 500 Zeichen enthalten.');
   return {...record, feedback};
+}
+
+export const lessonPreviews = lessons.map(({id, minutes, title}) => ({
+  id,
+  minutes,
+  title,
+  objective: id === 'stunde-1'
+    ? 'Du unterscheidest Merkmale und Labels und wendest einen Schwellenwert auf ein neues Beispiel an.'
+    : 'Du erklärst den Unterschied zwischen Trainingsbeispielen und Testdaten und erkennst eine Fehlklassifikation.',
+}));
+
+export const demoGroups = ['Demo-Gruppe A', 'Demo-Gruppe B'];
+
+export function createAssignmentPreview(lessonId, group) {
+  const lesson = lessonPreviews.find(({id}) => id === lessonId);
+  if (!lesson) throw new RangeError('Unterrichtsstunde ist in der Demo nicht verfügbar.');
+  if (!demoGroups.includes(group)) throw new RangeError('Bitte eine Demo-Gruppe auswählen.');
+  return {lessonTitle: lesson.title, group, sent: false, persisted: false};
 }

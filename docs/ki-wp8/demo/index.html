@@ -17,6 +17,24 @@
       <div id="summary" class="summary" aria-live="polite"></div>
       <div class="scroll"><table><caption>Fiktive Lernstände</caption><thead><tr><th scope="col">Demokürzel</th><th scope="col">Aktuelles Modul</th><th scope="col">Fortschritt</th><th scope="col">Offene Karten</th><th scope="col">Feedback</th><th scope="col">Ansicht</th></tr></thead><tbody id="learners"></tbody></table></div>
     </section>
+    <section class="detail" aria-labelledby="lessons-title">
+      <h2 id="lessons-title">Modul 2 · Unterrichtsvorschau</h2>
+      <p>Die beiden originalen, erfundenen Unterrichtsstunden und ihre Lernziele sind hier als Vorschau sichtbar. Es werden keine Lösungen aus den PDF-Materialien angezeigt.</p>
+      <div id="lessons" class="lesson-list"></div>
+    </section>
+    <section class="detail" aria-labelledby="assignment-title">
+      <h2 id="assignment-title">Aufgabe für eine Demo-Gruppe vorbereiten</h2>
+      <p><strong>Nur Demonstration:</strong> Diese Vorschau simuliert kein Zuweisen. Es gibt kein Senden, kein Login, kein Tracking, keine echten Schülerinnen und Schüler, keine Speicherung, keinen Export und keine PDF- oder Lehrerlösungen.</p>
+      <form id="assignment-form">
+        <label for="assignment-lesson">Unterrichtsstunde</label>
+        <select id="assignment-lesson"></select>
+        <label for="assignment-group">Fiktive Demo-Gruppe</label>
+        <select id="assignment-group"></select>
+        <button type="submit">Vorschau anzeigen</button>
+      </form>
+      <p id="assignment-preview" role="status" aria-live="polite">Noch keine Vorschau erstellt.</p>
+      <p id="assignment-status" role="status" aria-live="polite"></p>
+    </section>
     <section id="detail" class="detail" aria-labelledby="detail-title" hidden>
       <h2 id="detail-title" tabindex="-1">Musteransicht</h2>
       <p id="detail-progress"></p>

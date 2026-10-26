@@ -23,7 +23,7 @@ class Element {
   focus() { this.focused = true; }
 }
 
-const ids = ['summary', 'learners', 'detail', 'detail-title', 'detail-progress', 'detail-answer', 'detail-feedback', 'feedback-form', 'feedback-input', 'feedback-status'];
+const ids = ['summary', 'learners', 'detail', 'detail-title', 'detail-progress', 'detail-answer', 'detail-feedback', 'feedback-form', 'feedback-input', 'feedback-status', 'lessons', 'assignment-form', 'assignment-lesson', 'assignment-group', 'assignment-preview', 'assignment-status'];
 const nodes = Object.fromEntries(ids.map((id) => [id, new Element()]));
 globalThis.document = {
   getElementById: (id) => nodes[id],
@@ -31,6 +31,7 @@ globalThis.document = {
 };
 await import('../docs/ki-wp8/demo/app.mjs');
 assert.equal(nodes.learners.children.length, 3);
+assert.equal(nodes.lessons.children.length, 2);
 assert.match(nodes.summary.textContent, /7 von 18 Musterkarten/);
 const select = nodes.learners.children[0].children.at(-1).children[0];
 nodes.learners.fire('click', select);
