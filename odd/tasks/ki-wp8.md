@@ -1,6 +1,6 @@
 # KI WP8 feature record
 Branch: `feature/wp8-ki-lernpfad`
-Status: First two hours interactive and the KI card integrated in local catalogs; not deployed on `main`, no student tracking.
+Status: Public Informatik KI card and the first two interactive hours deployed on `main` as 3240bff; fictional teacher demo remains local and no student tracking is enabled.
 
 ## Specs
 1. **S1** — "Beginne jetzt mit der **Bestandsaufnahme des realen LinguaCode-Repositories**."
@@ -22,7 +22,7 @@ Status: First two hours interactive and the KI card integrated in local catalogs
 - T6 (S6): push feature branch and open local browser preview, route: parent, commit: none (delivery evidence in L14)
 - T7 (S7): make the first two module-1 hours independently openable and interactive with public-safe authored activities and checks, route: parent, commit: 5249347
 - T8 (S8): show a linked `UV Künstliche Intelligenz` card in the Informatik catalog on the public student site and local PHP teacher dashboard, route: parent, commit: e268f48
-- T9 (S8-S9): prepare a public-only `main` slice from current main with catalog card and two lesson hours only; no feature-branch merge, route: parent, commit: 3240bff (publish/ki8-public; pending push to main)
+- T9 (S8-S9): prepare a public-only `main` slice from current main with catalog card and two lesson hours only; no feature-branch merge, route: parent, commit: 3240bff (publish/ki8-public; deployed to main)
 - T10 (S9): verify isolated slice, push main and confirm GitHub Pages live course, route: parent, commit: 3240bff (deployed via Pages run 40401644667; see L22)
 
 ## Log
