@@ -50,3 +50,13 @@ CREATE TABLE IF NOT EXISTS external_resources (
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Additive storage: no migration of existing engine types or student data.
+CREATE TABLE IF NOT EXISTS keyboard_exercises (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  level INTEGER NOT NULL CHECK(level IN (2, 3, 4, 6)),
+  texts_json TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><title>Tastatur-Profi · LinguaCode</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><a class="brand" href="../">Lingua<span>Code</span></a><span>Informatik · Klasse 6</span><a id="teacher-link" href="/teacher/tastatur">Lehrerübungen</a></header>
+<main>
+ <div class="heading"><div><h1>Tastatur-Profi</h1><p>Ich lerne tippen! Entdecke deine Windows-Tastatur.</p></div><button id="free">✎ Freies Schreiben</button></div>
+ <nav id="levels" aria-label="Lernstufen"></nav>
+ <section class="practice" aria-labelledby="task-title">
+  <div class="task-top"><h2 id="task-title"></h2><span id="position"></span><button id="help-toggle" aria-expanded="false" aria-controls="help">💡 Hilfe anzeigen</button></div>
+  <p id="instruction"></p><div id="target" aria-label="Vorlage"></div>
+  <label for="typing">Hier schreibst du <span id="input-hint">– klicke hinein und lege los!</span></label>
+  <textarea id="typing" rows="1" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="feedback" maxlength="500"></textarea>
+  <p id="live-stats" aria-label="Challenge-Statistik" hidden></p>
+  <label id="tab-option" hidden><input id="tab-in-text" type="checkbox"> Tabulator im Text üben (mit Umschalt + Tab verlässt du das Feld)</label>
+  <div id="marked" aria-label="Zeichenkontrolle"></div>
+  <div class="feedback-row"><p id="feedback" role="status"></p><button id="next" hidden>Weiter ↵</button><button id="restart">Neu starten</button></div>
+  <div id="help" hidden></div>
+  <progress id="progress" value="0" max="100" aria-label="Fortschritt"></progress>
+ </section>
+ <section class="keyboard-section" aria-label="Deutsche Windows-Tastatur">
+  <div class="keyboard-caption"><strong>Deutsche Windows-Tastatur · QWERTZ</strong><span><i class="legend"></i> Nächste Taste <span id="modifiers"></span></span></div>
+  <p class="small-screen">Auf kleinen Bildschirmen kannst du die Tastatur seitlich verschieben.</p>
+  <div class="keyboard-scroll"><div id="keyboard"><div id="functions"></div><div class="keyboard-body"><div id="main-keys"></div><div id="navigation"></div><div id="numpad"></div></div></div></div>
+  <p class="keyboard-note">Echte Tastatur oder Mausklick: beides geht! Virtuell: Shift anklicken, dann ein Zeichen. Tab wechselt den Fokus. Im freien Schreiben kannst du „Tabulator im Text üben“ einschalten.</p>
+ </section>
+ <section id="results" aria-label="Dein Ergebnis" hidden></section>
+ <p class="privacy">Ohne Anmeldung. Dein Text und deine Ergebnisse bleiben auf diesem Gerät und werden nicht gespeichert.</p>
+</main><script type="module" src="app.js"></script>
+</body></html>

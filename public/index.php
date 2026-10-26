@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/java-runner.php';
+require_once __DIR__ . '/tastatur-teacher.php';
 
 const ROOT = __DIR__ . '/..';
 const DB_PATH = ROOT . '/data/linguacode.sqlite';
@@ -141,7 +142,7 @@ function validateContent(string $type, array $content): void {
 }
 
 function layout(string $title, string $body, bool $public = false): void {
-    $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a>';
+    $nav = $public ? '<a class="brand" href="/">Lingua<span>Code</span></a>' : '<a class="brand" href="/">Lingua<span>Code</span></a><a class="nav-link" href="/exercise/new">+ Übung anlegen</a><a class="nav-link" href="/teacher/tastatur">Tastaturübungen</a>';
     echo '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#19252f"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/app.css"><link rel="stylesheet" href="/assets/dashboard.css"><title>' . h($title) . ' · LinguaCode</title></head><body><header><nav>' . $nav . '</nav></header><main>' . $body . '</main><script src="/assets/qrcode-generator.min.js" defer></script><script src="/assets/app.js" defer></script></body></html>';
 }
 
@@ -161,6 +162,7 @@ function dashboard(): void {
     $external[] = ['subject' => 'informatik', 'title' => 'Java-Interaktiv', 'description' => 'Oberstufe · 78 Lernkarten, Quiz und begrenzte Simulationen.', 'url' => baseUrl() . '/java-interaktiv/', 'pages_url' => studentSiteUrl('j')];
     $external[] = ['subject' => 'informatik', 'title' => 'Java-Lernen', 'description' => 'Java Foundations mit Editor, Compiler-Feedback und drei Grundlagenlektionen.', 'url' => javaPublicUrl(), 'pages_url' => javaPublicUrl()];
     ob_start(); ?>
+    <p><a href="/tastatur/">Tastatur-Profi starten</a> · <a href="/teacher/tastatur">Eigene Tastaturübungen verwalten</a></p>
     <section class="hero"><p class="eyebrow">Lehrerbereich</p><h1>Übungen, klar organisiert.</h1><p>Erstellen, freigeben und direkt im Unterricht einsetzen.</p></section>
     <form class="filters" method="get"><label>Fach <select name="subject"><option value="">Alle Fächer</option><option value="spanisch" <?= $subject === 'spanisch' ? 'selected' : '' ?>>Spanisch</option><option value="informatik" <?= $subject === 'informatik' ? 'selected' : '' ?>>Informatik</option></select></label><label>Typ <select name="type"><option value="">Alle Typen</option><?php foreach(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'] as $key=>$label): ?><option value="<?= $key ?>" <?= $type === $key ? 'selected' : '' ?>><?= $label ?></option><?php endforeach ?></select></label><button class="secondary">Filtern</button></form>
     <section class="cards"><?php foreach ($exercises as $e): $url = studentExerciseUrl($e); ?><article class="card"><div class="card-top"><span class="tag"><?= h(ucfirst($e['subject'])) ?></span><span class="status <?= h($e['status']) ?>"><?= $e['status'] === 'published' ? 'Veröffentlicht' : 'Entwurf' ?></span></div><h2><?= h($e['title']) ?></h2><p><?= h($e['description']) ?: 'Ohne Beschreibung' ?></p><p class="meta"><?= h(['quiz'=>'Quiz','memory'=>'Memory','matching'=>'Zuordnung','cloze'=>'Lückentext'][$e['type']]) ?> · <?= $e['is_active'] ? 'aktiv' : 'pausiert' ?></p><div class="card-actions"><a href="/exercise/<?= $e['id'] ?>/edit">Bearbeiten</a><a href="/exercise/<?= $e['id'] ?>/preview" target="_blank" rel="noopener">Vorschau</a><?php if ($url && $e['status'] === 'published' && $e['is_active']): ?><button class="link-button" data-share-url="<?= h($url) ?>">Link / QR</button><?php elseif ($e['status'] === 'published' && $e['is_active']): ?><span class="meta">Noch nicht auf Schülerseite veröffentlicht</span><?php endif ?></div></article><?php endforeach; if (!$exercises): ?><p class="empty">Noch keine passende Übung.</p><?php endif ?></section>
@@ -292,6 +294,7 @@ if ($path === '/login') {
     layout('Anmelden', '<section class="notice"><p class="eyebrow">Lehrerbereich</p><h1>Anmelden</h1>' . $error . '<form class="editor" method="post"><input type="hidden" name="csrf" value="' . h(csrf()) . '"><label>Passwort<input type="password" name="password" required autofocus autocomplete="current-password"></label><button>Anmelden</button></form></section>', true); exit;
 }
 if (!$isPublicLink) requireTeacher();
+if (str_starts_with($path, '/teacher/tastatur')) keyboardTeacherRoute($path, $method);
 if ($path === '/logout' && $method === 'POST') { requireCsrf(); $_SESSION = []; session_destroy(); redirect('/login'); }
 if ($method === 'POST' && $path === '/exercise') { requireCsrf(); saveExercise(); }
 if ($method === 'POST' && preg_match('#^/exercise/(\d+)$#', $path, $m)) { requireCsrf(); saveExercise((int)$m[1]); }

@@ -22,6 +22,24 @@ if ($path === '/java-interaktiv' || str_starts_with($path, '/java-interaktiv/'))
     readfile($file);
     exit;
 }
+if ($path === '/tastatur' || str_starts_with($path, '/tastatur/')) {
+    $relativePath = $path === '/tastatur' ? '/index.html' : substr($path, strlen('/tastatur'));
+    $file = realpath(__DIR__ . '/../pages/tastatur' . $relativePath);
+    $root = realpath(__DIR__ . '/../pages/tastatur');
+    if ($file === false || $root === false || !str_starts_with($file, $root . DIRECTORY_SEPARATOR) || !is_file($file)) {
+        http_response_code(404);
+        exit('Nicht gefunden.');
+    }
+    // Explicit JS MIME: module scripts require a JavaScript Content-Type.
+    header('Content-Type: ' . match (pathinfo($file, PATHINFO_EXTENSION)) {
+        'js' => 'text/javascript; charset=utf-8',
+        'css' => 'text/css; charset=utf-8',
+        'html' => 'text/html; charset=utf-8',
+        default => 'application/octet-stream',
+    });
+    readfile($file);
+    exit;
+}
 if ($path === '/automaten' || str_starts_with($path, '/automaten/')) {
     $relativePath = $path === '/automaten' ? '/index.html' : substr($path, strlen('/automaten'));
     $file = realpath(__DIR__ . '/../pages/automaten' . $relativePath);

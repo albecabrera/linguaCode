@@ -37,7 +37,7 @@ Setze auf dem Server ausschließlich einen Passwort-Hash, niemals ein Klartextpa
 php -r 'echo password_hash("DEIN-SICHERES-PASSWORT", PASSWORD_DEFAULT), PHP_EOL;'
 ```
 
-Hinterlege das Ergebnis vor einem öffentlichen Plesk-Deployment als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Der integrierte lokale PHP-Entwicklungsserver lässt den Lehrerbereich bewusst ohne Anmeldung zu. Das gilt **nur** für `php -S`; auf jedem Webserver bleibt der Lehrerbereich ohne Passwort-Hash gesperrt.
+Hinterlege das Ergebnis vor einem öffentlichen Plesk-Deployment als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Der integrierte lokale PHP-Entwicklungsserver lässt die bisherigen Lehrseiten bewusst ohne Anmeldung zu. **Ausnahme:** `/teacher/tastatur` und die dazugehörige Datenroute benötigen auch lokal einen Passwort-Hash und eine Anmeldung. Die allgemeine lokale Ausnahme gilt **nur** für `php -S`; auf jedem anderen Webserver bleibt der Lehrerbereich ohne Passwort-Hash gesperrt.
 
 ## Prüfung
 
@@ -59,6 +59,28 @@ Die JSON-Formate der vier Engines stehen in [`docs/content-formats.md`](docs/con
 Das Java-Lab für Informatik EF/Q1/Q2 ist unter `/java` integriert. Architektur und Betrieb stehen in [`docs/java-lab.md`](docs/java-lab.md). Die sichere Java-Ausführung bleibt standardmäßig deaktiviert, bis ein administrativ geprüfter Docker-Runner eingerichtet ist.
 
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.
+
+## Tastatur-Profi · Informatik Klasse 6
+
+- Schülertrainer: `/tastatur/` auf dem PHP-Testserver, `pages/tastatur/` auf GitHub Pages; öffentlicher Pages-Kurzlink: `s/b/`.
+- Sechs Lernstufen, Korrekturübungen, Hilfe, Challenge und freies Schreiben. Die deutsche Windows-T1-Tastatur zeigt 105 Tasten inklusive Nummernblock und ISO-Enter.
+- Lehrerübungen: `/teacher/tastatur`, geschützt durch den vorhandenen Lehrerzugang und CSRF. Auch lokal ist hierfür ein gesetzter `LINGUACODE_TEACHER_PASSWORD_HASH` erforderlich; ohne ihn antwortet die Route mit 503, selbst wenn andere lokale Lehrseiten ohne Anmeldung erreichbar sind. Eigene Wörter/Sätze anlegen, bearbeiten, löschen und direkt starten. Die additive Tabelle `keyboard_exercises` nutzt dieselbe SQLite-Datenbank; bestehende Engines bleiben unverändert.
+- Eigene Übungen sind nur auf dem PHP-Host im Lehrerzugang verfügbar (z. B. Smartboard), nicht auf GitHub Pages. Schülertexte und Ergebnisse werden weder gespeichert noch übertragen.
+- Die echte Tastatur verwendet die native Browser-Textbearbeitung. Windows-/Strg-/Alt-Kombinationen werden nicht abgefangen. Tab wechselt den Fokus; im freien Schreiben ist die Text-Tabulatorfunktion ausdrücklich zuschaltbar. Virtuelles Shift/Alt Gr gilt für das nächste Zeichen, Feststell bleibt aktiviert.
+- Das deutsche Windows-Caps-Lock-Verhalten betrifft auch viele Zahlen und Satzzeichen. Belegung geprüft anhand von [Microsofts KBDGR-Tabelle](https://github.com/microsoft/Windows-driver-samples/blob/main/input/layout/all_kbds/kbdgr/kbdgr.c).
+- Sterne hängen nur von der Genauigkeit ab: 98 % → 3, 90 % → 2, darunter → 1. Nachträglich korrigierte Fehler bleiben in der Statistik. Die Zeit gibt keine Punkte.
+
+Prüfung ohne Build und ohne produktive Daten:
+
+```bash
+node scripts/verify-tastatur.mjs
+node scripts/verify-tastatur-ui.mjs
+php scripts/verify-tastatur.php
+node scripts/verify-tastatur-auth.mjs
+php scripts/verify-schema.php
+```
+
+`verify-tastatur.php` testet Validierung und CRUD ausschließlich mit SQLite im Arbeitsspeicher. Die Arbeitsblätter aus dem Briefing liegen nicht im Projekt; der Trainer übernimmt deshalb die vorhandenen LinguaCode-Farben. Ein echter Windows-11-Gerätetest und ein iPad-Touch-Test stehen noch aus.
 
 ## Java-Interaktiv · Informatik Oberstufe
 
