@@ -52,4 +52,18 @@ PDF metadata identifies third-party authors; no reuse or redistribution rights h
 
 **Open decision:** Who will operate and approve the protected service (and its EU data location, legal basis, processor agreement, retention period, code reset and backup process)? Without that answer, the persistent course, teacher cockpit and graded exam cannot be safely delivered. The proposed dates 22.12.2026 and 12.01.2027 are unconfirmed, not scheduled.
 
+## Lokales PDF-Lektionsbeispiel (S15)
+
+`docs/ki-wp8/lesson-example/` ist ein einzelnes lokales Beispiel zu Seite 1 von `01_Klassifikation_Anwendung_ver1.pdf`. Es zeigt das PDF inline und bietet nur für diese exakt erlaubte Datei Download/Öffnen an. Der Server ist ein separater Loopback-Preview und bindet ausschließlich an `127.0.0.1`; er verweigert Repository-Root, Verzeichnisse, Traversal, andere PDFs einschließlich Lehrerlösungen und unerwartete HTTP-Methoden. Er kopiert kein PDF und veröffentlicht nichts.
+
+Start aus dem Repository-Root mit genau:
+
+```sh
+node scripts/ki-wp8-lesson-preview.mjs --port 8102
+```
+
+Dann `http://127.0.0.1:8102/docs/ki-wp8/lesson-example/index.html` öffnen. Nach der Prüfung den Prozess mit `Ctrl-C` stoppen. Loopback ist keine Authentifizierung. Die Aktivität ist offline, nur im Browser und ohne gespeicherten Lernstand; keine echten Schülerdaten eingeben. Die vorgegebene Trainings-/Testaufteilung wird erklärt. Die Eingabe wird separat auf Anwendung der festen Flügelregel geprüft; die Modell-Testgenauigkeit wird unabhängig davon aus den Regelvorhersagen gegen wahre Labels berechnet: Die Fledermaus ist ein Säugetier und macht die Flügel-Regel absichtlich zu einem Falsch-positiv. Der Video-Bereich bleibt absichtlich leer. Quick Draw und Teachable Machine werden nur als unverifizierte Hinweise aus dem PDF genannt: Verfügbarkeit, Datenschutz, Nutzungsbedingungen, Rechte und schulische Freigabe sind nicht geprüft; es gibt keine externe Einbettung oder automatischen Netzwerkaufrufe.
+
+Fokustest: `node scripts/verify-ki-wp8-lesson-preview.mjs`. Der bestehende Lehrer-Preview bleibt getrennt; seinen Regressionstest weiterhin mit `node scripts/verify-ki-wp8-teacher-preview.mjs` ausführen. Keine Produktion, Datenbank, Build-, Deploy-, Commit- oder Push-Aktion.
+
 **Verification path:** check `git check-ignore -v teaching-materials/ki-wp8/source/...`, inspect the branch diff for PDFs/solutions and secrets, run focused prototype checks, then existing regression checks. No build or deploy here.

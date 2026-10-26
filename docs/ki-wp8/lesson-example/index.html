@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klassifikation: Anwendung · lokales Beispiel</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt springen</a>
+  <header><strong>Lingua<span>Code</span></strong><span>KI WP8 · Beispiel lokal</span></header>
+  <main id="main">
+    <h1>Klassifikation: Anwendung</h1>
+    <p class="notice"><strong>Nur lokale Demo.</strong> Loopback ist keine Anmeldung. Keine echten Schülerinnen und Schüler, kein gespeicherter Lernstand, keine Datenbank und kein Versand.</p>
+    <section aria-labelledby="material-title">
+      <h2 id="material-title">Arbeitsblatt als PDF</h2>
+      <p>Das ausgewählte Unterrichtsmaterial wird nur von diesem lokalen Preview-Server gelesen. Die genannten Online-Ressourcen sind <strong>unverifiziert</strong>; prüfe vor Nutzung Verfügbarkeit, Datenschutz, Nutzungsbedingungen und schulische Freigaben.</p>
+      <div class="pdf-frame"><iframe title="PDF: Klassifikation – Anwendung" src="/teaching-materials/ki-wp8/source/01_Klassifikation_Anwendung_ver1.pdf"></iframe></div>
+      <p><a href="/teaching-materials/ki-wp8/source/01_Klassifikation_Anwendung_ver1.pdf" download>PDF herunterladen</a> · <a href="/teaching-materials/ki-wp8/source/01_Klassifikation_Anwendung_ver1.pdf" target="_blank" rel="noopener">PDF in neuem Tab öffnen</a></p>
+    </section>
+    <section aria-labelledby="video-title" class="placeholder">
+      <h2 id="video-title">Video-Platzhalter</h2>
+      <p>Hier kann später nach einer Rechte-, Datenschutz- und Verfügbarkeitsprüfung ein Unterrichtsvideo beschrieben werden. <strong>Kein Video ist eingebettet und es gibt keine automatischen Netzwerkaufrufe.</strong></p>
+      <div class="empty-slot" aria-label="Leerer Platz für ein geprüftes Video">Video noch nicht ausgewählt</div>
+    </section>
+    <section aria-labelledby="activity-title">
+      <h2 id="activity-title">Eigene Offline-Aktivität: Trainieren oder testen?</h2>
+      <p>Ordne die Beispiele einem Datensatz zu und sage voraus, ob das Merkmal <em>Flügel</em> zur Klasse „Vogel“ passt. Die Regel lautet: <strong>Flügel = ja → Vogel</strong>, sonst „kein Vogel“.</p>
+      <p><strong>Vorgegebene Beispielaufteilung:</strong> Amsel und Pinguin sind Trainingsbeispiele; Katze und Fledermaus sind Testbeispiele. Diese Aufteilung ist für den Vergleich bewusst festgelegt, nicht die einzig mögliche Aufteilung. Deine Auswahl wird darauf geprüft, ob du die feste Flügelregel anwendest. Die Modell-Testgenauigkeit wird davon getrennt immer aus Regelvorhersage und wahrem Label berechnet. Die Fledermaus ist ein Säugetier: Die Regel erzeugt hier trotz Flügeln die falsche Vorhersage „Vogel“.</p>
+      <form id="activity-form">
+        <div id="examples" class="examples"></div>
+        <button type="submit">Zuordnung und Regel prüfen</button>
+      </form>
+      <p id="activity-status" class="status" role="status" aria-live="polite">Noch nicht geprüft.</p>
+    </section>
+    <p class="footer-note">Ressourcen-Hinweis aus dem PDF: Quick Draw und Teachable Machine werden nur als unverifizierte Anregungen erwähnt; keine aktiven externen Links oder Einbettungen.</p>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
