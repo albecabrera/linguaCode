@@ -1,4 +1,7 @@
 import {modules, classify, testSamples} from './course.mjs';
+import {initCourseIntegration} from './mission/course-integration.mjs';
+
+initCourseIntegration();
 
 const container = document.querySelector('#modules');
 for (const [index, item] of modules.entries()) {

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>KI entdecken, verstehen und gestalten – WP Informatik 8 · LinguaCode</title>
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./mission/course-integration.css">
+  <script src="../assets/qrcode-generator.min.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Zum Inhalt springen</a>
@@ -14,7 +16,30 @@
       <p class="eyebrow">Öffentlicher Lernpfad · 18 Unterrichtsstunden</p>
       <h1>KI entdecken, verstehen und gestalten – WP Informatik 8</h1>
       <p>Sechs Module führen von KI im Alltag über Daten und Entscheidungsbäume bis zum verantwortlichen Einsatz. Alle 18 Unterrichtsstunden sind als interaktive Einstiege verlinkt; Modul 3 enthält zusätzlich eine Beispielkarte.</p>
-      <p class="notice"><strong>Öffentliche Ausgabe:</strong> Keine Anmeldung, kein persönlicher Lernstand und keine Klassenarbeit. Antworten werden nicht gespeichert.</p>
+      <p class="notice"><strong>Öffentliche Ausgabe:</strong> Keine Anmeldung und keine persönlichen Namen. Antworten und Fortschritt bleiben – sofern verfügbar – ausschließlich lokal in diesem Browser.</p>
+    </section>
+    <section class="mission-callout" aria-labelledby="mission-title">
+      <p class="eyebrow">Neu · Mission 01</p>
+      <h2 id="mission-title">Was ist künstliche Intelligenz? – Maschinen, die lernen</h2>
+      <p>Entdecke, wie Maschinen aus Beispielen Muster lernen und warum auch KI Fehler machen kann.</p>
+      <a class="mission-link" href="./stunde-1/">Mission 01 starten →</a>
+      <p id="course-progress" role="status" aria-live="polite">Lokaler Fortschritt wird geladen …</p>
+      <p class="shared-device-warning"><strong>Hinweis für gemeinsam genutzte Geräte:</strong> Der Fortschritt wird nicht übertragen, kann im privaten Modus fehlen und ist an diesen Browser und dieses Gerät gebunden.</p>
+    </section>
+    <section class="course-sharing" aria-labelledby="sharing-title">
+      <h2 id="sharing-title">Kurs teilen</h2>
+      <p>Dieser Link führt zur öffentlichen Kursseite. Der QR-Code enthält nur diese Kurs-URL, keine persönlichen Daten.</p>
+      <div class="sharing-grid">
+        <div>
+          <label for="course-url">Öffentliche Kurs-URL</label>
+          <div class="copy-row">
+            <input id="course-url" type="url" readonly>
+            <button id="copy-course-url" type="button">Link kopieren</button>
+          </div>
+          <p id="copy-course-status" role="status" aria-live="polite"></p>
+        </div>
+        <div id="course-qr" class="course-qr" aria-label="QR-Code für die öffentliche Kursseite"></div>
+      </div>
     </section>
     <h2>Dein Lernpfad</h2>
     <p><a href="./modul-1.html#stunde-1">Mit Modul 1 beginnen →</a></p>
