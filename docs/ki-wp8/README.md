@@ -16,6 +16,12 @@
 
 Existing unrelated uncommitted edits (Tastatur and Java work) predate this feature branch; keep them out of KI commits. `pages/ki8/` is a standalone draft and is **not linked** from the public catalog.
 
+## Fictional teacher demo (not a teacher account)
+
+`docs/ki-wp8/demo/` contains a separate, unprotected local preview of a class overview, synthetic learner details and transient feedback. It is outside `pages/`, so the existing Pages workflow does not upload it. The labels `DEMO-001`–`DEMO-003` and every response are invented. Feedback is held only in JavaScript memory and disappears on reload; **do not enter real student data**. No login, student access, export, exam release or protected teacher area has been implemented.
+
+To preview locally from the repository root: `python3 -m http.server 8099`, then open `http://localhost:8099/docs/ki-wp8/demo/`. Stop the server afterward. ES modules need HTTP rather than opening `index.html` as a `file://` URL. This is a visual workflow mock, not a security or GDPR validation. Check the rules and DOM interactions with `node scripts/verify-ki-wp8-teacher-demo.mjs` and `node scripts/verify-ki-wp8-teacher-demo-ui.mjs`.
+
 ## Materials and rights
 
 `/Users/acabrera/Desktop/KI_WP8` was already extracted; no ZIP was present there. Its README describes 13 PDFs (12 classroom PDFs plus one teacher solution). They were copied to the local ignored `teaching-materials/ki-wp8/source/`; the solution is additionally separated under `source/teacher-only/`. Git ignore excludes the entire source directory, including solutions. The filename `AB1_NÃ¤hrwerte_als_Daten.pdf` contains unusual Unicode/encoding and must not be silently renamed without checking references.

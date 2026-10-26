@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lehrer-Cockpit – KI WP8 · Demo</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt springen</a>
+  <header><strong>Lingua<span>Code</span></strong><span>Nur Demodaten · kein geschützter Lehrerbereich</span></header>
+  <main id="main">
+    <h1>Lehrer-Cockpit – KI WP8</h1>
+    <p class="warning"><strong>Nur Demodaten. Nicht für echte Schülerdaten.</strong> Diese ungeschützte Vorschau nutzt frei erfundene Kürzel und Antworten. Sie besitzt weder Anmeldung noch Backend. Rückmeldungen bleiben nur bis zum Neuladen im Arbeitsspeicher; bitte keine echten Namen, Kürzel, Antworten oder Beurteilungen eingeben. Nicht veröffentlichen.</p>
+    <section aria-labelledby="overview-title">
+      <h2 id="overview-title">Klassenübersicht · Musterwerte</h2>
+      <div id="summary" class="summary" aria-live="polite"></div>
+      <div class="scroll"><table><caption>Fiktive Lernstände</caption><thead><tr><th scope="col">Demokürzel</th><th scope="col">Aktuelles Modul</th><th scope="col">Fortschritt</th><th scope="col">Offene Karten</th><th scope="col">Feedback</th><th scope="col">Ansicht</th></tr></thead><tbody id="learners"></tbody></table></div>
+    </section>
+    <section id="detail" class="detail" aria-labelledby="detail-title" hidden>
+      <h2 id="detail-title" tabindex="-1">Musteransicht</h2>
+      <p id="detail-progress"></p>
+      <h3>Beispielantwort (frei erfunden)</h3><p id="detail-answer"></p>
+      <h3>Rückmeldung in dieser Vorschau</h3><p id="detail-feedback"></p>
+      <form id="feedback-form"><label for="feedback-input">Nur erfundenen Beispieltext eingeben</label><textarea id="feedback-input" maxlength="500" required></textarea><button type="submit">Rückmeldung nur in der Demo anzeigen</button></form>
+      <p id="feedback-status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="detail" aria-labelledby="controls-title"><h2 id="controls-title">Kurssteuerung und Prüfungen</h2><p>In dieser Vorschau deaktiviert. Freigaben, echte Ergebnisse, Klassenarbeiten und geschützte Lösungen benötigen erst eine genehmigte, serverseitig geschützte Architektur.</p></section>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
