@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KI entdecken, verstehen und gestalten – WP Informatik 8 · LinguaCode</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt springen</a>
+  <header><a href="../">Lingua<span>Code</span></a><span>Informatik · WP 8</span></header>
+  <main id="main">
+    <section class="hero">
+      <p class="eyebrow">Lokaler Kursentwurf · 18 Unterrichtsstunden</p>
+      <h1>KI entdecken, verstehen und gestalten – WP Informatik 8</h1>
+      <p>Sechs Module führen von KI im Alltag über Daten und Entscheidungsbäume bis zum verantwortlichen Einsatz. Bisher ist nur eine Beispielkarte interaktiv.</p>
+      <p class="notice"><strong>Entwurf:</strong> Keine Anmeldung, kein persönlicher Lernstand, keine Klassenarbeit und keine Lehreransicht. Antworten werden nicht gespeichert.</p>
+    </section>
+    <h2>Dein Lernpfad</h2>
+    <div id="modules" class="modules"></div>
+    <section class="lesson" id="beispielkarte" aria-labelledby="card-title">
+      <p class="eyebrow">Modul 3 · Beispielkarte · etwa 5 Minuten</p>
+      <h2 id="card-title">Schwellenwerte ausprobieren</h2>
+      <p><strong>Lernziel:</strong> Du wendest eine Ja-Nein-Regel auf neue Daten an und erkennst den Unterschied zwischen Trainingsdaten und Testdaten.</p>
+      <h3>Erklären</h3>
+      <p>Ein <strong>Merkmal</strong> beschreibt ein Objekt durch einen Wert. Ein <strong>Schwellenwert</strong> teilt Werte in zwei Gruppen: kleiner oder gleich dem Grenzwert – oder größer. Trainingsbeispiele helfen beim Entwerfen einer Regel; mit bisher ungesehenen Testbeispielen prüfst du sie.</p>
+      <p class="notice"><strong>Vereinfachte Labels:</strong> Die in den Originalmaterialien verwendeten Kategorien sind Labels einer Datenaufgabe, keine allgemeingültigen Gesundheitsurteile. Diese Karte nutzt deshalb ausschließlich erfundene Zahlen und neutrale Gruppennamen.</p>
+      <h3>Ausprobieren</h3>
+      <p>Trainingsbeispiele: Wert 3 → Gruppe „unter oder gleich“, Wert 11 → Gruppe „über“. Probiere einen Grenzwert aus. Auf welche Seite fällt ein <em>neues</em> Beispiel mit Wert 8?</p>
+      <form id="threshold-form">
+        <label for="threshold">Schwellenwert (0 bis 20)</label>
+        <input id="threshold" type="number" min="0" max="20" step="0.1" value="8" required>
+        <button type="submit">Testbeispiel einordnen</button>
+      </form>
+      <p id="result" role="status" aria-live="polite">Noch keine Regel getestet.</p>
+      <h3>Anwenden</h3>
+      <p>Ändere den Schwellenwert auf 7. In welche Gruppe fällt Wert 8 jetzt? Begründe, warum ein Testbeispiel nicht zum Aussuchen des Grenzwerts benutzt werden sollte.</p>
+      <h3>Rückmeldung und Abschluss</h3>
+      <p>Vergleiche deine Begründung mit der Regel: Wert ≤ Schwellenwert liegt in der ersten Gruppe, sonst in der zweiten. Testdaten dienen zur Überprüfung – nicht zum heimlichen Nachtrainieren. Deine Antwort bleibt nur auf dieser Seite sichtbar und ist nach dem Neuladen weg.</p>
+    </section>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
