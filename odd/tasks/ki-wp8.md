@@ -8,12 +8,15 @@ Status: Inventory, public-safe course scaffold and isolated fictional teacher de
 3. **S3** — "Erst danach entscheidest du, ob die benötigten Schülerzugänge über ein bestehendes Backend oder über einen neuen, datenschutzrechtlich geprüften Dienst umgesetzt werden."
 4. **S4** — "Entpacke diesen .zip und nutze es für die Karteikarte '/Users/acabrera/Desktop/KI_WP8'"
 5. **S5** — "si" (reply to the explicit question whether to build a teacher prototype using only fictional data, without activating real student tracking).
+6. **S6** — "ahora guarda todos los cambios, haz un commit + push y levanta la app en el navegador para ver como se ve"; clarification: "todos".
 
 ## Tasks
 - T1 (S1-S4): inventory and prioritized plan, route: parent, commit: 670b9b8
 - T2 (S2-S4): quarantine local materials, route: parent, commit: 670b9b8
 - T3 (S1-S3): isolated public-safe prototype with tests, route: parent, commit: f200db9
 - T4 (S2,S5): fictional teacher dashboard, isolated from Pages and real student records, route: parent, commit: 5a8a1c1
+- T5 (S6): inspect, test and commit previously uncommitted Tastatur/Java changes in reviewable units; close discovered local teacher-data exposure, route: parent, commits: 1e77e1a (Tastatur/security), 2798ed7 (Java)
+- T6 (S6): push feature branch and open local browser preview, route: parent, commit: none
 
 ## Log
 - L1: "Berücksichtige diese Schritte von Codex: 1. Lege in deinem Projekt einen Ordner teaching-materials/ki-wp8/source/ an und kopiere dort die hochgeladenen PDF- und ODS-Dateien hinein. Lasse sie zunächst lokal und füge den Ordner gegebenenfalls zu .gitignore hinzu, damit du nicht versehentlich fremde oder geschützte Materialien veröffentlichst."
@@ -26,3 +29,6 @@ Status: Inventory, public-safe course scaffold and isolated fictional teacher de
 - L8: User: "si". This answered the focused question: "¿Aceptás que avance con ese prototipo docente usando únicamente datos ficticios?" No permission to use real records, store them, merge or publish was given.
 - L9: T4 RED: missing `docs/ki-wp8/demo/model.mjs`; GREEN: focused model and DOM checks. Existing KI/Java/schema checks passed. Native assess unavailable with pre-existing unrelated untracked files. Demo remains outside Pages; no browser/device check performed.
 - L10: T4 committed as 5a8a1c1. Review boundary: treat T1–T3 (public-safe scaffold) and T4 (fictional teacher demo) as separate slices; combined branch exceeds the ~400-line review target. Do not merge or publish without explicit authorization.
+- L11: User: "ahora guarda todos los cambios, haz un commit + push y levanta la app en el navegador para ver como se ve". Scope clarification: User: "todos" — authorizes inclusion of pre-existing Tastatur and Java work in the feature branch commit/push, not a main merge or production deployment.
+- L12: Independent verifier reproduced unauthenticated teacher data disclosure on the local PHP server when no password hash is configured. Focused HTTP test RED with seeded exercise (200), GREEN after per-route auth gate (503, stored DB unchanged). Tastatur/Java/KI/schema/lab checks passed. Group Tastatur behavior, security fix, tests and README in one review unit; Java Challenge fix/tests in a separate unit. Neither work unit includes ignored source PDFs.
+- L13: Review boundaries after T5: KI inventory/scaffold 670b9b8–26bcedb (~195 lines), fictional teacher demo 5a8a1c1–3130682 (~227 lines), Tastatur/security 1e77e1a (521 lines; coupled public trainer + teacher CRUD + regression checks exceeds ~400 review target), Java Challenge 2798ed7 (25 lines). Do not review the 971-line branch as one PR. Production/Pages remain unchanged; push is feature branch only.
