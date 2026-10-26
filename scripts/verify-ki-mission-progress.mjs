@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {createProgressStore, PROGRESS_NAMESPACE} from '../pages/ki8/mission/progress.mjs';
+import {createProgressStore, PROGRESS_NAMESPACE, progressKeyForLesson} from '../pages/ki8/mission/progress.mjs';
 
 class MemoryStorage {
   #values = new Map();
@@ -10,6 +10,17 @@ class MemoryStorage {
 }
 
 const storage = new MemoryStorage();
+assert.equal(progressKeyForLesson('ki-01'), 'ki-01');
+assert.equal(progressKeyForLesson('ki-02'), 'ki-02');
+const mission01Store = createProgressStore(storage, progressKeyForLesson('ki-01'));
+const mission02Store = createProgressStore(storage, progressKeyForLesson('ki-02'));
+assert.deepEqual(mission01Store.save({phase: 1}), {status: 'success'});
+assert.deepEqual(mission02Store.load(), {status: 'success', state: null});
+assert.deepEqual(mission02Store.save({phase: 2}), {status: 'success'});
+assert.deepEqual(mission01Store.load(), {status: 'success', state: {phase: 1}});
+assert.deepEqual(mission02Store.load(), {status: 'success', state: {phase: 2}});
+assert.equal(storage.getItem(`${PROGRESS_NAMESPACE}:ki-01`), JSON.stringify({version: 1, state: {phase: 1}}));
+assert.equal(storage.getItem(`${PROGRESS_NAMESPACE}:ki-02`), JSON.stringify({version: 1, state: {phase: 2}}));
 const key = 'lesson-01';
 const store = createProgressStore(storage, key);
 const saved = {phase: 'quiz', answers: {first: 2}, completed: false, tags: ['local']};

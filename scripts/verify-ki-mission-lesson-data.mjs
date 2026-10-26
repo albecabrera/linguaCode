@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {
   LESSONS,
   KI_MISSION_01,
+  KI_MISSION_02,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -27,7 +28,42 @@ assert.equal(KI_MISSION_01.media.worksheet.url, 'https://www.planet-schule.de/th
 assert.equal(Object.hasOwn(KI_MISSION_01.media, 'teacherGuide'), false);
 assert.equal(getLesson('ki-01'), KI_MISSION_01);
 assert.equal(validateLessonDefinition(KI_MISSION_01), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01']);
+assert.equal(KI_MISSION_01.title, 'Mission 01 – Was ist künstliche Intelligenz?');
+assert.equal(KI_MISSION_01.duration, 45);
+assert.deepEqual(KI_MISSION_01.objectives, [
+  'Du erklärst, wie Maschinen aus Beispielen Muster lernen.',
+  'Du beschreibst, warum geeignete Trainingsdaten wichtig sind.',
+  'Du erkennst, dass KI bei neuen Beispielen Fehler machen kann.',
+]);
+assert.equal(getLesson('ki-01'), KI_MISSION_01);
+assert.equal(getLesson('ki-02'), KI_MISSION_02);
+assert.equal(KI_MISSION_02.id, 'ki-02');
+assert.equal(KI_MISSION_02.title, 'Mission 02 – Regeln, Training und Grenzen');
+assert.equal(KI_MISSION_02.duration, 45);
+assert.deepEqual(KI_MISSION_02.context, { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 2', overviewHref: '../modul-1.html#stunde-2' });
+assert.deepEqual(KI_MISSION_02.objectives, [
+  'Du unterscheidest vorgegebene Regeln von Mustern, die ein Modell aus Trainingsbeispielen lernt.',
+  'Du erklärst, warum neue, ungesehene Testdaten zum Prüfen eines Modells wichtig sind.',
+]);
+assert.equal(KI_MISSION_02.media.video, undefined);
+assert.equal(KI_MISSION_02.media.experienceAi.url, 'https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13');
+assert.equal(KI_MISSION_02.media.klickpunktSchule.url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial');
+assert.equal(KI_MISSION_02.resourceNotes.video.status, 'unconfirmed');
+assert.match(KI_MISSION_02.resourceNotes.video.text, /[Kk]ein spezifisches Video/);
+assert.equal(KI_MISSION_02.resourceNotes.worksheet.status, 'confirmed-source');
+assert.match(KI_MISSION_02.resourceNotes.worksheet.text, /Klasse 5–8/);
+assert.deepEqual(KI_MISSION_02.phases.map((phase) => phase.minutes), [10, 15, 14, 6]);
+assert.equal(KI_MISSION_02.phases.at(-1).blocks[0].type, 'quiz');
+assert.equal(KI_MISSION_02.phases.at(-1).questions.length, 5);
+assert.ok(KI_MISSION_02.tasks.length >= 3);
+assert.ok(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).some((block) => block.type === 'task'));
+assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'quiz', 'task']);
+assert.deepEqual(KI_MISSION_02.phases[0].blocks.slice(0, 2), [
+  { type: 'media', mediaId: 'experienceAi' },
+  { type: 'media', mediaId: 'klickpunktSchule' },
+]);
+assert.equal(validateLessonDefinition(KI_MISSION_02), true);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02']);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [

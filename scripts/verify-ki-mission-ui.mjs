@@ -2,10 +2,17 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { gradeQuiz, matchGapFill, getLesson } from '../pages/ki8/mission/lesson-data.mjs';
 import { createProgressStore, PROGRESS_NAMESPACE } from '../pages/ki8/mission/progress.mjs';
-import { createMissionRenderer } from '../pages/ki8/mission/mission.mjs';
+import { createMissionRenderer, resolveMissionRoute } from '../pages/ki8/mission/mission.mjs';
 
 const html = fs.readFileSync(new URL('../pages/ki8/stunde-1/index.html', import.meta.url), 'utf8');
+const mission02Html = fs.readFileSync(new URL('../pages/ki8/stunde-2/index.html', import.meta.url), 'utf8');
 assert.match(html, /src="\.\.\/mission\/mission\.mjs"/);
+assert.match(html, /data-lesson-id="ki-01"/);
+assert.match(mission02Html, /src="\.\.\/mission\/mission\.mjs"/);
+assert.match(mission02Html, /data-lesson-id="ki-02"/);
+assert.deepEqual(resolveMissionRoute('/ki8/stunde-1/'), { path: '/ki8/stunde-1/', lessonId: 'ki-01', progressKey: 'ki-01' });
+assert.deepEqual(resolveMissionRoute('/ki8/stunde-2/'), { path: '/ki8/stunde-2/', lessonId: 'ki-02', progressKey: 'ki-02' });
+assert.equal(resolveMissionRoute('/ki8/stunde-2/?lesson=ki-01'), undefined);
 assert.match(html, /id="mission-app"/);
 assert.doesNotMatch(html, /<iframe/i);
 const missionSource = fs.readFileSync(new URL('../pages/ki8/mission/mission.mjs', import.meta.url), 'utf8');

@@ -22,16 +22,19 @@ function isPlainValue(value, seen = new Set()) {
   return true;
 }
 
+export function progressKeyForLesson(lessonId) {
+  if (typeof lessonId !== 'string' || lessonId.length === 0) {
+    throw new TypeError('Progress key must be a non-empty string.');
+  }
+  return lessonId;
+}
+
 function storageKey(key) {
   return `${PROGRESS_NAMESPACE}:${key}`;
 }
 
 export function createProgressStore(storage, key) {
-  if (typeof key !== 'string' || key.length === 0) {
-    throw new TypeError('Progress key must be a non-empty string.');
-  }
-
-  const targetKey = storageKey(key);
+  const targetKey = storageKey(progressKeyForLesson(key));
   let futureVersionDetected = false;
 
   function load() {

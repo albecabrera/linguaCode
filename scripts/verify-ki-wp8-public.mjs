@@ -15,7 +15,7 @@ const expectedFiles = [
   'modul-4.html', 'modul-5.html', 'modul-6.html', 'module1-core.mjs', 'module1-ui.mjs',
   'module2-core.mjs', 'module2-ui.mjs', 'module3-core.mjs', 'module3-ui.mjs',
   'module4-core.mjs', 'module4-ui.mjs', 'module5-core.mjs', 'module5-ui.mjs',
-  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1',
+  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
@@ -23,7 +23,11 @@ assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="modules"/);
 const app = readFileSync(new URL('app.mjs', folder), 'utf8');
 assert.match(app, /modul-\$\{index \+ 1\}\.html#stunde-\$\{hour\}/);
-const publicSources = [catalog, entry, app, readFileSync(new URL('course.mjs', folder), 'utf8')];
+const missionTwoRoute = readFileSync(new URL('stunde-2/index.html', folder), 'utf8');
+assert.match(missionTwoRoute, /data-lesson-id="ki-02"/);
+assert.match(missionTwoRoute, /mission\.mjs/);
+assert.doesNotMatch(missionTwoRoute, /Lösung_02_TrainingEinesBaums|teacher-only/i);
+const publicSources = [catalog, entry, app, missionTwoRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
 for (let module = 1; module <= 6; module += 1) {
   const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
   const hours = [2, 2, 4, 2, 3, 5][module - 1];

@@ -84,7 +84,85 @@ export const KI_MISSION_01 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01 });
+const KI_MISSION_02_QUESTIONS = Object.freeze([
+  {
+    id: 'q1',
+    prompt: 'Welche Aussage beschreibt eine feste Regel?',
+    choices: ['Wenn die Ampel rot ist, halte an.', 'Das Modell findet selbst häufige Formen in Beispielen.', 'Das Modell probiert neue Daten aus.'],
+    correctIndex: 0,
+    explanation: 'Eine feste Regel wird von Menschen vorgegeben und gilt nach ihrer Formulierung direkt.',
+  },
+  {
+    id: 'q2',
+    prompt: 'Woran erkennt man ein trainiertes Muster?',
+    choices: ['Es wurde aus vielen Beispielen gelernt.', 'Es ist immer als Satz im Programm aufgeschrieben.', 'Es funktioniert nur bei genau einem bekannten Beispiel.'],
+    correctIndex: 0,
+    explanation: 'Ein Modell kann Muster aus Trainingsbeispielen lernen, ohne dass jede einzelne Entscheidung als Regel notiert wurde.',
+  },
+  {
+    id: 'q3',
+    prompt: 'Warum braucht man ungesehene Testdaten?',
+    choices: ['Damit das Modell mehr Trainingsdaten bekommt.', 'Damit man prüft, ob das Modell auch bei neuen Beispielen funktioniert.', 'Damit feste Regeln nicht mehr gelten.'],
+    correctIndex: 1,
+    explanation: 'Ungesehene Testdaten zeigen, ob ein Modell verallgemeinern kann und nicht nur bekannte Beispiele auswendig gelernt hat.',
+  },
+  {
+    id: 'q4',
+    prompt: 'Was ist eine mögliche Grenze eines Modells?',
+    choices: ['Es kann bei neuen oder seltenen Beispielen Fehler machen.', 'Es kann niemals falsche Antworten geben.', 'Es braucht keine passenden Trainingsbeispiele.'],
+    correctIndex: 0,
+    explanation: 'Wenn neue Beispiele anders sind als die Trainingsdaten, kann ein Modell Schwierigkeiten haben.',
+  },
+  {
+    id: 'q5',
+    prompt: 'Welche Reihenfolge passt zu einem fairen Test?',
+    choices: ['Testen, trainieren, Testdaten verändern.', 'Trainieren, mit neuen Testdaten prüfen, Ergebnis besprechen.', 'Eine Regel auswendig lernen, dann alle Antworten vorgeben.'],
+    correctIndex: 1,
+    explanation: 'Erst lernt das Modell aus Trainingsdaten; danach prüft man es mit getrennten, neuen Testdaten.',
+  },
+]);
+
+export const KI_MISSION_02 = Object.freeze({
+  id: 'ki-02',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 2', overviewHref: '../modul-1.html#stunde-2' },
+  title: 'Mission 02 – Regeln, Training und Grenzen',
+  description: 'Vergleiche feste Regeln mit gelernten Mustern und prüfe, warum ungesehene Testdaten wichtig sind.',
+  duration: 45,
+  objectives: [
+    'Du unterscheidest vorgegebene Regeln von Mustern, die ein Modell aus Trainingsbeispielen lernt.',
+    'Du erklärst, warum neue, ungesehene Testdaten zum Prüfen eines Modells wichtig sind.',
+  ],
+  phases: [
+    { id: 'rules', title: 'Feste Regeln erkennen', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }, { type: 'media', mediaId: 'klickpunktSchule' }, { type: 'task', taskId: 'task-rules' }] },
+    { id: 'training', title: 'Muster aus Beispielen', minutes: 15, blocks: [{ type: 'task', taskId: 'task-training' }, { type: 'task', taskId: 'task-pattern' }] },
+    { id: 'testing', title: 'Ungesehene Testdaten', minutes: 14, blocks: [{ type: 'task', taskId: 'task-testing' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_02_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_02_QUESTIONS },
+  ],
+  media: {
+    experienceAi: { url: 'https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13', kind: 'official-lesson', title: 'Maschinelles Lernen: Regeln und Daten', provider: 'Experience AI', observation: 'Lies, wie regelbasierte und datenbasierte Systeme Probleme unterschiedlich lösen.', checkboxLabel: 'Ich habe die Quelle angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+    klickpunktSchule: { url: 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial', kind: 'official-material-page', title: 'Maschinelles Lernen: Begleitmaterial', provider: 'Klickpunkt Schule', observation: 'Die Seite bietet eine Weblektion und Materialhinweise für die Klassen 5–8. Nutze nur die verlinkte Quelle.', checkboxLabel: 'Ich habe die Materialseite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein spezifisches Video für diese Stunde ist bestätigt; es wird kein Video zugewiesen.' },
+    worksheet: { status: 'confirmed-source', text: 'Eine passende Materialseite für Klasse 5–8 ist bestätigt und oben verlinkt; Arbeitsblätter werden nicht kopiert oder eingebettet.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Eine feste Regel wird von Menschen vorgegeben. Ein Modell kann dagegen Muster aus Trainingsbeispielen lernen. Mit neuen, ungesehenen Testdaten prüfen wir, ob es auch außerhalb der Übungsbeispiele funktioniert.' },
+    { type: 'reflection', id: 'self-check', prompt: 'Woran würdest du merken, dass ein Modell nur bekannte Beispiele auswendig gelernt hat?', examples: ['Bei neuen Beispielen macht es deutlich mehr Fehler.', 'Die Testdaten wurden beim Training schon verwendet.'] },
+  ],
+  tasks: [
+    { id: 'task-rules', type: 'open-response', title: 'Selbst-Check: Regel oder Muster?', prompt: 'Eine Sortierhilfe sagt: „Alles mit einem roten Aufkleber kommt in Kiste A.“ Ist das eine feste Regel oder ein gelerntes Muster? Begründe deine Antwort.', exampleAnswer: 'Das ist eine feste Regel, weil sie von Menschen vorgegeben ist und direkt auf die Farbe des Aufklebers angewendet wird.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-training', type: 'open-response', title: 'Training planen', prompt: 'Du möchtest ein Modell trainieren, Äpfel und Birnen auf Bildern zu unterscheiden. Nenne zwei Merkmale oder Beispiele, die im Training vorkommen sollten.', exampleAnswer: 'Zum Beispiel Bilder von Äpfeln und Birnen mit unterschiedlichen Farben, Formen und Größen. Beide Obstsorten sollten in verschiedenen Varianten vorkommen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-pattern', type: 'gap-fill', title: 'Begriffe sichern', prompt: 'Ein Modell lernt aus ______. Seine Antworten werden mit neuen ______ geprüft.', selfCheck: true },
+    { id: 'task-testing', type: 'open-response', title: 'Warum testen?', prompt: 'Warum sollte ein Modell nicht nur mit den Beispielen geprüft werden, die es schon im Training gesehen hat? Erkläre es mit einem eigenen Beispiel.', exampleAnswer: 'Mit neuen Testdaten sieht man, ob das Modell ein Muster gelernt hat. Wenn es nur bekannte Bilder richtig sortiert, könnte es diese auswendig gelernt haben und bei einem neuen Bild scheitern.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [{ taskId: 'task-pattern', acceptedCategories: ['examples-or-training-data', 'data-or-images'] }],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02 });
 
 export function getLesson(id) {
   return LESSONS[id];

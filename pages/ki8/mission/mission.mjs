@@ -1,6 +1,15 @@
 import { getLesson, gradeQuiz, matchGapFill } from './lesson-data.mjs';
-import { createProgressStore } from './progress.mjs';
+import { createProgressStore, progressKeyForLesson } from './progress.mjs';
 import { deriveFruitLab, fruitLabReducer, initialFruitLab } from './fruit-lab.mjs';
+
+export const MISSION_ROUTES = Object.freeze([
+  Object.freeze({ path: '/ki8/stunde-1/', lessonId: 'ki-01', progressKey: 'ki-01' }),
+  Object.freeze({ path: '/ki8/stunde-2/', lessonId: 'ki-02', progressKey: 'ki-02' }),
+]);
+
+export function resolveMissionRoute(pathname = globalThis.location?.pathname) {
+  return MISSION_ROUTES.find((route) => route.path === pathname);
+}
 
 const DEFAULT_STATE = () => ({ phase: 0, answers: {}, fruit: initialFruitLab(), quizAnswers: [], quizSubmitted: false, completed: false });
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -13,9 +22,9 @@ function isPlainObject(value) { return value !== null && typeof value === 'objec
 function isValidFruitState(value) { return isPlainObject(value) && (value.selectedExample === null || value.selectedExample === 'banana' || value.selectedExample === 'apple') && typeof value.shapeRuleEnabled === 'boolean' && typeof value.examplesApplied === 'boolean' && (value.reflectionAnswer === null || ['A', 'B', 'C'].includes(value.reflectionAnswer)) && typeof value.optionalText === 'string' && value.optionalText.length <= 500; }
 function isValidMissionState(value, phaseCount) { return isPlainObject(value) && Number.isInteger(value.phase) && value.phase >= 0 && value.phase < phaseCount && isPlainObject(value.answers) && Object.values(value.answers).every((answer) => typeof answer === 'string' || typeof answer === 'boolean' || (isPlainObject(answer) && Object.values(answer).every((part) => typeof part === 'string'))) && isValidFruitState(value.fruit) && Array.isArray(value.quizAnswers) && value.quizAnswers.every((answer) => answer === null || (Number.isInteger(answer) && answer >= 0 && answer <= 2)) && typeof value.quizSubmitted === 'boolean' && (value.completed === undefined || typeof value.completed === 'boolean'); }
 
-export function createMissionRenderer({ root, lesson = getLesson('ki-01'), storage = browserStorage() } = {}) {
+export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progressKey = lesson?.id, storage = browserStorage() } = {}) {
   if (!root || !lesson) throw new TypeError('Mission root and lesson are required.');
-  const store = createProgressStore(storage, lesson.id);
+  const store = createProgressStore(storage, progressKeyForLesson(progressKey));
   const phaseCount = lesson.phases.length;
   let state = DEFAULT_STATE();
   const loaded = store.load();
@@ -115,4 +124,9 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), stora
   return { getState: () => structuredClone(state), reset: () => { const result = store.reset(); if (result.status === 'success') { state = DEFAULT_STATE(); writesFrozen = false; storageMessage = ''; render(); } return result; } };
 }
 
-if (typeof document !== 'undefined') createMissionRenderer({ root: document.querySelector('#mission-app') });
+if (typeof document !== 'undefined') {
+  const root = document.querySelector('#mission-app');
+  const route = resolveMissionRoute();
+  const lesson = route ? getLesson(route.lessonId) : undefined;
+  if (root && lesson) createMissionRenderer({ root, lesson, progressKey: route.progressKey });
+}
