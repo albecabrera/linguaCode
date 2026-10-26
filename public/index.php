@@ -85,6 +85,7 @@ function studentResourceUrl(string $url): ?string {
     };
 }
 function externalShareUrl(array $resource): string {
+    if (($resource['title'] ?? '') === 'UV Künstliche Intelligenz') return baseUrl() . '/ki8/';
     if (!empty($resource['short_code'])) return shortUrl((string)$resource['short_code']);
     return shortUrl(match ($resource['title'] ?? '') {
         'Zustandsautomaten · Klasse 8' => 'automaten',
@@ -157,6 +158,9 @@ function dashboard(): void {
     $externalSql = 'SELECT * FROM external_resources WHERE is_active=1'; $externalValues = [];
     if (in_array($subject, ['spanisch', 'informatik'], true)) { $externalSql .= ' AND subject=?'; $externalValues[] = $subject; }
     $externalSql .= ' ORDER BY title'; $externalStmt = db()->prepare($externalSql); $externalStmt->execute($externalValues); $external = $externalStmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($subject === '' || $subject === 'informatik') {
+        $external[] = ['subject' => 'informatik', 'title' => 'UV Künstliche Intelligenz', 'description' => 'WP 8 · zwei interaktive Stunden als Kursentwurf; kein gespeicherter Lernstand.', 'url' => baseUrl() . '/ki8/', 'pages_url' => '/ki8/'];
+    }
     $external[] = ['subject' => 'informatik', 'title' => 'Zustandsautomaten · Klasse 8', 'description' => 'Interaktive Lernübung zu Zuständen und Zustandsübergängen.', 'url' => automataPublicUrl(), 'pages_url' => studentSiteUrl('z')];
     $external[] = ['subject' => 'informatik', 'title' => 'Kara-Einführung', 'description' => 'Kara mit Zuständen, Sensoren und Übergängen programmieren.', 'url' => karaPublicUrl(), 'pages_url' => studentSiteUrl('kara')];
     $external[] = ['subject' => 'informatik', 'title' => 'Java-Interaktiv', 'description' => 'Oberstufe · 78 Lernkarten, Quiz und begrenzte Simulationen.', 'url' => baseUrl() . '/java-interaktiv/', 'pages_url' => studentSiteUrl('j')];

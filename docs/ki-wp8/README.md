@@ -14,7 +14,13 @@
 | Local progress | `pages/java/script.js:3-8`, `README.md` | Browser-local only; does not survive device changes. Existing Java teacher-mode toggle is not access control. |
 | Checks | `scripts/verify-schema.php`, `scripts/verify-java-interaktiv.mjs`, `scripts/verify-java-interaktiv-ui.mjs` | Focused PHP and Node checks exist; no central test/build system. Do not build per project instruction. |
 
-Existing unrelated uncommitted edits (Tastatur and Java work) predate this feature branch; keep them out of KI commits. `pages/ki8/` is a standalone draft and is **not linked** from the public catalog.
+Previously separate Tastatur and Java work was committed in distinct work units after explicit user authorization. The course appears on this feature branch as **UV Künstliche Intelligenz** under `Informatik` in `pages/index.html` and as an entry in the local PHP teacher dashboard. Neither change is deployed on `main`.
+
+## Interactive course draft
+
+The public-safe course at `pages/ki8/` now opens two separate 45-minute module-1 lesson plans via “Stunde 1 öffnen” and “Stunde 2 öffnen”. Each has two closed-answer activities with immediate explanations and page-only progress; the decision-tree sample card in module 3 remains available. Modules 2 and 4–6 are still outlines, not finished lessons. The catalog card is **UV Künstliche Intelligenz** in `Informatik`; no student accounts or persistent results exist.
+
+For a local public-catalog preview, serve only the public folder: `python3 -m http.server 8101 --bind 127.0.0.1 --directory pages`, then visit `http://127.0.0.1:8101/` and filter by `Informatik`. The local PHP host also serves `/ki8/` and shows a teacher-dashboard entry. Do not share a QR code based on a localhost URL, and do not claim the live GitHub Pages site is updated until an explicitly authorized deployment to `main` occurs. Check with `node scripts/verify-ki-wp8-module1.mjs`, `node scripts/verify-ki-wp8-module1-ui.mjs`, `node scripts/verify-ki-wp8-catalog.mjs` and `node scripts/verify-ki-wp8-catalog-http.mjs`.
 
 ## Fictional teacher demo (not a teacher account)
 

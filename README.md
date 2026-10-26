@@ -60,6 +60,14 @@ Das Java-Lab für Informatik EF/Q1/Q2 ist unter `/java` integriert. Architektur 
 
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.
 
+## UV Künstliche Intelligenz · WP Informatik 8 (Entwurf)
+
+Die Karte **UV Künstliche Intelligenz** steht im öffentlichen Schülerkatalog unter **Informatik** und im lokalen PHP-Lehrdashboard. Auf der Kursseite `/ki8/` lassen sich die ersten zwei Unterrichtsstunden des Moduls „KI im Alltag entdecken“ getrennt öffnen: vier interaktive Fragen mit unmittelbarer Begründung sowie Aufgaben für Partnerarbeit. Die Beispielkarte zu Entscheidungsbäumen bleibt erhalten; weitere Module sind noch nicht ausgearbeitet. Kein Login und kein geräteübergreifender Lernstand; keine echten Schülerdaten eingeben.
+
+Lokale Vorschau des Katalogs ohne private Quelldateien: `python3 -m http.server 8101 --bind 127.0.0.1 --directory pages`, danach `http://127.0.0.1:8101/` öffnen und **Informatik** auswählen. Alternativ bietet der lokale PHP-Host `/ki8/`. GitHub Pages veröffentlicht diese Branch-Änderungen **nicht**, solange kein ausdrücklich freigegebener Merge nach `main` erfolgt. Architektur- und Materialstatus: [`docs/ki-wp8/README.md`](docs/ki-wp8/README.md).
+
+Prüfung ohne Build: `node scripts/verify-ki-wp8-module1.mjs`, `node scripts/verify-ki-wp8-module1-ui.mjs`, `node scripts/verify-ki-wp8-catalog.mjs`, `node scripts/verify-ki-wp8-catalog-http.mjs`.
+
 ## Tastatur-Profi · Informatik Klasse 6
 
 - Schülertrainer: `/tastatur/` auf dem PHP-Testserver, `pages/tastatur/` auf GitHub Pages; öffentlicher Pages-Kurzlink: `s/b/`.
