@@ -47,7 +47,7 @@ assert.deepEqual(KI_MISSION_02.objectives, [
 ]);
 assert.equal(KI_MISSION_02.media.video, undefined);
 assert.equal(KI_MISSION_02.media.experienceAi.url, 'https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13');
-assert.equal(KI_MISSION_02.media.klickpunktSchule.url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial');
+assert.equal(KI_MISSION_02.media.klickpunktSchule.url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial');
 assert.equal(KI_MISSION_02.resourceNotes.video.status, 'unconfirmed');
 assert.match(KI_MISSION_02.resourceNotes.video.text, /[Kk]ein spezifisches Video/);
 assert.equal(KI_MISSION_02.resourceNotes.worksheet.status, 'confirmed-source');

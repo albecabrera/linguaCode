@@ -31,7 +31,7 @@ Dieser Lehrer-Link gehört ausschließlich in dieses lokale Repository-Dokument 
 Die nächste Stunde ist lokal unter `/ki8/stunde-2/` verfügbar und wird aus derselben Lesson-Registry gerendert. Ihr Thema ist der Vergleich fester Regeln mit gelernten Mustern und die Rolle neuer Testdaten.
 
 - [Experience AI: Maschinelles Lernen, Modul 1 Lektion 2](https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13) – Quelle für 11- bis 14-Jährige, mit genauem Schwerpunkt auf regelbasierten und datenbasierten Verfahren.
-- [Klickpunkt Schule: Maschinelles Lernen](https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial) – Materialseite für Klassen 5–8 mit Weblektion und Materialpaket; die Seite nennt CC BY-SA 4.0.
+- [Klickpunkt Schule: Maschinelles Lernen](https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial) – Materialseite für Klassen 5–8 mit Weblektion und Materialpaket; die Seite nennt CC BY-SA 4.0.
 
 Beide Quellen werden nur verlinkt. Arbeitsblätter werden nicht kopiert oder eingebettet. Ein spezifisches, passendes Video für diese Stunde wurde nicht bestätigt und ist deshalb nicht zugewiesen. Die HubbS-Ressource zu Trainingsdaten ist für eine berufliche KI-Zusatzqualifikation beschrieben; eine Eignung für WP 8 ist nicht belegt.
 
