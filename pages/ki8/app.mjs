@@ -7,7 +7,7 @@ for (const [index, item] of modules.entries()) {
   const heading = document.createElement('h3');
   heading.textContent = `${item.icon} ${index + 1}. ${item.title}`;
   const detail = document.createElement('p');
-  detail.textContent = `${item.hours} Unterrichtsstunden · ${index === 0 || index === 1 ? '2 interaktive Stunden verfügbar' : index === 2 ? 'Beispielkarte verfügbar' : 'In Vorbereitung'}`;
+  detail.textContent = `${item.hours} Unterrichtsstunden · ${index === 0 || index === 1 ? '2 interaktive Stunden verfügbar' : index === 2 ? '4 interaktive Stunden · Beispielkarte verfügbar' : 'In Vorbereitung'}`;
   card.append(heading, detail);
   if (index === 0) {
     for (const hour of [1, 2]) {
@@ -25,11 +25,12 @@ for (const [index, item] of modules.entries()) {
       card.append(link);
     }
   }
+  // The module 3 lesson is linked from the course page: ./modul-3.html
   if (index === 2) {
-    const link = document.createElement('a');
-    link.href = '#beispielkarte';
-    link.textContent = 'Beispielkarte öffnen';
-    card.append(link);
+    const sample = document.createElement('a');
+    sample.href = '#beispielkarte';
+    sample.textContent = 'Beispielkarte öffnen';
+    card.append(sample);
   }
   container.append(card);
 }
