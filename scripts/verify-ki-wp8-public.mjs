@@ -7,23 +7,35 @@ const cards = [...catalog.matchAll(/<article data-subject="([^"]+)">([\s\S]*?)<\
 const matches = cards.filter(([, , html]) => html.includes('<h2>UV Künstliche Intelligenz</h2>'));
 assert.equal(matches.length, 1);
 assert.equal(matches[0][1], 'Informatik');
-assert.match(matches[0][2], /href="ki8\/"/);
-assert.match(matches[0][2], /data-share="ki8\/"/);
+assert.match(matches[0][2], /href="ki8\//);
+assert.match(matches[0][2], /data-share="ki8\//);
 const folder = new URL('../pages/ki8/', import.meta.url);
-assert.deepEqual(readdirSync(folder).sort(), ['index.html', 'modul-1.html', 'module1-core.mjs', 'module1-ui.mjs', 'style.css']);
+const expectedFiles = [
+  'app.mjs', 'course.mjs', 'index.html', 'modul-1.html', 'modul-2.html', 'modul-3.html',
+  'modul-4.html', 'modul-5.html', 'modul-6.html', 'module1-core.mjs', 'module1-ui.mjs',
+  'module2-core.mjs', 'module2-ui.mjs', 'module3-core.mjs', 'module3-ui.mjs',
+  'module4-core.mjs', 'module4-ui.mjs', 'module5-core.mjs', 'module5-ui.mjs',
+  'module6-core.mjs', 'module6-ui.mjs', 'style.css',
+];
+assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
-assert.match(entry, /content="0; url=\.\/modul-1\.html"/);
-assert.match(entry, /href="\.\/modul-1\.html"/);
-const html = readFileSync(new URL('modul-1.html', folder), 'utf8');
-for (const anchor of ['stunde-1', 'stunde-2', 'activities-1', 'activities-2']) {
-  assert.match(html, new RegExp(`id="${anchor}"`));
+assert.doesNotMatch(entry, /http-equiv="refresh"/);
+assert.match(entry, /id="modules"/);
+const app = readFileSync(new URL('app.mjs', folder), 'utf8');
+assert.match(app, /modul-\$\{index \+ 1\}\.html#stunde-\$\{hour\}/);
+const publicSources = [catalog, entry, app, readFileSync(new URL('course.mjs', folder), 'utf8')];
+for (let module = 1; module <= 6; module += 1) {
+  const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
+  const hours = [2, 2, 4, 2, 3, 5][module - 1];
+  for (let hour = 1; hour <= hours; hour += 1) {
+    assert.match(html, new RegExp(`id="stunde-${hour}"`));
+    assert.match(html, new RegExp(`id="activities-${hour}"`));
+  }
+  assert.match(html, new RegExp(`type="module" src="\\./module${module}-ui\\.mjs"`));
+  publicSources.push(html, readFileSync(new URL(`module${module}-ui.mjs`, folder), 'utf8'), readFileSync(new URL(`module${module}-core.mjs`, folder), 'utf8'));
 }
-assert.equal((html.match(/href="\.\.\/"/g) || []).length, 3);
-assert.match(html, /type="module" src="\.\/module1-ui\.mjs"/);
-const ui = readFileSync(new URL('module1-ui.mjs', folder), 'utf8');
-const core = readFileSync(new URL('module1-core.mjs', folder), 'utf8');
-for (const source of [catalog, entry, html, ui, core]) {
-  assert.doesNotMatch(source, /(?:localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest|Lösung_02_TrainingEinesEBaums)/);
+for (const source of publicSources) {
+  assert.doesNotMatch(source, /(?:localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest|Lösung_02_TrainingEinesBaums|\.pdf|docs\/ki-wp8\/demo)/i);
 }
 assert.equal(existsSync(new URL('../docs/ki-wp8/demo/index.html', import.meta.url)), false);
 const {lessons, gradeChoice} = await import('../pages/ki8/module1-core.mjs');
@@ -52,4 +64,4 @@ assert.equal(exerciseCards[cards.indexOf(matches[0])].hidden, false);
 assert.equal(exerciseCards[cards.findIndex(([, subject]) => subject === 'Spanisch')].hidden, true);
 buttons[0].click();
 assert.equal(exerciseCards.some(({hidden}) => hidden), false);
-console.log('PASS: public-only KI card, two hours, offline feedback rules, safe files and existing subject filter.');
+console.log('PASS: public-only KI card, six modules, 18 linked hours, offline feedback rules, safe files and existing subject filter.');

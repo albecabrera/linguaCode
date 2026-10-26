@@ -20,9 +20,9 @@ Die meisten bisherigen Freigaben verwenden kurze Pages-Pfade (`/s/a/`, `/s/z/` u
 
 ## UV Künstliche Intelligenz · WP Informatik 8
 
-Die Karte steht im öffentlichen Katalog unter **Informatik**. Sie öffnet ausschließlich zwei interaktive Unterrichtsstunden mit automatisch erklärten Auswahlaufgaben und Partnerarbeitsphasen. Antworten gelten nur für die offene Seite; es gibt weder Konto noch gespeicherten Lernstand oder einen geschützten Lehrerbereich. Nicht fertiggestellte Module, Original-PDFs und Lehrerlösungen sind nicht Teil der öffentlichen Ausgabe.
+Die Karte steht im öffentlichen Katalog unter **Informatik**. Sie öffnet alle sechs Module mit 18 interaktiven Unterrichtsstunden, automatisch erklärten Auswahlaufgaben und Partnerarbeitsphasen. Antworten gelten nur für die offene Seite; es gibt weder Konto noch gespeicherten Lernstand oder einen geschützten Lehrerbereich. Original-PDFs und Lehrerlösungen sind nicht Teil der öffentlichen Ausgabe.
 
-Lokale Prüfung ohne Build: `node scripts/verify-ki-wp8-public.mjs` und `node scripts/verify-ki-wp8-module1-ui.mjs`. Der öffentliche Kurslink ist `https://albecabrera.github.io/linguaCode/ki8/`; diese Route führt zu den beiden Stunden. Veröffentlichung erfolgt ausschließlich über den bestehenden Pages-Workflow bei einem Push auf `main`.
+Lokale Prüfung ohne Build: `node scripts/verify-ki-wp8-public.mjs`, `node scripts/verify-ki-wp8-public-release.mjs` und die zehn Modul-/UI-Prüfungen für die Module 2–6. Der öffentliche Kurslink ist `https://albecabrera.github.io/linguaCode/ki8/`; die stabile Route führt zur Kursübersicht, während `/ki8/modul-1.html` unverändert direkt erreichbar bleibt. Veröffentlichung erfolgt ausschließlich über den bestehenden Pages-Workflow bei einem Push auf `main`.
 
 ## Öffentlicher PHP-Host und Kurzlinks
 

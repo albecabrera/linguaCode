@@ -45,3 +45,17 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 .skip { position: absolute; top: -100px; background: var(--surface); padding: .5rem; }
 .skip:focus { top: 0; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.hero { max-width: 800px; }
+.modules { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 1rem; }
+.module { border: 1px solid var(--line); border-top: 8px solid var(--module); background: var(--surface); border-radius: 1rem; padding: 1.25rem; }
+.module h3 { margin: .2rem 0; }
+.module a { display: inline-flex; align-items: center; min-height: 44px; margin-right: .8rem; }
+.module.blue { --module: #367cc1; }
+.module.mint { --module: #318e76; }
+.module.orange { --module: #b96d13; }
+.module.violet { --module: #8251ab; }
+.module.coral { --module: #c7594b; }
+.module.teal { --module: #188f99; }
+input[type=number] { width: 9rem; background: var(--surface); color: var(--fg); }
+#result { min-height: 2.5rem; font-weight: 700; }
