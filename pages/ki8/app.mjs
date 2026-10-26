@@ -7,8 +7,16 @@ for (const [index, item] of modules.entries()) {
   const heading = document.createElement('h3');
   heading.textContent = `${item.icon} ${index + 1}. ${item.title}`;
   const detail = document.createElement('p');
-  detail.textContent = `${item.hours} Unterrichtsstunden · ${index === 2 ? 'Beispielkarte verfügbar' : 'In Vorbereitung'}`;
+  detail.textContent = `${item.hours} Unterrichtsstunden · ${index === 0 ? '2 interaktive Stunden verfügbar' : index === 2 ? 'Beispielkarte verfügbar' : 'In Vorbereitung'}`;
   card.append(heading, detail);
+  if (index === 0) {
+    for (const hour of [1, 2]) {
+      const link = document.createElement('a');
+      link.href = `./modul-1.html#stunde-${hour}`;
+      link.textContent = `Stunde ${hour} öffnen`;
+      card.append(link);
+    }
+  }
   if (index === 2) {
     const link = document.createElement('a');
     link.href = '#beispielkarte';
