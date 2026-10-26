@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light dark;
+  font: 16px/1.55 system-ui, sans-serif;
+  --bg: #f5f8fb;
+  --fg: #162837;
+  --surface: #fff;
+  --line: #c5d3df;
+  --accent: #155b8b;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #101d29; --fg: #f2f6fc; --surface: #1c2d3c; --line: #647b8b; --accent: #8dd5ff; }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); }
+header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem max(1rem, calc((100vw - 1080px)/2));
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+}
+header a { color: var(--fg); text-decoration: none; }
+header a span, .eyebrow { color: var(--accent); }
+main { max-width: 1080px; margin: auto; padding: clamp(1rem, 3vw, 2rem); }
+h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
+.eyebrow { font-size: .8rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; }
+.notice { border-left: 4px solid var(--accent); padding: .8rem 1rem; background: var(--surface); }
+.lesson { border: 1px solid var(--line); background: var(--surface); border-radius: 1rem; padding: 1.25rem; margin: 2rem 0; max-width: 800px; }
+.hour-nav { display: flex; flex-wrap: wrap; gap: .8rem; }
+.hour-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); }
+.activities { display: grid; gap: 1rem; }
+.activity { padding: 1rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--bg); }
+.activity fieldset { border: 0; padding: 0; margin: 0; }
+.activity legend { font-weight: 700; padding: 0; margin-bottom: .7rem; }
+.activity label { display: flex; align-items: flex-start; gap: .5rem; padding: .4rem; margin: .3rem 0; cursor: pointer; }
+.activity input[type=radio] { min-width: 20px; min-height: 20px; margin: 0; accent-color: var(--accent); }
+.activity button { margin: .7rem 0; }
+button { font: inherit; min-height: 44px; padding: .55rem .8rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--accent); color: var(--bg); font-weight: 700; cursor: pointer; }
+a { color: var(--accent); }
+.answer-feedback { min-height: 1.5rem; margin: .4rem 0 0; }
+section[id^=stunde-] { scroll-margin-top: 1rem; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.skip { position: absolute; top: -100px; background: var(--surface); padding: .5rem; }
+.skip:focus { top: 0; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

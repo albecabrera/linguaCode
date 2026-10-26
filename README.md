@@ -16,7 +16,13 @@ Alle Schülerübungen werden als reine statische Seite unter [https://albecabrer
 
 Die Seite enthält nur öffentliche Übungen und keine Schülerdaten. Änderungen an `pages/` werden nach einem Push auf `main` automatisch veröffentlicht.
 
-Alle dort hinterlegten Freigaben verwenden einstellige Pages-Pfade (`/s/a/`, `/s/z/` usw.). Dadurch entstehen keine `localhost`-Links. Noch nicht als statische Schülerübung veröffentlichte Dashboard-Entwürfe erhalten bewusst keinen fehlerhaften öffentlichen Link.
+Die meisten bisherigen Freigaben verwenden kurze Pages-Pfade (`/s/a/`, `/s/z/` usw.); der KI-WP8-Kurs nutzt die stabile öffentliche Route `/ki8/`. Dadurch entstehen keine `localhost`-Links. Noch nicht als statische Schülerübung veröffentlichte Dashboard-Entwürfe erhalten bewusst keinen fehlerhaften öffentlichen Link.
+
+## UV Künstliche Intelligenz · WP Informatik 8
+
+Die Karte steht im öffentlichen Katalog unter **Informatik**. Sie öffnet ausschließlich zwei interaktive Unterrichtsstunden mit automatisch erklärten Auswahlaufgaben und Partnerarbeitsphasen. Antworten gelten nur für die offene Seite; es gibt weder Konto noch gespeicherten Lernstand oder einen geschützten Lehrerbereich. Nicht fertiggestellte Module, Original-PDFs und Lehrerlösungen sind nicht Teil der öffentlichen Ausgabe.
+
+Lokale Prüfung ohne Build: `node scripts/verify-ki-wp8-public.mjs` und `node scripts/verify-ki-wp8-module1-ui.mjs`. Der öffentliche Kurslink ist `https://albecabrera.github.io/linguaCode/ki8/`; diese Route führt zu den beiden Stunden. Veröffentlichung erfolgt ausschließlich über den bestehenden Pages-Workflow bei einem Push auf `main`.
 
 ## Öffentlicher PHP-Host und Kurzlinks
 
