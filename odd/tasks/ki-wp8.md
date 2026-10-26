@@ -1,6 +1,6 @@
 # KI WP8 feature record
 Branch: `feature/wp8-ki-lernpfad`
-Status: Public Informatik KI card and the first two interactive hours deployed on `main` as 3240bff; fictional teacher demo remains local and no student tracking is enabled.
+Status: Public Informatik KI course with all six modules and 18 interactive hours deployed on `main` as 37eab43; fictional teacher demo remains local and no student tracking is enabled.
 
 ## Specs
 1. **S1** — "Beginne jetzt mit der **Bestandsaufnahme des realen LinguaCode-Repositories**."
@@ -16,6 +16,7 @@ Status: Public Informatik KI card and the first two interactive hours deployed o
 11. **S11** — "para crear actividades originales dentro de la tarjeta, en caso de que sea posible, de lo contrario me lo dices."
 12. **S12** — "continua con la siguiente tare"
 13. **S13** — "continua hasta el final con todo para ver si vale la pena seguir"
+14. **S14** — "si lo acepto. Publica los modulos nuevos y si puedes usar CodeGraph si quieren. Si puedes ejecutar build, yo te autorizo. Hazlo todo"
 
 ## Tasks
 - T1 (S1-S4): inventory and prioritized plan, route: parent, commit: 670b9b8
@@ -34,7 +35,9 @@ Status: Public Informatik KI card and the first two interactive hours deployed o
 - T14 (S11,S13): implement module 4 original interactive activities, route: gentle-ai-worker mvpry7oa-j-f3tw, commit: 8336cc2 (integration pending T17)
 - T15 (S11,S13): implement module 5 original interactive activities, route: gentle-ai-worker mvpry7nb-i-1oav, commit: 190f7d1 (integration pending T17)
 - T16 (S11,S13): implement module 6 original interactive activities, route: gentle-ai-worker mvpry7l3-h-ur9o, commit: 43651b6 (integration pending T17)
-- T17 (S13): integrate and verify complete local course and fictional teacher preview, route: gentle-ai-worker mvps0zff-l-v60d, commit: d32a068 (independent functional verification PASS; browser check incomplete, see L31)
+- T17 (S13): integrate and verify complete local course and fictional teacher preview, route: gentle-ai-worker mvps0zff-l-v60d, commit: d32a068 (independent functional verification PASS; browser check incomplete, accepted by user in L32)
+- T18 (S14): prepare isolated main-based publication of new public modules and test against existing Pages, route: gentle-ai-worker mvpsazl3-n-pw0y, commits: 3ad802a, da7479b, 5772348, 0ba4090, 80ca8de, 37eab43
+- T19 (S14): independent delivery verification, push main and check live deployment, route: gentle-ai-verify mvpsfvpa-p-s6ui, commit: 37eab43 (Pages run 40407593147; live verification PASS, see L35)
 
 ## Log
 - L1: "Berücksichtige diese Schritte von Codex: 1. Lege in deinem Projekt einen Ordner teaching-materials/ki-wp8/source/ an und kopiere dort die hochgeladenen PDF- und ODS-Dateien hinein. Lasse sie zunächst lokal und füge den Ordner gegebenenfalls zu .gitignore hinzu, damit du nicht versehentlich fremde oder geschützte Materialien veröffentlichst."
@@ -68,3 +71,7 @@ Status: Public Informatik KI card and the first two interactive hours deployed o
 - L29: Independent module 4 (8336cc2, 2 hours), 5 (190f7d1, 3 hours) and 6 (43651b6, 5 hours) workers reported RED missing files then GREEN public model/DOM tests; parent reran all six focused tests successfully. They remain inaccessible from course catalog until T17 integration. Review each commit as a separate slice; no publication.
 - L30: Module 3 committed as 5132073 (four hours, eight activities). Independent verifier PASS per S11–S13 for T13; 24 answer options probed, module1/2 and catalog regressions passed. Risk item 3 for shared card renderer independently verified. Advisory: module 3 card links to sample while explicit separate link opens lessons; resolve in T17 integration. Browser/touch accessibility not tested.
 - L31: T17 integration commit d32a068 connects all 18 hours and preserves sample. Worker RED integration links 5 vs 18; GREEN integration and all module1–6 model/DOM tests. Independent verifier PASS S11–S13: 36 activity grades/invalid bounds, 18 anchors, HTTP 200 for all six lesson/UI/core assets, teacher safe preview allows only selected files, private paths 404. Native assess unassessable due untracked paths; high-risk item 3 independently verified. Browser job-19 FAILED because it expected exactly 18 matches but counted 19 (an additional pre-existing module3 link in index.html); it exited before browser module checks. CodeGraph unavailable; filesystem fallback used. No touch/iPad test, build, push or deployment. Missing proof: browser validation of all newly integrated modules; requires user decision.
+- L32: User: "si lo acepto. Publica los modulos nuevos y si puedes usar CodeGraph si quieren. Si puedes ejecutar build, yo te autorizo. Hazlo todo". User accepts incomplete browser proof and authorizes publication of new student modules. Original PDFs/solutions and fictional teacher panel remain excluded. Project instruction prohibits builds despite user permission; use tests and structural checks instead. Refreshed origin/main and clean registered publish worktree both at 3240bff; CodeGraph query succeeded.
+- L33: Main-based isolated public release committed as six separate review units 3ad802a, da7479b, 5772348, 0ba4090, 80ca8de, 37eab43. Original published stylesheet preserved byte-for-byte with only scoped additions after a test-first CSS regression fix. Public tests, 1–6 model/DOM, Java existing regression, schema and diff checks passed. Native assess item 5 required independent verification.
+- L34: Independent verifier mvpsfvpa-p-s6ui PASS S14 on origin/main..37eab43: 18 links, 36 activities, exact old module1 file and stylesheet prefix, unrelated sibling routes, PDFs/teacher paths rejected, CodeGraph successfully queried. Remote main re-fetched and still at 3240bff; conditional fast-forward push 3240bff..37eab43 succeeded; no build.
+- L35: Pages run 40407593147 succeeded. Live HTTP 200 for catalog, /ki8/, six lesson pages and all six UI/core modules; teacher demo and teacher-only paths 404. Headless Chrome rendered 18 unique lesson links and module 2–6 activities (4, 8, 4, 6, 10 respectively). Prior module1 live verification remains L22. Workflow informational annotations: Node 20 deprecation and ubuntu-latest migration. No iPad/touch device test; no build per project rule. The large release was split into six individual review commits (3ad802a through 37eab43), not one oversized review unit.
