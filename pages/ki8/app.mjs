@@ -1,5 +1,5 @@
-import {createCatalogController} from './catalog.mjs';
-import {renderCheckpoints} from './checkpoints.mjs';
+import {createCatalogController, createDashboardModel} from './catalog.mjs';
+import {createCheckpointController, renderCheckpoints} from './checkpoints.mjs';
 import {initCourseIntegration} from './mission/course-integration.mjs';
 import {createThemeController} from './mission/theme.mjs';
 import {createPresentationController} from './presentation.mjs';
@@ -13,7 +13,15 @@ createPresentationController({storage: browserStorage()}).bind();
 initCourseIntegration();
 const storage = browserStorage();
 const catalog = createCatalogController({storage});
-renderCheckpoints({storage});
+const checkpointController = createCheckpointController({storage, cards: catalog.progress});
+renderCheckpoints({storage, cards: catalog.progress});
+const dashboard = createDashboardModel(catalog.progress, checkpointController.checkpoints);
+const dashboardSummary = document.querySelector('[data-dashboard-summary]');
+if (dashboardSummary) dashboardSummary.innerHTML = `<p><strong>Missionen:</strong> ${dashboard.summary.missionsCompleted} von ${dashboard.summary.missionsTotal} abgeschlossen</p><p><strong>Checkpoints:</strong> ${dashboard.summary.checkpointsCompleted} von ${dashboard.summary.checkpointsTotal} abgeschlossen</p>`;
+const dashboardModules = document.querySelector('[data-dashboard-modules]');
+if (dashboardModules) dashboardModules.innerHTML = dashboard.modules.map(({name, completed, total}) => `<p><strong>${name}</strong><span>${completed} von ${total} Missionen</span></p>`).join('');
+const dashboardNext = document.querySelector('[data-dashboard-next]');
+if (dashboardNext && dashboard.nextMission) dashboardNext.innerHTML = `<a class="mission-cta" href="${dashboard.nextMission.href}">${dashboard.nextMission.status === 'in-progress' ? 'Kurs fortsetzen' : 'Mission starten'}: Mission ${dashboard.nextMission.mission} →</a>`;
 const continueLink = document.querySelector('#continue-course');
 if (continueLink && catalog.continuation) {
   continueLink.href = catalog.continuation.href;

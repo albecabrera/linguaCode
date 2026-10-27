@@ -1,4 +1,5 @@
 import {createProgressStore} from './mission/progress.mjs';
+import {LESSONS} from './mission/lesson-data.mjs';
 
 export const PROGRESS_FILTERS = Object.freeze(['all', 'in-progress', 'completed']);
 export const PROGRESS_LABELS = Object.freeze({
@@ -27,6 +28,47 @@ export const COURSE_CATALOG = Object.freeze([
 function statusForState(state) {
   if (!state || typeof state !== 'object') return 'not-started';
   return state.completed || state.quizSubmitted ? 'completed' : 'in-progress';
+}
+
+export function missionDetailsForCard(card, progress = card) {
+  const lesson = LESSONS[card.id];
+  const status = progress?.status ?? 'not-started';
+  return {
+    objectives: lesson?.objectives ?? [],
+    duration: lesson?.duration ?? 0,
+    phases: lesson?.phases?.map(({title, minutes}) => ({title, minutes})) ?? [],
+    status,
+    statusLabel: PROGRESS_LABELS[status] ?? PROGRESS_LABELS.unavailable,
+  };
+}
+
+export function createDashboardModel(progress, checkpoints = []) {
+  const modules = [];
+  for (const card of progress) {
+    let module = modules.find(({name}) => name === card.module);
+    if (!module) {
+      module = {name: card.module, completed: 0, total: 0};
+      modules.push(module);
+    }
+    module.total += 1;
+    if (card.status === 'completed') module.completed += 1;
+  }
+  return {
+    modules,
+    nextMission: progress.find(({status}) => status === 'in-progress' || status === 'not-started' || status === 'unavailable') ?? progress[0] ?? null,
+    summary: {
+      missionsCompleted: progress.filter(({status}) => status === 'completed').length,
+      missionsTotal: progress.length,
+      checkpointsCompleted: checkpoints.filter(({status}) => status === 'completed').length,
+      checkpointsTotal: checkpoints.length,
+    },
+  };
+}
+
+function missionDetailsMarkup(details) {
+  const objectives = details.objectives.map((objective) => `<li>${objective}</li>`).join('');
+  const phases = details.phases.map(({title, minutes}) => `${title} (${minutes} Min.)`).join(' · ');
+  return `<p class="mission-detail-status" data-detail-status>${details.statusLabel}</p><dl class="mission-detail-list"><div><dt>Ziele</dt><dd><ul>${objectives}</ul></dd></div><div><dt>Dauer</dt><dd>${details.duration} Minuten</dd></div><div><dt>Lernphasen</dt><dd>${phases}</dd></div></dl>`;
 }
 
 export function readCatalogProgress(storage, cards = COURSE_CATALOG) {
@@ -76,6 +118,8 @@ export function createCatalogController({documentLike = globalThis.document, sto
       node.hidden = !current || !filterCatalog([current], state).length;
       if (current) {
         node.dataset.progress = current.status;
+        const details = node.querySelector?.('[data-mission-details]') ?? node.missionDetails;
+        if (details) details.innerHTML = missionDetailsMarkup(missionDetailsForCard(card, current));
         const label = node.querySelector?.('[data-progress-label]') ?? node.progressLabel;
         if (label) {
           label.textContent = PROGRESS_LABELS[current.status] ?? PROGRESS_LABELS['unavailable'];

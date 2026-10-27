@@ -73,6 +73,21 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 
 .hero { max-width: 1200px; }
 .course-roadmap { margin: 2rem 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
+.student-dashboard { margin: 2rem 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
+.dashboard-summary, .dashboard-grid { display: grid; gap: 1rem; }
+.dashboard-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dashboard-summary p, .dashboard-grid > div { margin: 0; padding: 1rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--bg); }
+.dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 1rem; }
+.dashboard-grid h3 { margin-top: 0; }
+.dashboard-grid [data-dashboard-modules] p { display: flex; justify-content: space-between; gap: 1rem; margin: .5rem 0; }
+.mission-details { margin: .75rem 0; padding: .8rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--bg); }
+.mission-detail-status { margin: 0 0 .5rem; font-weight: 800; }
+.mission-detail-list { margin: 0; }
+.mission-detail-list > div { margin-top: .5rem; }
+.mission-detail-list dt { font-weight: 800; }
+.mission-detail-list dd { margin: .15rem 0 0; }
+.mission-detail-list ul { margin: 0; padding-left: 1.2rem; }
+@media (max-width: 680px) { .dashboard-summary, .dashboard-grid { grid-template-columns: 1fr; } }
 .section-heading h2 { margin: .15rem 0; }
 .section-heading p:last-child { margin-bottom: 0; }
 .catalog-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }

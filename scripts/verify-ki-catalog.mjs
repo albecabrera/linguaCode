@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createCatalogController, filterCatalog, readCatalogProgress, selectContinuation} from '../pages/ki8/catalog.mjs';
+import {createCatalogController, createDashboardModel, filterCatalog, missionDetailsForCard, readCatalogProgress, selectContinuation} from '../pages/ki8/catalog.mjs';
 import {createPresentationController} from '../pages/ki8/presentation.mjs';
 
 const entry = readFileSync(new URL('../pages/ki8/index.html', import.meta.url), 'utf8');
@@ -10,6 +10,9 @@ const presentation = readFileSync(new URL('../pages/ki8/presentation.mjs', impor
 
 assert.match(entry, /id="continue-course"/);
 assert.match(entry, /Kurs (fortsetzen|starten)/);
+assert.match(entry, /id="student-dashboard"/);
+assert.match(entry, /data-dashboard-summary/);
+assert.match(entry, /data-dashboard-modules/);
 assert.match(entry, /id="catalog-filters"/);
 assert.match(entry, /data-progress-filter="all"/);
 assert.match(entry, /data-progress-filter="in-progress"/);
@@ -32,7 +35,11 @@ assert.match(style, /forced-colors: active/);
 assert.match(entry, /href="\.\/teacher\/"[^>]*>Lokale Lehransicht öffnen/);
 assert.match(app, /createCatalogController/);
 assert.match(style, /catalog-filters/);
+assert.match(style, /student-dashboard/);
+assert.match(style, /mission-details/);
 assert.equal((entry.match(/data-progress-label/g) ?? []).length, 19, 'each catalog card exposes a local progress label');
+assert.equal((entry.match(/data-mission-details/g) ?? []).length, 19, 'each catalog card exposes expanded local details');
+assert.equal(missionDetailsForCard({id: 'ki-01', mission: 1, topic: 'KI-Grundlagen'}, {status: 'completed'}).statusLabel, 'Abgeschlossen');
 assert.match(style, /\.mission-panel\[data-progress="not-started"\]/);
 assert.match(style, /\.mission-panel\[data-progress="in-progress"\]/);
 assert.match(style, /\.mission-panel\[data-progress="completed"\]/);
@@ -47,6 +54,10 @@ const cards = [
 assert.deepEqual(filterCatalog(cards, {progress: 'all'}), cards);
 assert.deepEqual(filterCatalog(cards, {progress: 'in-progress', module: 'Grundlagen'}), [cards[0], cards[1]]);
 assert.deepEqual(filterCatalog(cards, {progress: 'completed', topic: 'Daten'}), [cards[2]]);
+const dashboard = createDashboardModel(cards, [{status: 'completed'}, {status: 'open'}]);
+assert.deepEqual(dashboard.summary, {missionsCompleted: 1, missionsTotal: 3, checkpointsCompleted: 1, checkpointsTotal: 2});
+assert.equal(dashboard.nextMission.id, 'ki-01');
+assert.equal(dashboard.modules[0].completed, 0);
 
 class Storage {
   constructor(values = {}) { this.values = new Map(Object.entries(values)); }
