@@ -73,8 +73,8 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
 
   function render() {
     const context = lesson.context ?? {};
-    const contextLabel = [context.subject, context.module, context.hour].filter(Boolean).join(' · ');
-    const contextLink = context.overviewHref ? `<a class="text-link" href="${esc(context.overviewHref)}">${esc(context.module ?? 'Stundenübersicht')}</a>` : '';
+    const contextLabel = [context.subject, context.hour].filter(Boolean).join(' · ');
+    const contextLink = context.overviewHref ? `<a class="text-link" href="${esc(context.overviewHref)}">Zur Missionsübersicht</a>` : '';
     const progress = state.completed ? 100 : Math.round((state.phase / phaseCount) * 100);
     root.innerHTML = `<div class="mission-shell">
       <header class="mission-hero"><div class="hero-layout"><div><p class="eyebrow">${esc(lesson.module)}${contextLabel ? ` · ${esc(contextLabel)}` : ''}</p><h1>${esc(lesson.title)}</h1></div><svg class="ai-illustration" viewBox="0 0 180 140" aria-hidden="true" focusable="false"><rect x="35" y="30" width="110" height="80" rx="22" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="70" cy="66" r="8" fill="currentColor"/><circle cx="110" cy="66" r="8" fill="currentColor"/><path d="M65 88 Q90 105 115 88 M90 30 V14 M82 14 H98" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path class="ai-spark" d="M20 20 L24 30 L34 34 L24 38 L20 48 L16 38 L6 34 L16 30 Z" fill="var(--gold)"/></svg></div><p>${esc(lesson.description)}</p><p><a class="button-link" href="#phase-${esc(lesson.phases[0]?.id ?? '')}">Mission starten</a> ${contextLink}</p><p class="privacy-note"><strong>Nur auf diesem Gerät:</strong> Antworten bleiben lokal im Browser. Auf gemeinsam genutzten Geräten können andere Nutzerinnen und Nutzer dieselben Daten sehen; im Privatmodus können Daten fehlen. Beim Löschen der Browserdaten oder Gerätewechsel gehen sie verloren.</p></header>

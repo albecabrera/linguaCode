@@ -15,11 +15,7 @@ assert.match(matches[0][2], /data-share="ki8\//);
 assert.match(catalog, /<article\b[^>]*class="course-featured"[^>]*>[\s\S]*?<h2>UV Künstliche Intelligenz<\/h2>/);
 const folder = new URL('../pages/ki8/', import.meta.url);
 const expectedFiles = [
-  'app.mjs', 'course.mjs', 'index.html', 'modul-1.html', 'modul-2.html', 'modul-3.html',
-  'modul-4.html', 'modul-5.html', 'modul-6.html', 'module1-core.mjs', 'module1-ui.mjs',
-  'module2-core.mjs', 'module2-ui.mjs', 'module3-core.mjs', 'module3-ui.mjs',
-  'module4-core.mjs', 'module4-ui.mjs', 'module5-core.mjs', 'module5-ui.mjs',
-  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18',
+  'app.mjs', 'index.html', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
@@ -88,33 +84,11 @@ assert.match(missionSeventeenRoute, /mission\.mjs/);
 const missionEighteenRoute = readFileSync(new URL('stunde-18/index.html', folder), 'utf8');
 assert.match(missionEighteenRoute, /data-lesson-id="ki-18"/);
 assert.match(missionEighteenRoute, /mission\.mjs/);
-const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, missionSevenRoute, missionEightRoute, missionNineRoute, missionTenRoute, missionElevenRoute, missionTwelveRoute, missionThirteenRoute, missionFourteenRoute, missionFifteenRoute, missionSixteenRoute, missionSeventeenRoute, missionEighteenRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
-for (let module = 1; module <= 6; module += 1) {
-  const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
-  if (module === 1) assert.match(html, /href="stunde-2\/"[^>]*>Mission 02 starten[^<]*<\/a>/);
-  if (module === 2) assert.match(html, /href="stunde-3\/"[^>]*>Mission 03 starten[^<]*<\/a>/);
-  const hours = [2, 2, 4, 2, 3, 5][module - 1];
-  for (let hour = 1; hour <= hours; hour += 1) {
-    assert.match(html, new RegExp(`id="stunde-${hour}"`));
-    assert.match(html, new RegExp(`id="activities-${hour}"`));
-  }
-  assert.match(html, new RegExp(`type="module" src="\\./module${module}-ui\\.mjs"`));
-  publicSources.push(html, readFileSync(new URL(`module${module}-ui.mjs`, folder), 'utf8'), readFileSync(new URL(`module${module}-core.mjs`, folder), 'utf8'));
-}
+const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, missionSevenRoute, missionEightRoute, missionNineRoute, missionTenRoute, missionElevenRoute, missionTwelveRoute, missionThirteenRoute, missionFourteenRoute, missionFifteenRoute, missionSixteenRoute, missionSeventeenRoute, missionEighteenRoute];
 for (const source of publicSources) {
   assert.doesNotMatch(source, /(?:localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest|Lösung_02_TrainingEinesBaums|\.pdf|docs\/ki-wp8\/demo)/i);
 }
 assert.equal(existsSync(new URL('../docs/ki-wp8/demo/index.html', import.meta.url)), false);
-const {lessons, gradeChoice} = await import('../pages/ki8/module1-core.mjs');
-assert.deepEqual(lessons.map(({id, minutes}) => [id, minutes]), [['stunde-1', 45], ['stunde-2', 45]]);
-for (const lesson of lessons) {
-  assert.equal(lesson.activities.length, 2);
-  for (const item of lesson.activities) {
-    assert.equal(gradeChoice(item.id, item.correct).correct, true);
-    assert.equal(gradeChoice(item.id, (item.correct + 1) % item.options.length).correct, false);
-  }
-}
-assert.throws(() => gradeChoice('unknown', 0), RangeError);
 const exerciseCards = cards.map(([, subject]) => ({dataset: {subject}, hidden: false}));
 const buttons = ['all', 'Informatik', 'Spanisch'].map((filter) => ({
   dataset: {filter}, events: {}, classList: {toggle() {}}, setAttribute() {},
@@ -131,4 +105,4 @@ assert.equal(exerciseCards[cards.indexOf(matches[0])].hidden, false);
 assert.equal(exerciseCards[cards.findIndex(([, subject]) => subject === 'Spanisch')].hidden, true);
 buttons[0].click();
 assert.equal(exerciseCards.some(({hidden}) => hidden), false);
-console.log('PASS: public-only KI card, mission-only overview, six retained module sources with 18 hour anchors, offline feedback rules and existing subject filter.');
+console.log('PASS: public-only KI card, mission-only overview, 18 mission routes, local-only privacy rules and existing subject filter.');

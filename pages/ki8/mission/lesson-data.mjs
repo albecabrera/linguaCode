@@ -51,7 +51,7 @@ const QUIZ_QUESTIONS = Object.freeze([
 export const KI_MISSION_01 = Object.freeze({
   id: 'ki-01',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 1', overviewHref: '../modul-1.html#stunde-1' },
+  context: { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 1', overviewHref: '../' },
   title: 'Mission 01 – Was ist künstliche Intelligenz?',
   description: 'Entdecke, wie Maschinen aus Beispielen lernen und warum auch KI Fehler machen kann.',
   duration: 45,
@@ -125,7 +125,7 @@ const KI_MISSION_02_QUESTIONS = Object.freeze([
 export const KI_MISSION_02 = Object.freeze({
   id: 'ki-02',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 2', overviewHref: '../modul-1.html#stunde-2' },
+  context: { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 02 – Regeln, Training und Grenzen',
   description: 'Vergleiche feste Regeln mit gelernten Mustern und prüfe, warum ungesehene Testdaten wichtig sind.',
   duration: 45,
@@ -173,7 +173,7 @@ const KI_MISSION_03_QUESTIONS = Object.freeze([
 export const KI_MISSION_03 = Object.freeze({
   id: 'ki-03',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 1', overviewHref: '../modul-2.html#stunde-1' },
+  context: { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 1', overviewHref: '../' },
   title: 'Mission 03 – Merkmale, Labels und Schwellenwerte',
   description: 'Unterscheide beobachtete Merkmale von Labels und wende eine klare Schwellenwert-Regel auf neue Werte an.',
   duration: 45,
@@ -216,7 +216,7 @@ const KI_MISSION_04_QUESTIONS = Object.freeze([
 export const KI_MISSION_04 = Object.freeze({
   id: 'ki-04',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 2', overviewHref: '../modul-2.html#stunde-2' },
+  context: { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 04 – Trainieren, testen und Fehler untersuchen',
   description: 'Trenne Trainings- und Testdaten und untersuche, was eine falsche Vorhersage wirklich zeigt.',
   duration: 45,
@@ -262,7 +262,7 @@ const KI_MISSION_05_QUESTIONS = Object.freeze([
 export const KI_MISSION_05 = Object.freeze({
   id: 'ki-05',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../modul-3.html#stunde-1' },
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../' },
   title: 'Mission 05 – Vom Merkmal zur ersten Regel',
   description: 'Verbinde ein beobachtetes Merkmal mit einem Label und untersuche, was genau an einem Schwellenwert gilt.',
   duration: 45,
@@ -308,7 +308,7 @@ const KI_MISSION_06_QUESTIONS = Object.freeze([
 export const KI_MISSION_06 = Object.freeze({
   id: 'ki-06',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 2', overviewHref: '../modul-3.html#stunde-2' },
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 06 – Trainingsdaten und Aufteilungen',
   description: 'Finde heraus, wie gelabelte Trainingsbeispiele Regeln unterstützen und warum getrennte Testdaten außen vor bleiben.',
   duration: 45,
@@ -354,7 +354,7 @@ const KI_MISSION_07_QUESTIONS = Object.freeze([
 export const KI_MISSION_07 = Object.freeze({
   id: 'ki-07',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 3', overviewHref: '../modul-3.html#stunde-3' },
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 3', overviewHref: '../' },
   title: 'Mission 07 – Regeln an Testbeispielen prüfen',
   description: 'Wende eine Schwellenwertregel auf Temperaturbeispiele an und vergleiche ihre Vorhersage mit dem bekannten Testlabel.',
   duration: 45,
@@ -397,7 +397,7 @@ const KI_MISSION_08_QUESTIONS = Object.freeze([
 export const KI_MISSION_08 = Object.freeze({
   id: 'ki-08',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 4', overviewHref: '../modul-3.html#stunde-4' },
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 4', overviewHref: '../' },
   title: 'Mission 08 – Verbessern, ohne den Test zu verraten',
   description: 'Untersuche Trainingsbeispiele, Merkmale und Schwellenwerte, ohne bekannte Testlabels oder Testdaten zur Regelwahl zu verwenden.',
   duration: 45,
@@ -443,7 +443,7 @@ const KI_MISSION_09_QUESTIONS = Object.freeze([
 export const KI_MISSION_09 = Object.freeze({
   id: 'ki-09',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 1', overviewHref: '../modul-4.html#stunde-1' },
+  context: { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 1', overviewHref: '../' },
   title: 'Mission 09 – Muster in Beispielen entdecken',
   description: 'Vergleiche erfundene Beispiele, beschreibe gemeinsame beobachtbare Merkmale und vermeide unbelegte Aussagen über Namen oder Ursachen.',
   duration: 45,
@@ -488,7 +488,7 @@ const KI_MISSION_10_QUESTIONS = Object.freeze([
 export const KI_MISSION_10 = Object.freeze({
   id: 'ki-10',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 2', overviewHref: '../modul-4.html#stunde-2' },
+  context: { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 10 – Muster prüfen und Ausreißer erkennen',
   description: 'Untersuche abweichende, erfundene Beispiele und halte fest, was ein Muster erklärt und wo seine Grenzen liegen.',
   duration: 45,
@@ -533,7 +533,7 @@ const KI_MISSION_11_QUESTIONS = Object.freeze([
 export const KI_MISSION_11 = Object.freeze({
   id: 'ki-11',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 1', overviewHref: '../modul-5.html#stunde-1' },
+  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 1', overviewHref: '../' },
   title: 'Mission 11 – Intents erkennen: Regel oder gelernte KI?',
   description: 'Unterscheide bei einem fiktiven Schulhof-Bot eine festgelegte Intent-Regel von einem Modell, das Muster aus Beispielen ableitet.',
   duration: 45,
@@ -578,7 +578,7 @@ const KI_MISSION_12_QUESTIONS = Object.freeze([
 export const KI_MISSION_12 = Object.freeze({
   id: 'ki-12',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 2', overviewHref: '../modul-5.html#stunde-2' },
+  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 12 – Beispiele, Lernen und Testen',
   description: 'Untersuche, wie gelabelte, erfundene Nachrichten einem Intent-Lernbot helfen und wie getrennte Testnachrichten neue Formulierungen prüfen.',
   duration: 45,
@@ -623,7 +623,7 @@ const KI_MISSION_13_QUESTIONS = Object.freeze([
 export const KI_MISSION_13 = Object.freeze({
   id: 'ki-13',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 3', overviewHref: '../modul-5.html#stunde-3' },
+  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 3', overviewHref: '../' },
   title: 'Mission 13 – Unbekannte Eingaben sicher behandeln',
   description: 'Entwirf einen ehrlichen Fallback für unbekannte Nachrichten und prüfe, wie ein Team nach einer Fehlzuordnung sicher weiterarbeitet.',
   duration: 45,
@@ -668,7 +668,7 @@ const KI_MISSION_14_QUESTIONS = Object.freeze([
 export const KI_MISSION_14 = Object.freeze({
   id: 'ki-14',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 1', overviewHref: '../modul-6.html#stunde-1' },
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 1', overviewHref: '../' },
   title: 'Mission 14 – Behauptungen kritisch prüfen',
   description: 'Prüfe starke Behauptungen anhand ihrer Quelle, Belege, Messmethode und eines fairen Vergleichs.',
   duration: 45,
@@ -713,7 +713,7 @@ const KI_MISSION_15_QUESTIONS = Object.freeze([
 export const KI_MISSION_15 = Object.freeze({
   id: 'ki-15',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 2', overviewHref: '../modul-6.html#stunde-2' },
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 15 – Fehlinformation erkennen',
   description: 'Halte vor dem Teilen inne und prüfe Quelle, Datum und überprüfbare Originalinformationen, statt Zahlen nach Gefühl zu ändern.',
   duration: 45,
@@ -758,7 +758,7 @@ const KI_MISSION_16_QUESTIONS = Object.freeze([
 export const KI_MISSION_16 = Object.freeze({
   id: 'ki-16',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 3', overviewHref: '../modul-6.html#stunde-3' },
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 3', overviewHref: '../' },
   title: 'Mission 16 – Privatsphäre schützen',
   description: 'Nutze nur notwendige Informationen und übe mit erfundenen oder anonymisierten Beispielen, statt persönliche Daten preiszugeben.',
   duration: 45,
@@ -803,7 +803,7 @@ const KI_MISSION_17_QUESTIONS = Object.freeze([
 export const KI_MISSION_17 = Object.freeze({
   id: 'ki-17',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 4', overviewHref: '../modul-6.html#stunde-4' },
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 4', overviewHref: '../' },
   title: 'Mission 17 – Bias und Vorurteile untersuchen',
   description: 'Suche in fiktiven Trainingsdaten nach fehlenden Gruppen und Situationen und prüfe, warum Gesamtgenauigkeit allein keine Fairness beweist.',
   duration: 45,
@@ -848,7 +848,7 @@ const KI_MISSION_18_QUESTIONS = Object.freeze([
 export const KI_MISSION_18 = Object.freeze({
   id: 'ki-18',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 5', overviewHref: '../modul-6.html#stunde-5' },
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 5', overviewHref: '../' },
   title: 'Mission 18 – Verantwortungsvoll nutzen',
   description: 'Prüfe fiktive KI-Vorschläge, beachte Klassenregeln und Datenschutz und triff wichtige Entscheidungen nicht allein aufgrund einer KI-Antwort.',
   duration: 45,

@@ -6,7 +6,7 @@ import {resolve, sep} from 'node:path';
 const root = resolve(new URL('../pages/ki8/', import.meta.url).pathname);
 const server = createServer(async (request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, 'http://127.0.0.1').pathname);
-  const relative = pathname === '/' ? 'index.html' : pathname.slice(1);
+  const relative = pathname === '/' ? 'index.html' : pathname.endsWith('/') ? `${pathname.slice(1)}index.html` : pathname.slice(1);
   const file = resolve(root, relative);
   if (!file.startsWith(`${root}${sep}`) && file !== root) {
     response.writeHead(404).end();
@@ -42,23 +42,16 @@ try {
   assert.match(style, /\.activity input\[type=radio\] \{ min-width: 20px; min-height: 20px;/);
   assert.match(style, /\.activity button \{ margin: \.7rem 0; \}/);
   assert.match(style, /\.hero \{/);
-  assert.match(style, /\.modules \{/);
-  assert.match(style, /\.module \{/);
-  assert.match(style, /input\[type=number\] \{/);
-  assert.match(style, /#result \{/);
   assert.doesNotMatch(style, /(?:^|\n)input,button \{/);
-  const hours = [2, 2, 4, 2, 3, 5];
-  for (let module = 1; module <= 6; module += 1) {
-    const pageResponse = await fetch(`${origin}/modul-${module}.html`);
-    assert.equal(pageResponse.status, 200);
-    const page = await pageResponse.text();
-    for (let hour = 1; hour <= hours[module - 1]; hour += 1) {
-      assert.match(page, new RegExp(`id="stunde-${hour}"`));
-    }
+  for (let mission = 1; mission <= 18; mission += 1) {
+    const response = await fetch(`${origin}/stunde-${mission}/`);
+    assert.equal(response.status, 200);
+    const route = await response.text();
+    assert.match(route, new RegExp(`data-lesson-id="ki-${String(mission).padStart(2, '0')}"`));
   }
-  assert.equal((await fetch(`${origin}/modul-1.html`)).status, 200);
+  assert.equal((await fetch(`${origin}/modul-1.html`)).status, 404);
   assert.equal((await fetch(`${origin}/../docs/ki-wp8/demo/index.html`)).status, 404);
-  console.log('PASS: static /ki8/ mission-only entry and all 18 retained source-hour anchors are reachable; private demo path is absent.');
+  console.log('PASS: static /ki8/ mission-only entry and all 18 mission routes are reachable; legacy modules and private demo paths are absent.');
 } finally {
   server.close();
 }
