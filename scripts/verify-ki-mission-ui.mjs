@@ -208,6 +208,11 @@ let mission14Writes = 0;
 createMissionRenderer({ root: mission14Root, lesson: getLesson('ki-14'), progressKey: 'ki-14', storage: { getItem: () => null, setItem() { mission14Writes += 1; }, removeItem() {} } });
 assert.equal(mission14Writes, 0, 'M14 does not write progress on initial render');
 assert.match(mission14Root.innerHTML, /In der nächsten Mission prüfst du Nachrichten auf fehlende Quellen, veraltete Angaben und veränderte Originalinformationen\./);
+const mission15Root = new FakeRoot();
+let mission15Writes = 0;
+createMissionRenderer({ root: mission15Root, lesson: getLesson('ki-15'), progressKey: 'ki-15', storage: { getItem: () => null, setItem() { mission15Writes += 1; }, removeItem() {} } });
+assert.equal(mission15Writes, 0, 'M15 does not write progress on initial render');
+assert.match(mission15Root.innerHTML, /In der nächsten Mission schützt du deine Privatsphäre, indem du nur notwendige und erfundene Angaben verwendest\./);
 
 const defaultHintRoot = new FakeRoot();
 createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });

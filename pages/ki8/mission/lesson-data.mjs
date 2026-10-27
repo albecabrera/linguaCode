@@ -702,7 +702,52 @@ export const KI_MISSION_14 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14 });
+const KI_MISSION_15_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Eine fiktive Nachricht nennt eine sensationelle Zahl, aber keine Quelle und kein Datum. Was ist der beste nächste Schritt?', choices: ['Vor dem Teilen innehalten und die Aussage mit verlässlichen Quellen prüfen.', 'Die Zahl als wahr behandeln, weil sie genau klingt.', 'Die Zahl so ändern, dass sie plausibler wirkt.'], correctIndex: 0, explanation: 'Fehlende Quelle und fehlender Zeitpunkt sind Warnzeichen. Prüfe unabhängig, bevor du teilst; ändere keine Zahl nach Gefühl.' },
+  { id: 'q2', prompt: 'Zwei fiktive Beiträge nennen unterschiedliche Zahlen zum selben Ereignis. Was hilft bei der Prüfung?', choices: ['Nur den Beitrag lesen, der zur eigenen Meinung passt.', 'Nach überprüfbaren Originalinformationen, Quelle und Datum suchen.', 'Den längeren Beitrag automatisch für richtig halten.'], correctIndex: 1, explanation: 'Vergleiche Quellen und überprüfbare Originalinformationen und achte auf den Zeitpunkt.' },
+  { id: 'q3', prompt: 'Warum ist das Datum einer Nachricht wichtig?', choices: ['Eine alte Information kann aus einem früheren Zusammenhang stammen.', 'Das neueste Datum beweist immer, dass alles wahr ist.', 'Das Datum ersetzt den Beleg.'], correctIndex: 0, explanation: 'Zeitpunkt und Kontext helfen beim Einordnen, sind aber allein kein Wahrheitsbeweis.' },
+  { id: 'q4', prompt: 'Ein Beitrag schneidet eine Zahl aus einer längeren Originalmeldung heraus. Was solltest du tun?', choices: ['Die Zahl selbst korrigieren, bis sie glaubwürdig aussieht.', 'Die Originalmeldung und ihren Zusammenhang prüfen und Änderungen kenntlich machen.', 'Den Ausschnitt als vollständigen Beleg weiterleiten.'], correctIndex: 1, explanation: 'Prüfe die Originalinformation und ihren Zusammenhang. Zahlen dürfen nicht nach Gefühl verändert werden.' },
+  { id: 'q5', prompt: 'Was bedeutet „erst prüfen, dann teilen“?', choices: ['Quelle, Datum und Originalinformationen prüfen und Unsicheres nicht als sicher weitergeben.', 'Jede Nachricht sofort ablehnen.', 'Eine Nachricht weiterleiten, wenn viele Menschen sie geteilt haben.'], correctIndex: 0, explanation: 'Prüfen heißt weder blind glauben noch alles ablehnen. Teile Unsicheres nicht als gesicherte Tatsache.' },
+]);
+
+export const KI_MISSION_15 = Object.freeze({
+  id: 'ki-15',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 2', overviewHref: '../modul-6.html#stunde-2' },
+  title: 'Mission 15 – Fehlinformation erkennen',
+  description: 'Halte vor dem Teilen inne und prüfe Quelle, Datum und überprüfbare Originalinformationen, statt Zahlen nach Gefühl zu ändern.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission schützt du deine Privatsphäre, indem du nur notwendige und erfundene Angaben verwendest.',
+  objectives: [
+    'Du erkennst fehlende Quellen, fehlende oder alte Datumsangaben und aus dem Zusammenhang gerissene Zahlen als Warnzeichen.',
+    'Du prüfst verlässliche Quellen und Originalinformationen, bevor du eine Nachricht teilst; du veränderst Zahlen nicht nach Gefühl.',
+  ],
+  phases: [
+    { id: 'pause', title: 'Vor dem Teilen innehalten', minutes: 10, blocks: [{ type: 'task', taskId: 'task-pause-before-share' }] },
+    { id: 'source-date', title: 'Quelle und Datum prüfen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-source-date' }] },
+    { id: 'original', title: 'Originalinformationen vergleichen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-original-information' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_15_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_15_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zum Erkennen von Fehlinformation durch fehlende Quellen, veraltete Daten oder veränderte Originalinformationen wurde bestätigt; keines ist zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Kein direkt passendes externes Material für diese Stunde wurde verifiziert. Eine altersangemessene Quelle und Lizenz sind nicht bestätigt; die Aktivitäten verwenden deshalb ausschließlich fiktive Beiträge und Quellenhinweise.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Fehlinformation kann eine echte Zahl aus einem alten Zusammenhang, eine Nachricht ohne Quelle oder einen Ausschnitt ohne Originalkontext verwenden. Prüfe Quelle, Datum und überprüfbare Originalinformationen. Halte vor dem Teilen inne und ändere Zahlen nicht „nach Augenmaß“.' },
+    { type: 'reflection', id: 'misinformation-reflection', prompt: 'Warum reicht eine genaue Zahl allein nicht als Beleg?', examples: ['Ohne Quelle, Datum und Zusammenhang kann eine Zahl falsch eingeordnet sein. Ich suche nach überprüfbaren Originalinformationen und teile Unsicheres nicht als Tatsache.'] },
+  ],
+  tasks: [
+    { id: 'task-pause-before-share', type: 'open-response', title: 'Vor dem Teilen innehalten', prompt: 'Eine fiktive Chatnachricht nennt eine sensationelle Zahl, aber kein Datum und keine Quelle. Was tust du, bevor du sie teilst?', exampleAnswer: 'Ich halte inne und teile sie nicht als Tatsache. Ich prüfe, wer die Zahl veröffentlicht hat, wann sie gilt und ob verlässliche Quellen oder Originalinformationen sie bestätigen. Ich verändere die Zahl nicht nach Gefühl.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-source-date', type: 'open-response', title: 'Quelle und Zeitpunkt untersuchen', prompt: 'Zwei fiktive Beiträge beschreiben dasselbe Ereignis unterschiedlich; einer hat kein Datum. Welche Angaben prüfst du, bevor du urteilst?', exampleAnswer: 'Ich suche nach der ursprünglichen Quelle und einem Datum, prüfe, ob die Information aktuell ist, und vergleiche sie mit einer verlässlichen Quelle. Das Datum allein beweist nicht, dass ein Beitrag wahr ist.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-original-information', type: 'open-response', title: 'Originalinformationen fair vergleichen', prompt: 'Zwei fiktive Beiträge nennen unterschiedliche Zahlen. Wie findest du heraus, was die Originalinformation tatsächlich sagt, ohne eine Zahl „nach Augenmaß“ zu verändern?', exampleAnswer: 'Ich öffne die auffindbare Originalquelle, lese den Zusammenhang und das Datum und vergleiche die Angaben. Wenn etwas fehlt oder unklar bleibt, sage ich das offen, statt die Zahl selbst zu ändern oder als bewiesen weiterzugeben.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15 });
 
 export function getLesson(id) {
   return LESSONS[id];
