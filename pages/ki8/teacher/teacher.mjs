@@ -4,8 +4,12 @@ import { CHECKPOINTS } from '../checkpoints.mjs';
 
 export const MISSION_KEYS = Object.freeze(Array.from({ length: 19 }, (_, index) => `ki-${String(index + 1).padStart(2, '0')}`));
 export const TEACHER_EVALUATION_KEY = 'linguacode:ki-wp8:teacher-evaluation:v1';
+export const RUBRIC_CONFIG_KEY = 'linguacode:ki-wp8:teacher-rubric:v1';
 const EVALUATION_VERSION = 1;
+export const RUBRIC_CONFIG_VERSION = 1;
 export const RUBRIC_CRITERIA = Object.freeze(['Fortschritt sichtbar', 'Checkpoint-Bereitschaft', 'Nächster Schritt geklärt']);
+const RUBRIC_CRITERIA_COUNT = RUBRIC_CRITERIA.length;
+const RUBRIC_LABEL_MAX_LENGTH = 80;
 
 const columns = Object.freeze([
   ['mission', 'Mission'],
@@ -75,6 +79,50 @@ export function buildTeacherSummary(progress) {
 
 function evaluationStorageKey() {
   return `${TEACHER_EVALUATION_KEY}`;
+}
+
+function normalizeRubricCriteria(criteria) {
+  if (!Array.isArray(criteria) || criteria.length !== RUBRIC_CRITERIA_COUNT) return null;
+  const normalized = criteria.map((label) => typeof label === 'string' ? label.trim() : '');
+  return normalized.every((label) => label.length > 0 && label.length <= RUBRIC_LABEL_MAX_LENGTH) ? normalized : null;
+}
+
+export function readRubricConfig(storage = browserStorage()) {
+  try {
+    const raw = storage?.getItem?.(RUBRIC_CONFIG_KEY);
+    if (!raw) return { version: RUBRIC_CONFIG_VERSION, criteria: [...RUBRIC_CRITERIA] };
+    const parsed = JSON.parse(raw);
+    const criteria = parsed?.version === RUBRIC_CONFIG_VERSION ? normalizeRubricCriteria(parsed.criteria) : null;
+    return { version: RUBRIC_CONFIG_VERSION, criteria: criteria ?? [...RUBRIC_CRITERIA] };
+  } catch {
+    return { version: RUBRIC_CONFIG_VERSION, criteria: [...RUBRIC_CRITERIA] };
+  }
+}
+
+export function saveRubricConfig(storage, criteria) {
+  const normalized = normalizeRubricCriteria(criteria);
+  if (!normalized) return { status: 'rejected', reason: 'invalid-rubric' };
+  if (!storage?.setItem) return { status: 'unavailable', reason: 'storage-error' };
+  try {
+    storage.setItem(RUBRIC_CONFIG_KEY, JSON.stringify({ version: RUBRIC_CONFIG_VERSION, criteria: normalized }));
+    return { status: 'success' };
+  } catch {
+    return { status: 'unavailable', reason: 'storage-error' };
+  }
+}
+
+export function buildRubricConfigExport(config) {
+  const criteria = normalizeRubricCriteria(config?.criteria) ?? [...RUBRIC_CRITERIA];
+  return { schema: 'linguacode-ki-teacher-rubric-v1', version: RUBRIC_CONFIG_VERSION, localOnly: true, criteria };
+}
+
+export function importRubricConfig(storage, input) {
+  let value;
+  try { value = typeof input === 'string' ? JSON.parse(input) : input; } catch { return { status: 'rejected', reason: 'invalid-json' }; }
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return { status: 'rejected', reason: 'invalid-rubric' };
+  const keys = Object.keys(value).sort();
+  if (keys.join(',') !== 'criteria,localOnly,schema,version' || value.schema !== 'linguacode-ki-teacher-rubric-v1' || value.version !== RUBRIC_CONFIG_VERSION || value.localOnly !== true) return { status: 'rejected', reason: 'invalid-rubric' };
+  return saveRubricConfig(storage, value.criteria);
 }
 
 function normalizeEvaluation(value) {
@@ -188,13 +236,20 @@ function renderSummary(documentLike, summary) {
   if (followUp) followUp.innerHTML = `<h2>Follow-up für den Ausdruck</h2><ul>${summary.modules.map(({ name, completed, total }) => `<li><strong>${escapeHtml(name)}:</strong> ${completed < total ? 'Fortschritt gemeinsam prüfen.' : 'Erreichten Fortschritt sichern.'}</li>`).join('')}</ul><p>Nur aggregierte lokale Fortschrittsmetadaten; keine Namen, Antworten oder Aufgabeninhalte.</p>`;
 }
 
-function renderEvaluation(documentLike, storage, summary) {
+function renderRubricConfig(documentLike, storage) {
+  const output = documentLike?.querySelector('#rubric-config-form');
+  if (!output) return;
+  const { criteria } = readRubricConfig(storage);
+  output.innerHTML = criteria.map((criterion, index) => `<label for="rubric-criterion-${index}">Kriterium ${index + 1}<input id="rubric-criterion-${index}" data-rubric-criterion="${index}" maxlength="${RUBRIC_LABEL_MAX_LENGTH}" value="${escapeHtml(criterion)}"></label>`).join('');
+}
+
+function renderEvaluation(documentLike, storage, summary, criteria = readRubricConfig(storage).criteria) {
   const output = documentLike.querySelector('#evaluation-form');
   if (!output) return;
   const evaluation = readTeacherEvaluation(storage);
   output.innerHTML = summary.modules.map(({ name }) => {
-    const entry = evaluation[name] ?? { criteria: RUBRIC_CRITERIA.map(() => false), score: 0 };
-    return `<fieldset><legend>${escapeHtml(name)}</legend>${RUBRIC_CRITERIA.map((criterion, index) => `<label><input type="checkbox" data-module="${escapeHtml(name)}" data-criterion="${index}" ${entry.criteria[index] ? 'checked' : ''}> ${escapeHtml(criterion)}</label>`).join('')}<label>Score (0–4) <input type="number" min="0" max="4" step="1" value="${entry.score}" data-score-module="${escapeHtml(name)}"></label></fieldset>`;
+    const entry = evaluation[name] ?? { criteria: criteria.map(() => false), score: 0 };
+    return `<fieldset><legend>${escapeHtml(name)}</legend>${criteria.map((criterion, index) => `<label><input type="checkbox" data-module="${escapeHtml(name)}" data-criterion="${index}" ${entry.criteria[index] ? 'checked' : ''}> ${escapeHtml(criterion)}</label>`).join('')}<label>Score (0–4) <input type="number" min="0" max="4" step="1" value="${entry.score}" data-score-module="${escapeHtml(name)}"></label></fieldset>`;
   }).join('');
 }
 
@@ -203,6 +258,7 @@ export function createTeacherView({ documentLike = globalThis.document, storage 
   const summary = buildTeacherSummary(progress);
   renderTable(documentLike, progress);
   renderSummary(documentLike, summary);
+  renderRubricConfig(documentLike, storage);
   renderEvaluation(documentLike, storage, summary);
   const jsonButton = documentLike?.querySelector('#export-json');
   const csvButton = documentLike?.querySelector('#export-csv');
@@ -218,7 +274,24 @@ export function createTeacherView({ documentLike = globalThis.document, storage 
   const resetMissionButton = documentLike?.querySelector('#reset-mission-button');
   const resetEvaluationButton = documentLike?.querySelector('#reset-evaluation');
   const resetAllButton = documentLike?.querySelector('#reset-all-progress');
+  const rubricForm = documentLike?.querySelector('#rubric-config-form');
+  const rubricSaveButton = documentLike?.querySelector('#save-rubric');
+  const rubricExportButton = documentLike?.querySelector('#export-rubric-json');
+  const rubricImportInput = documentLike?.querySelector('#import-rubric-json');
+  const rubricResetButton = documentLike?.querySelector('#reset-rubric');
   if (resetMissionSelect) resetMissionSelect.innerHTML = MISSION_KEYS.map((mission) => `<option value="${mission}">${mission}</option>`).join('');
+  rubricSaveButton?.addEventListener('click', () => {
+    const criteria = [...(rubricForm?.querySelectorAll?.('[data-rubric-criterion]') ?? [])].map((input) => input.value);
+    if (saveRubricConfig(storage, criteria).status === 'success') renderEvaluation(documentLike, storage, summary, criteria);
+  });
+  rubricExportButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildRubricConfigExport(readRubricConfig(storage)), null, 2), 'ki-teacher-rubric.json', 'application/json'));
+  rubricImportInput?.addEventListener('change', async () => {
+    const file = rubricImportInput.files?.[0];
+    if (!file?.text) return;
+    const result = importRubricConfig(storage, await file.text());
+    if (result.status === 'success') { renderRubricConfig(documentLike, storage); renderEvaluation(documentLike, storage, summary); }
+  });
+  rubricResetButton?.addEventListener('click', () => { saveRubricConfig(storage, RUBRIC_CRITERIA); renderRubricConfig(documentLike, storage); renderEvaluation(documentLike, storage, summary); });
   evaluationForm?.addEventListener('change', (event = {}) => {
     const current = readTeacherEvaluation(storage);
     const module = event.target?.dataset?.module ?? event.target?.dataset?.scoreModule;

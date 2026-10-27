@@ -43,6 +43,12 @@
     <section id="evaluation-mode" aria-labelledby="evaluation-title">
       <h2 id="evaluation-title">Lokale Bewertung</h2>
       <p>Bewerte nur auf Modulebene mit Kriterien und einem Score. Die Eingaben bleiben lokal auf diesem Gerät.</p>
+      <details class="rubric-editor">
+        <summary>Rubrik konfigurieren</summary>
+        <p>Nur drei Kriterienlabels werden lokal gespeichert. Namen, Antworten und Aufgabeninhalte werden nicht importiert oder exportiert.</p>
+        <div id="rubric-config-form"></div>
+        <div class="actions"><button id="save-rubric" type="button">Rubrik speichern</button><button id="reset-rubric" type="button">Standardrubrik wiederherstellen</button><button id="export-rubric-json" type="button">Rubrik exportieren</button><label class="file-control">Rubrik importieren<input id="import-rubric-json" type="file" accept="application/json,.json"></label></div>
+      </details>
       <div id="evaluation-form"></div>
     </section>
     <section id="follow-up" aria-live="polite"></section>

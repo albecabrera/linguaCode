@@ -15,6 +15,12 @@ import {
   readTeacherEvaluation,
   saveTeacherEvaluation,
   TEACHER_EVALUATION_KEY,
+  RUBRIC_CONFIG_KEY,
+  RUBRIC_CRITERIA,
+  readRubricConfig,
+  saveRubricConfig,
+  buildRubricConfigExport,
+  importRubricConfig,
 } from '../pages/ki8/teacher/teacher.mjs';
 
 assert.equal(MISSION_KEYS.length, 19);
@@ -25,11 +31,16 @@ assert.match(teacherHtml, /Privat und nur lokal/);
 assert.match(teacherHtml, /JSON exportieren/);
 assert.match(teacherHtml, /evaluation-mode/);
 assert.match(teacherHtml, /Bewertung exportieren/);
+assert.match(teacherHtml, /Rubrik exportieren/);
+assert.match(teacherHtml, /Rubrik importieren/);
+assert.match(teacherHtml, /rubric-config-form/);
 assert.match(teacherHtml, /Modulfilter/);
 assert.match(teacherHtml, /Checkpointfilter/);
 assert.match(teacherHtml, /Teilfortschritt exportieren/);
 assert.match(teacherHtml, /Mission zurücksetzen/);
 assert.equal(TEACHER_EVALUATION_KEY, 'linguacode:ki-wp8:teacher-evaluation:v1');
+assert.equal(RUBRIC_CONFIG_KEY, 'linguacode:ki-wp8:teacher-rubric:v1');
+assert.deepEqual(RUBRIC_CRITERIA, ['Fortschritt sichtbar', 'Checkpoint-Bereitschaft', 'Nächster Schritt geklärt']);
 
 class MemoryStorage {
   #values = new Map();
@@ -63,6 +74,18 @@ assert.equal(buildPartialExportData(filterTeacherProgress(progress, {module: 'Gr
 assert.equal(summary.checkpoints.length, 3);
 assert.deepEqual(summary.modules[0], { name: 'Grundlagen', completed: 1, inProgress: 1, total: 3, evidence: '1/3 abgeschlossen' });
 assert.deepEqual(summary.checkpoints[0], { id: 'checkpoint-1', number: 1, completed: 0, total: 3, status: 'in-progress' });
+
+assert.deepEqual(readRubricConfig(storage).criteria, RUBRIC_CRITERIA);
+assert.equal(saveRubricConfig(storage, ['Beobachtung', 'Prüfung', 'Nächster Schritt']).status, 'success');
+assert.deepEqual(readRubricConfig(storage).criteria, ['Beobachtung', 'Prüfung', 'Nächster Schritt']);
+const rubricExport = buildRubricConfigExport(readRubricConfig(storage));
+assert.deepEqual(Object.keys(rubricExport).sort(), ['criteria', 'localOnly', 'schema', 'version']);
+assert.equal(rubricExport.schema, 'linguacode-ki-teacher-rubric-v1');
+assert.equal(importRubricConfig(storage, JSON.stringify(rubricExport)).status, 'success');
+const beforeInvalidRubric = storage.getItem(RUBRIC_CONFIG_KEY);
+assert.equal(importRubricConfig(storage, { schema: 'linguacode-ki-teacher-rubric-v1', version: 1, localOnly: true, criteria: ['ok'] }).status, 'rejected');
+assert.equal(storage.getItem(RUBRIC_CONFIG_KEY), beforeInvalidRubric);
+assert.doesNotMatch(JSON.stringify(rubricExport), /name|answer|task|content/i);
 
 const savedEvaluation = saveTeacherEvaluation(storage, { 'Grundlagen': { criteria: [true, false], score: 3 } });
 assert.equal(savedEvaluation.status, 'success');
@@ -109,6 +132,10 @@ const windowLike = {
 };
 createTeacherView({ documentLike, storage, windowLike });
 assert.deepEqual(events.map(({ selector, type }) => [selector, type]), [
+  ['#save-rubric', 'click'],
+  ['#export-rubric-json', 'click'],
+  ['#import-rubric-json', 'change'],
+  ['#reset-rubric', 'click'],
   ['#evaluation-form', 'change'],
   ['#module-filter', 'change'],
   ['#checkpoint-filter', 'change'],
@@ -124,7 +151,7 @@ assert.deepEqual(events.map(({ selector, type }) => [selector, type]), [
 ]);
 assert.ok(events.every(({ handler }) => !handler || typeof handler === 'function'));
 for (const event of events.filter((entry) => entry.handler)) event.handler();
-assert.equal(downloads.length, 5);
+assert.equal(downloads.length, 6);
 assert.ok(downloads.every(({ clicked }) => clicked === true));
 assert.deepEqual(events.at(-1), { type: 'print' });
 
