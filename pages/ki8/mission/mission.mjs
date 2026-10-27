@@ -11,6 +11,7 @@ export const MISSION_ROUTES = Object.freeze([
   Object.freeze({ path: '/ki8/stunde-6/', lessonId: 'ki-06', progressKey: 'ki-06' }),
   Object.freeze({ path: '/ki8/stunde-7/', lessonId: 'ki-07', progressKey: 'ki-07' }),
   Object.freeze({ path: '/ki8/stunde-8/', lessonId: 'ki-08', progressKey: 'ki-08' }),
+  Object.freeze({ path: '/ki8/stunde-9/', lessonId: 'ki-09', progressKey: 'ki-09' }),
 ]);
 
 export function resolveMissionRoute(pathname = globalThis.location?.pathname) {
@@ -72,7 +73,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
       <div class="storage-status" role="status" aria-live="polite">${esc(storageMessage)}</div>
       <nav class="phase-nav" aria-label="Missionsphasen"><ol>${lesson.phases.map((phase, index) => { const accessible = index <= state.phase; return `<li class="${state.phase === index ? 'current' : ''} ${phaseComplete(index) ? 'complete' : ''} ${accessible ? '' : 'locked'}"><span aria-hidden="true">${phaseComplete(index) ? '✓' : index + 1}</span>${accessible ? `<a href="#phase-${esc(phase.id)}">${esc(phase.title)}</a>` : `<span aria-disabled="true">${esc(phase.title)}</span>`}<small>${phase.minutes} Min.</small></li>`; }).join('')}</ol></nav>
       <main>${lesson.phases.map((phase, index) => renderPhase(phase, index)).join('')}</main>
-      <aside class="next-hint"><strong>Nächster Schritt:</strong> In der nächsten Stunde untersuchen wir genauer, wie Trainingsdaten und Merkmale Modelle beeinflussen.</aside>
+      <aside class="next-hint"><strong>Nächster Schritt:</strong> ${esc(lesson.nextHint ?? 'In der nächsten Stunde untersuchen wir genauer, wie Trainingsdaten und Merkmale Modelle beeinflussen.')}</aside>
       <footer class="mission-footer"><button type="button" class="secondary" data-reset>Mission zurücksetzen</button><p>Beim Zurücksetzen werden nur die lokalen Daten dieser Mission gelöscht.</p></footer>
     </div>`;
     bind();

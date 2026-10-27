@@ -178,6 +178,14 @@ const alternateLesson = { id: 'alternate', module: 'Test', title: 'Alternative S
 
 const mediaLesson = { id: 'media-alternate', module: 'Andere Reihe', context: { subject: 'Test', module: 'Modul X', hour: 'Stunde Y' }, title: 'Andere Stunde', description: 'Andere Medienphase', duration: 5, objectives: [], phases: [{ id: 'reading', title: 'Lesen', minutes: 3, blocks: [{ type: 'media', mediaId: 'reading' }] }, { id: 'finish', title: 'Abschluss', minutes: 2, blocks: [{ type: 'prompt', text: 'Ende' }] }], media: { reading: { kind: 'text', title: 'Andere Quelle', provider: 'Beispielanbieter', observation: 'Achte auf ein anderes Muster.', checkboxLabel: 'Ich habe gelesen', selfReportDisclaimer: 'Selbstmeldung.' } }, contentBlocks: [], tasks: [], solutions: [], feedback: {}, progress: { version: 1, localOnly: true } }; const mediaRoot = new FakeRoot(); const mediaRenderer = createMissionRenderer({ root: mediaRoot, lesson: mediaLesson, storage: { getItem: () => null, setItem: () => {}, removeItem: () => {} } }); assert.match(mediaRoot.innerHTML, /Beispielanbieter/); assert.match(mediaRoot.innerHTML, /Achte auf ein anderes Muster/); assert.match(mediaRoot.innerHTML, /Ich habe gelesen/); assert.doesNotMatch(mediaRoot.innerHTML, /Planet Schule|Hunde-App|Hunderassen/); const mediaDone = mediaRoot.querySelector('[data-phase-done]'); mediaDone.checked = true; mediaDone.dispatch('change'); mediaRoot.querySelector('[data-advance]').dispatch('click'); assert.equal(mediaRenderer.getState().phase, 1);
 
+const mission09Root = new FakeRoot();
+let mission09Writes = 0;
+createMissionRenderer({ root: mission09Root, lesson: getLesson('ki-09'), progressKey: 'ki-09', storage: { getItem: () => null, setItem() { mission09Writes += 1; }, removeItem() {} } });
+assert.equal(mission09Writes, 0, 'M09 does not write progress on initial render');
+assert.match(mission09Root.innerHTML, /In der nächsten Mission prüfst du Muster an neuen Fällen und untersuchst mögliche Ausreißer\./);
+const defaultHintRoot = new FakeRoot();
+createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });
+assert.match(defaultHintRoot.innerHTML, /In der nächsten Stunde untersuchen wir genauer, wie Trainingsdaten und Merkmale Modelle beeinflussen\./);
 const memory = new Map();
 const storage = { getItem: (key) => memory.get(key) ?? null, setItem: (key, value) => memory.set(key, value), removeItem: (key) => memory.delete(key) };
 const store = createProgressStore(storage, 'ui-test');

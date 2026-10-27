@@ -9,6 +9,7 @@ import {
   KI_MISSION_06,
   KI_MISSION_07,
   KI_MISSION_08,
+  KI_MISSION_09,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -87,7 +88,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -169,7 +170,7 @@ assert.equal(KI_MISSION_07.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_07.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_07.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_07), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09']);
 assert.equal(getLesson('ki-08'), KI_MISSION_08);
 assert.equal(KI_MISSION_08.id, 'ki-08');
 assert.equal(KI_MISSION_08.title, 'Mission 08 – Verbessern, ohne den Test zu verraten');
@@ -190,7 +191,25 @@ assert.equal(KI_MISSION_08.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_08.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_08.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_08), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08']);
+assert.equal(getLesson('ki-09'), KI_MISSION_09);
+assert.equal(KI_MISSION_09.id, 'ki-09');
+assert.equal(KI_MISSION_09.title, 'Mission 09 – Muster in Beispielen entdecken');
+assert.equal(KI_MISSION_09.duration, 45);
+assert.equal(KI_MISSION_09.nextHint, 'In der nächsten Mission prüfst du Muster an neuen Fällen und untersuchst mögliche Ausreißer.');
+assert.deepEqual(KI_MISSION_09.context, { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 1', overviewHref: '../modul-4.html#stunde-1' });
+assert.deepEqual(KI_MISSION_09.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_09.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_09.contentBlocks[0].text, /gemeinsam.*Merkmal|beobachtbare.*Gemeinsamkeit/i);
+assert.match(KI_MISSION_09.tasks.find(({ id }) => id === 'task-pattern').prompt, /erfund|fiktiv/i);
+assert.match(KI_MISSION_09.tasks.find(({ id }) => id === 'task-pattern').exampleAnswer, /beobachtbar|Merkmal/i);
+assert.match(KI_MISSION_09.contentBlocks[0].text, /beweist nicht automatisch eine Ursache/);
+assert.match(KI_MISSION_09.tasks.find(({ id }) => id === 'task-similarity').exampleAnswer, /Daraus allein folgt nicht, warum/);
+assert.match(KI_MISSION_09.tasks.find(({ id }) => id === 'task-apply').prompt, /ohne echte Personen/);
+assert.equal(KI_MISSION_09.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_09.resourceNotes.material.status, 'unconfirmed');
+assert.equal(KI_MISSION_09.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_09), true);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09']);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [

@@ -432,7 +432,52 @@ export const KI_MISSION_08 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08 });
+const KI_MISSION_09_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Was ist ein Muster in mehreren Beispielen?', choices: ['Eine gemeinsame, beobachtbare Eigenschaft.', 'Eine Vermutung über den Namen der Beispiele.', 'Ein Beweis dafür, warum die Beispiele entstanden sind.'], correctIndex: 0, explanation: 'Ein Muster beschreibt eine wiederkehrende Beziehung oder beobachtbare Gemeinsamkeit.' },
+  { id: 'q2', prompt: 'Eine fiktive Sortiermaschine ordnet 2, 4, 6 und 8 als „gerade“ ein. Welches Merkmal passt zu allen vier Zahlen?', choices: ['Alle lassen sich ohne Rest durch 2 teilen.', 'Alle sind größer als 10.', 'Alle wurden am selben Tag aufgeschrieben.'], correctIndex: 0, explanation: 'Die Teilbarkeit durch 2 ist ein beobachtbares gemeinsames Merkmal.' },
+  { id: 'q3', prompt: 'Drei erfundene Geräusche sind kurz und hell. Was ist ein guter nächster Schritt?', choices: ['Die gemeinsamen Merkmale beschreiben und mit weiteren Beispielen prüfen.', 'Aus den Dateinamen sicher auf die Ursache schließen.', 'Das abweichende Geräusch umbenennen, bis es passt.'], correctIndex: 0, explanation: 'Merkmale lassen sich vergleichen und an weiteren Beispielen prüfen; Namen belegen keine Ursache.' },
+  { id: 'q4', prompt: 'Was zeigt ein Muster zunächst?', choices: ['Eine beobachtete Gemeinsamkeit, nicht automatisch eine Ursache.', 'Dass die Beispiele denselben Namen haben müssen.', 'Dass jedes neue Beispiel sicher dazugehört.'], correctIndex: 0, explanation: 'Ein Muster fasst Beobachtungen zusammen. Es erklärt nicht automatisch, wodurch sie verursacht wurden.' },
+  { id: 'q5', prompt: 'Wie kann eine Gruppe ein Muster fair beschreiben?', choices: ['Mit neutralen, erfundenen Beispielen und klaren beobachtbaren Merkmalen.', 'Nur mit den Namen der Beispiele.', 'Mit einer Ursache, die nicht untersucht wurde.'], correctIndex: 0, explanation: 'Neutrale Beispiele und klare Merkmale machen sichtbar, worauf sich das Muster stützt.' },
+]);
+
+export const KI_MISSION_09 = Object.freeze({
+  id: 'ki-09',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 1', overviewHref: '../modul-4.html#stunde-1' },
+  title: 'Mission 09 – Muster in Beispielen entdecken',
+  description: 'Vergleiche erfundene Beispiele, beschreibe gemeinsame beobachtbare Merkmale und vermeide unbelegte Aussagen über Namen oder Ursachen.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission prüfst du Muster an neuen Fällen und untersuchst mögliche Ausreißer.',
+  objectives: [
+    'Du beschreibst gemeinsame, beobachtbare Merkmale in erfundenen Beispielen.',
+    'Du erklärst, dass ein beobachtetes Muster allein keine Ursache beweist.',
+  ],
+  phases: [
+    { id: 'observe', title: 'Beispiele genau ansehen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-pattern' }] },
+    { id: 'compare', title: 'Gemeinsame Merkmale vergleichen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-similarity' }] },
+    { id: 'apply', title: 'Ein Muster fair beschreiben', minutes: 19, blocks: [{ type: 'task', taskId: 'task-apply' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_09_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_09_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video für Mustererkennung in Beispielen wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Kein passendes externes Material wurde für diese Stunde bestätigt. Die Aufgaben verwenden eigenständige, erfundene Beispiele.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Ein Muster beschreibt eine wiederkehrende Beziehung oder gemeinsame Eigenschaft. Wir vergleichen beobachtbare Merkmale in erfundenen Beispielen. Ein Muster benennt zunächst eine Gemeinsamkeit; es beweist nicht automatisch eine Ursache.' },
+    { type: 'reflection', id: 'pattern-reflection', prompt: 'Warum sollte eine Beschreibung sagen, was wir beobachtet haben, statt eine Ursache zu erfinden?', examples: ['Beobachtbare Merkmale lassen sich an Beispielen prüfen. Eine Ursache muss gesondert untersucht werden.'] },
+  ],
+  tasks: [
+    { id: 'task-pattern', type: 'open-response', title: 'Ein gemeinsames Merkmal finden', prompt: 'Eine fiktive Sortiermaschine sieht die Zahlen 2, 4, 6 und 8 und ordnet sie als „gerade“ ein. Welches beobachtbare Merkmal haben alle vier Zahlen gemeinsam?', exampleAnswer: 'Alle Zahlen lassen sich ohne Rest durch 2 teilen. Das ist ein gemeinsames, beobachtbares Merkmal.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-similarity', type: 'open-response', title: 'Ähnlichkeiten ohne Ursache beschreiben', prompt: 'Drei erfundene Geräusche haben die Merkmale „kurz“ und „hell“. Ein viertes ist „lang“ und „tief“. Welche Gemeinsamkeit siehst du, und was kannst du daraus noch nicht über die Ursache schließen?', exampleAnswer: 'Die ersten drei teilen die beobachtbaren Merkmale „kurz“ und „hell“. Daraus allein folgt nicht, warum sie so klingen oder ob die Merkmale die Ursache sind.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-apply', type: 'open-response', title: 'Ein neutrales Muster entwerfen', prompt: 'Erfinde sechs neutrale Beispiele mit zwei gemeinsamen Merkmalen. Beschreibe die Merkmale, ohne echte Personen oder unbelegte Ursachen zu nennen.', exampleAnswer: 'Zum Beispiel sechs erfundene Formen, die alle drei Seiten und einen blauen Rand haben. Die Beschreibung nennt beobachtbare Merkmale und behauptet nicht, warum sie entstanden sind.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09 });
 
 export function getLesson(id) {
   return LESSONS[id];
