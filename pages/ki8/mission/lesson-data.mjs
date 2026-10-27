@@ -567,7 +567,52 @@ export const KI_MISSION_11 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11 });
+const KI_MISSION_12_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Wozu dienen gelabelte Beispiele für einen Intent-Lernbot?', choices: ['Sie zeigen, welche Sprachmuster zu einem Intent gehören können.', 'Sie garantieren jede spätere Antwort.', 'Sie machen eine Prüfung mit neuen Formulierungen überflüssig.'], correctIndex: 0, explanation: 'Beispiele helfen beim Ableiten von Mustern, sind aber keine Garantie für neue Nachrichten.' },
+  { id: 'q2', prompt: 'Ein Lernbot übt mit „Hallo!“ und „Guten Morgen!“ als Begrüßungen. Was sollte ein Team daraus schließen?', choices: ['Das Modell kann Muster lernen, aber nicht jede Begrüßung ist damit sicher erkannt.', 'Das Modell versteht danach jedes Gespräch fehlerfrei.', 'Die Labels müssen vor dem Test geändert werden.'], correctIndex: 0, explanation: 'Gelabelte Beispiele unterstützen das Lernen, garantieren aber keine fehlerfreie Zuordnung.' },
+  { id: 'q3', prompt: 'Warum hält ein Team neue, ungesehene Testnachrichten getrennt von den Trainingsbeispielen?', choices: ['So lässt sich unabhängig prüfen, ob das Modell auch andere Formulierungen erkennt.', 'Damit die Testnachrichten heimlich Teil des Trainings werden.', 'Weil Testnachrichten immer private Daten enthalten müssen.'], correctIndex: 0, explanation: 'Getrennte Testbeispiele zeigen, wie das Modell auf neue Formulierungen reagiert, ohne vorher an ihnen zu üben.' },
+  { id: 'q4', prompt: 'Eine neue, erfundene Nachricht wird einem falschen Intent zugeordnet. Was ist ein sinnvoller nächster Schritt?', choices: ['Den Fehler notieren und die Zuordnung mit weiteren getrennten Beispielen prüfen.', 'Die Testnachricht sofort zu einem Trainingsbeispiel machen und den Fehler vergessen.', 'Behaupten, dass das Modell nun alle Formulierungen versteht.'], correctIndex: 0, explanation: 'Ein Fehler ist ein Prüfhinweis. Die Testnachricht bleibt für eine unabhängige Auswertung getrennt.' },
+  { id: 'q5', prompt: 'Welche Beispiele sind für die Übung geeignet?', choices: ['Erfundene Nachrichten ohne Namen oder private Angaben.', 'Echte private Chats aus der Klasse.', 'Nachrichten mit vollständigen Namen und Adressen.'], correctIndex: 0, explanation: 'Fiktive Nachrichten reichen aus; echte private Nachrichten oder Identifikationsdaten sind nicht nötig.' },
+]);
+
+export const KI_MISSION_12 = Object.freeze({
+  id: 'ki-12',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 2', overviewHref: '../modul-5.html#stunde-2' },
+  title: 'Mission 12 – Beispiele, Lernen und Testen',
+  description: 'Untersuche, wie gelabelte, erfundene Nachrichten einem Intent-Lernbot helfen und wie getrennte Testnachrichten neue Formulierungen prüfen.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission untersuchst du, wie ein Chatbot unbekannte Nachrichten offen und sicher beantwortet.',
+  objectives: [
+    'Du erklärst, wie gelabelte Beispiele einem Lernverfahren Muster für Intents zeigen können.',
+    'Du hältst neue, ungesehene Testnachrichten getrennt und erklärst, dass ein Modell trotzdem irren kann.',
+  ],
+  phases: [
+    { id: 'observe', title: 'Gelabelte Intent-Beispiele untersuchen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-intent-examples' }] },
+    { id: 'compare', title: 'Neue Formulierungen getrennt testen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-unseen-test' }] },
+    { id: 'apply', title: 'Ein fiktives Prüfset entwerfen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-apply' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_12_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_12_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zu gelabelten Chatbot-Intents und getrennten Testnachrichten wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Experience AI, „Large Language Models (LLMs) (11–14)“, ist nur eine teilweise passende Quelle zu Sprachmodellen und ihren Grenzen; eine direkte Aktivität zu gelabelten Chatbot-Intents und unabhängigen Testnachrichten ist nicht bestätigt. Lizenzstatus und konkrete Alterszuordnung für diese Stunde sind nicht verifiziert.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Gelabelte, erfundene Beispiele zeigen einem Lernverfahren, welche Sprachmuster zu welchem Intent gehören können. Eine unabhängige, bisher ungesehene Testnachricht prüft, ob die Zuordnung auch bei neuen Formulierungen funktioniert. Sie bleibt vom Training getrennt. Beispiele helfen beim Lernen, sind aber keine Garantie; ein Modell kann sich irren.' },
+    { type: 'reflection', id: 'intent-test-reflection', prompt: 'Warum sollte eine neue Testnachricht nicht vor der Prüfung in die Trainingsbeispiele aufgenommen werden?', examples: ['Sie soll unabhängig zeigen, ob das Modell auch ungesehene Formulierungen erkennt. Wird sie vorher zum Training benutzt, prüft sie nicht mehr unabhängig.'] },
+  ],
+  tasks: [
+    { id: 'task-intent-examples', type: 'open-response', title: 'Muster in gelabelten Beispielen finden', prompt: 'Gelabelte, erfundene Nachrichten für einen fiktiven Lernbot: „Hallo!“ → Begrüßung; „Guten Morgen!“ → Begrüßung; „Kannst du mir helfen?“ → Hilfe; „Ich verstehe Aufgabe 2 nicht.“ → Hilfe. Welche Sprachmuster könnte ein Modell ableiten, und warum ist das keine Garantie?', exampleAnswer: 'Die Intent-Labels zeigen, welche Muster zu Begrüßung und Hilfe gehören können. Ein Modell kann daraus typische Formulierungen ableiten; die Beispiele sind aber keine Garantie, dass jede neue Nachricht richtig erkannt wird.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-unseen-test', type: 'open-response', title: 'Eine neue Formulierung getrennt prüfen', prompt: 'Ein Modell wurde mit erfundenen Begrüßungs- und Hilfenachrichten trainiert. Wie könntest du es mit einer neuen, bisher ungesehenen Formulierung testen, ohne diese vorher ins Training aufzunehmen?', exampleAnswer: 'Ich halte eine neue erfundene Nachricht getrennt und prüfe, welchem Intent das Modell sie zuordnet. Die Testnachricht bleibt unabhängig vom Training; ein falsches Ergebnis wird notiert und zeigt, dass das Modell irren kann.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-apply', type: 'open-response', title: 'Ein fiktives Prüfset planen', prompt: 'Entwirf erfundene Trainingsbeispiele für zwei Intents und eine getrennte Testnachricht mit neuer Formulierung. Beschreibe, wie du die Vorhersage vergleichst, ohne echte Nachrichten oder Namen zu verwenden.', exampleAnswer: 'Ich kann erfundene Begrüßungen und Hilfenachrichten mit Labels trainieren und eine neue, erfundene Testnachricht getrennt halten. Danach vergleiche ich die Vorhersage mit ihrem bekannten Testlabel und notiere mögliche Fehler. Echte Namen oder private Nachrichten sind nicht nötig.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12 });
 
 export function getLesson(id) {
   return LESSONS[id];

@@ -12,6 +12,7 @@ import {
   KI_MISSION_09,
   KI_MISSION_10,
   KI_MISSION_11,
+  KI_MISSION_12,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -90,7 +91,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -172,7 +173,7 @@ assert.equal(KI_MISSION_07.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_07.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_07.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_07), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12']);
 assert.equal(getLesson('ki-08'), KI_MISSION_08);
 assert.equal(KI_MISSION_08.id, 'ki-08');
 assert.equal(KI_MISSION_08.title, 'Mission 08 – Verbessern, ohne den Test zu verraten');
@@ -232,7 +233,7 @@ assert.equal(KI_MISSION_10.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_10.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_10.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_10), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12']);
 
 assert.equal(getLesson('ki-11'), KI_MISSION_11);
 assert.equal(KI_MISSION_11.id, 'ki-11');
@@ -261,6 +262,34 @@ assert.equal(KI_MISSION_11.resourceNotes.material.license, 'not-stated');
 assert.match(KI_MISSION_11.resourceNotes.material.text, /Experience AI.*teilweise|teilweise.*Experience AI/i);
 assert.equal(KI_MISSION_11.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_11), true);
+
+assert.equal(getLesson('ki-12'), KI_MISSION_12);
+assert.equal(KI_MISSION_12.id, 'ki-12');
+assert.equal(KI_MISSION_12.title, 'Mission 12 – Beispiele, Lernen und Testen');
+assert.equal(KI_MISSION_12.duration, 45);
+assert.deepEqual(KI_MISSION_12.context, { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 2', overviewHref: '../modul-5.html#stunde-2' });
+assert.deepEqual(KI_MISSION_12.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_12.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_12.contentBlocks[0].text, /gelabelte.*Beispiele.*unabhängig.*Test/i);
+const labeledIntentTask = KI_MISSION_12.tasks.find(({ id }) => id === 'task-intent-examples');
+assert.match(labeledIntentTask.prompt, /gelabelte.*erfundene Nachrichten/i);
+assert.match(labeledIntentTask.exampleAnswer, /Intent.*Muster.*keine Garantie/i);
+const unseenTestTask = KI_MISSION_12.tasks.find(({ id }) => id === 'task-unseen-test');
+assert.match(unseenTestTask.prompt, /neuen.*ungesehenen.*Formulierung/i);
+assert.match(unseenTestTask.exampleAnswer, /unabhängig.*Training|nicht.*Training/i);
+assert.match(unseenTestTask.exampleAnswer, /Fehler|irren/i);
+const fictionalApplyTask = KI_MISSION_12.tasks.find(({ id }) => id === 'task-apply');
+assert.match(fictionalApplyTask.prompt, /erfundene.*Testnachricht/i);
+assert.match(fictionalApplyTask.exampleAnswer, /Echte Namen.*private Nachrichten.*nicht nötig/i);
+assert.equal(KI_MISSION_12.progress.localOnly, true);
+assert.deepEqual(KI_MISSION_12.media, {});
+assert.equal(KI_MISSION_12.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_12.resourceNotes.material.status, 'unconfirmed');
+assert.equal(KI_MISSION_12.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_12.resourceNotes.material.license, 'not-stated');
+assert.match(KI_MISSION_12.resourceNotes.material.text, /Experience AI.*teilweise|teilweise.*Experience AI/i);
+assert.equal(KI_MISSION_12.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_12), true);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [

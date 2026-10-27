@@ -193,6 +193,11 @@ let mission11Writes = 0;
 createMissionRenderer({ root: mission11Root, lesson: getLesson('ki-11'), progressKey: 'ki-11', storage: { getItem: () => null, setItem() { mission11Writes += 1; }, removeItem() {} } });
 assert.equal(mission11Writes, 0, 'M11 does not write progress on initial render');
 assert.match(mission11Root.innerHTML, /In der nächsten Mission untersuchst du, wie gelabelte Beispiele neuen Formulierungen zugeordnet werden\./);
+const mission12Root = new FakeRoot();
+let mission12Writes = 0;
+createMissionRenderer({ root: mission12Root, lesson: getLesson('ki-12'), progressKey: 'ki-12', storage: { getItem: () => null, setItem() { mission12Writes += 1; }, removeItem() {} } });
+assert.equal(mission12Writes, 0, 'M12 does not write progress on initial render');
+assert.match(mission12Root.innerHTML, /In der nächsten Mission untersuchst du, wie ein Chatbot unbekannte Nachrichten offen und sicher beantwortet\./);
 
 const defaultHintRoot = new FakeRoot();
 createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });

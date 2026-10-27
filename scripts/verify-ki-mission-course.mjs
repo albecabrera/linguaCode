@@ -26,6 +26,8 @@ assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-10\/">/);
 assert.match(html, /<a id="mission-10-qr" class="course-qr mission-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/stunde-10\//);
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-11\/">/);
 assert.match(html, /<a id="mission-11-qr" class="course-qr mission-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/stunde-11\//);
+assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-12\/">/);
+assert.match(html, /<a id="mission-12-qr" class="course-qr mission-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/stunde-12\//);
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-4/'), {path: '/ki8/stunde-4/', lessonId: 'ki-04', progressKey: 'ki-04'});
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-5/'), {path: '/ki8/stunde-5/', lessonId: 'ki-05', progressKey: 'ki-05'});
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-6/'), {path: '/ki8/stunde-6/', lessonId: 'ki-06', progressKey: 'ki-06'});
@@ -41,6 +43,8 @@ assert.deepEqual(resolveMissionRoute('/ki8/stunde-10/'), {path: '/ki8/stunde-10/
 assert.deepEqual(resolveMissionRoute('/linguaCode/ki8/stunde-10/'), {path: '/ki8/stunde-10/', lessonId: 'ki-10', progressKey: 'ki-10'});
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-11/'), {path: '/ki8/stunde-11/', lessonId: 'ki-11', progressKey: 'ki-11'});
 assert.deepEqual(resolveMissionRoute('/linguaCode/ki8/stunde-11/'), {path: '/ki8/stunde-11/', lessonId: 'ki-11', progressKey: 'ki-11'});
+assert.deepEqual(resolveMissionRoute('/ki8/stunde-12/'), {path: '/ki8/stunde-12/', lessonId: 'ki-12', progressKey: 'ki-12'});
+assert.deepEqual(resolveMissionRoute('/linguaCode/ki8/stunde-12/'), {path: '/ki8/stunde-12/', lessonId: 'ki-12', progressKey: 'ki-12'});
 const mission04Shell = fs.readFileSync(new URL('../pages/ki8/stunde-4/index.html', import.meta.url), 'utf8');
 assert.match(mission04Shell, /data-lesson-id="ki-04"/);
 const mission05Shell = fs.readFileSync(new URL('../pages/ki8/stunde-5/index.html', import.meta.url), 'utf8');
@@ -57,11 +61,13 @@ const mission10Shell = fs.readFileSync(new URL('../pages/ki8/stunde-10/index.htm
 assert.match(mission10Shell, /data-lesson-id="ki-10"/);
 const mission11Shell = fs.readFileSync(new URL('../pages/ki8/stunde-11/index.html', import.meta.url), 'utf8');
 assert.match(mission11Shell, /data-lesson-id="ki-11"/);
+const mission12Shell = fs.readFileSync(new URL('../pages/ki8/stunde-12/index.html', import.meta.url), 'utf8');
+assert.match(mission12Shell, /data-lesson-id="ki-12"/);
 assert.doesNotMatch(html, /127\.0\.0\.1/);
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-3\/">/);
 assert.match(html, /<span>Mission 03 starten →<\/span>/);
 assert.match(html, /id="mission-list"/);
-assert.equal([...html.matchAll(/<article class="mission-panel">/g)].length, 11);
+assert.equal([...html.matchAll(/<article class="mission-panel">/g)].length, 12);
 assert.match(html, /href="\.\/stunde-1\/"/);
 assert.match(html, /href="\.\/stunde-2\/"/);
 assert.match(html, /href="\.\/stunde-5\/"/);
@@ -97,7 +103,7 @@ class FakeElement {
   select() { this.selected = true; }
 }
 class FakeDocument {
-  constructor() { this.nodes = new Map(['#course-url', '#course-page-link', '#course-qr', '#mission-01-qr', '#mission-02-qr', '#mission-03-qr', '#mission-04-qr', '#mission-05-qr', '#mission-06-qr', '#mission-07-qr', '#mission-08-qr', '#mission-09-qr', '#mission-10-qr', '#mission-11-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
+  constructor() { this.nodes = new Map(['#course-url', '#course-page-link', '#course-qr', '#mission-01-qr', '#mission-02-qr', '#mission-03-qr', '#mission-04-qr', '#mission-05-qr', '#mission-06-qr', '#mission-07-qr', '#mission-08-qr', '#mission-09-qr', '#mission-10-qr', '#mission-11-qr', '#mission-12-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
   querySelector(selector) { return this.nodes.get(selector) ?? null; }
   node(selector) { return this.nodes.get(selector); }
 }
@@ -109,10 +115,10 @@ const dom = new FakeDocument();
 const qrPayloads = [];
 const qrAlts = [];
 const initialized = initCourseIntegration({documentLike: dom, locationLike: {href: 'http://127.0.0.1:8108/ki8/'}, qrFactory: () => ({addData(value) { qrPayloads.push(value); }, make() {}, createSvgTag(options) { qrAlts.push(options.alt); return '<svg></svg>'; }})});
-const missionUrls = Array.from({length: 11}, (_, index) => `${publicCourseUrl}stunde-${index + 1}/`);
+const missionUrls = Array.from({length: 12}, (_, index) => `${publicCourseUrl}stunde-${index + 1}/`);
 assert.equal(initialized.url, publicCourseUrl);
 assert.deepEqual(qrPayloads, [publicCourseUrl, ...missionUrls]);
-assert.deepEqual(qrAlts, ['QR-Code für die öffentliche Kursseite', 'QR-Code für Mission 01', 'QR-Code für Mission 02', 'QR-Code für Mission 03', 'QR-Code für Mission 04', 'QR-Code für Mission 05', 'QR-Code für Mission 06', 'QR-Code für Mission 07', 'QR-Code für Mission 08', 'QR-Code für Mission 09', 'QR-Code für Mission 10', 'QR-Code für Mission 11']);
+assert.deepEqual(qrAlts, ['QR-Code für die öffentliche Kursseite', 'QR-Code für Mission 01', 'QR-Code für Mission 02', 'QR-Code für Mission 03', 'QR-Code für Mission 04', 'QR-Code für Mission 05', 'QR-Code für Mission 06', 'QR-Code für Mission 07', 'QR-Code für Mission 08', 'QR-Code für Mission 09', 'QR-Code für Mission 10', 'QR-Code für Mission 11', 'QR-Code für Mission 12']);
 assert.equal(dom.node('#course-page-link').href, publicCourseUrl);
 assert.equal(dom.node('#course-page-link').textContent, publicCourseUrl);
 assert.equal(dom.node('#course-qr').href, publicCourseUrl);
