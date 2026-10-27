@@ -183,6 +183,12 @@ let mission09Writes = 0;
 createMissionRenderer({ root: mission09Root, lesson: getLesson('ki-09'), progressKey: 'ki-09', storage: { getItem: () => null, setItem() { mission09Writes += 1; }, removeItem() {} } });
 assert.equal(mission09Writes, 0, 'M09 does not write progress on initial render');
 assert.match(mission09Root.innerHTML, /In der nächsten Mission prüfst du Muster an neuen Fällen und untersuchst mögliche Ausreißer\./);
+const mission10Root = new FakeRoot();
+let mission10Writes = 0;
+createMissionRenderer({ root: mission10Root, lesson: getLesson('ki-10'), progressKey: 'ki-10', storage: { getItem: () => null, setItem() { mission10Writes += 1; }, removeItem() {} } });
+assert.equal(mission10Writes, 0, 'M10 does not write progress on initial render');
+assert.match(mission10Root.innerHTML, /In der nächsten Mission untersuchst du, ob ein Chatbot Absichten mit festen Regeln oder einem gelernten Modell erkennt\./);
+
 const defaultHintRoot = new FakeRoot();
 createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });
 assert.match(defaultHintRoot.innerHTML, /In der nächsten Stunde untersuchen wir genauer, wie Trainingsdaten und Merkmale Modelle beeinflussen\./);

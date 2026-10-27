@@ -477,7 +477,52 @@ export const KI_MISSION_09 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09 });
+const KI_MISSION_10_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Eine fiktive Lernkarten-KI erkennt Karten mit blauem Rand und drei Symbolen. Eine Karte hat fünf Symbole. Wie sollte sie diese Abweichung behandeln?', choices: ['Sie untersucht den Fall, statt ihn sofort einzuordnen oder zu verwerfen.', 'Sie löscht die Karte, damit das Muster einfacher aussieht.', 'Sie ändert das Muster für alle Karten, ohne weitere Beispiele zu prüfen.'], correctIndex: 0, explanation: 'Eine Abweichung sollte untersucht werden; sie allein zeigt noch nicht, warum der Fall anders ist.' },
+  { id: 'q2', prompt: 'Welche Erklärungen sind für einen abweichenden Fall möglich?', choices: ['Ein Datenfehler, eine neue Gruppe oder eine Grenze des aktuellen Musters.', 'Immer nur ein Tippfehler.', 'Der Beweis, dass jedes bisherige Beispiel falsch war.'], correctIndex: 0, explanation: 'Ein Ausreißer kann auf einen Datenfehler, eine weitere Gruppe oder eine Grenze des bisherigen Musters hinweisen.' },
+  { id: 'q3', prompt: 'Was ist ein hilfreicher nächster Schritt, wenn ein Beispiel nicht zum Muster passt?', choices: ['Den Fall prüfen und das Muster an neuen, erfundenen Beispielen testen.', 'Den Fall löschen, ohne nachzusehen.', 'Sicher behaupten, das Muster gelte immer.'], correctIndex: 0, explanation: 'Prüfen und Testen hilft, zwischen einem Fehler, einer neuen Gruppe und einer Mustergrenze zu unterscheiden.' },
+  { id: 'q4', prompt: 'Warum sollten Abweichungen dokumentiert werden?', choices: ['Damit sichtbar bleibt, welche Fälle noch geprüft werden müssen.', 'Damit niemand mehr die Beispiele vergleichen kann.', 'Damit aus einer Vermutung eine sichere Ursache wird.'], correctIndex: 0, explanation: 'Dokumentierte Abweichungen helfen, offene Fragen und die Grenzen eines Musters nachvollziehbar zu halten.' },
+  { id: 'q5', prompt: 'Welche Aussage über ein Muster ist fair?', choices: ['Ein Muster kann nützlich sein und trotzdem Grenzen haben.', 'Ein Muster muss ausnahmslos zu jedem neuen Fall passen.', 'Ein einzelner Ausreißer darf nie weiter untersucht werden.'], correctIndex: 0, explanation: 'Muster sind prüfbare Beschreibungen; neue Fälle können ihre Grenzen sichtbar machen.' },
+]);
+
+export const KI_MISSION_10 = Object.freeze({
+  id: 'ki-10',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 2', overviewHref: '../modul-4.html#stunde-2' },
+  title: 'Mission 10 – Muster prüfen und Ausreißer erkennen',
+  description: 'Untersuche abweichende, erfundene Beispiele und halte fest, was ein Muster erklärt und wo seine Grenzen liegen.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission untersuchst du, ob ein Chatbot Absichten mit festen Regeln oder einem gelernten Modell erkennt.',
+  objectives: [
+    'Du nennst mögliche Erklärungen für einen abweichenden Fall, ohne ihn vorschnell zu löschen.',
+    'Du prüfst Muster an neuen, erfundenen Beispielen und dokumentierst offene Fragen.',
+  ],
+  phases: [
+    { id: 'observe', title: 'Ein Muster genau beschreiben', minutes: 10, blocks: [{ type: 'task', taskId: 'task-outlier' }] },
+    { id: 'compare', title: 'Mögliche Erklärungen untersuchen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-investigate' }] },
+    { id: 'apply', title: 'Mit neuen Beispielen prüfen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-apply' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_10_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_10_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zu Mustern und Ausreißern wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Kein passendes externes Material zu Mustern und Ausreißern wurde bestätigt. Die Beispiele dieser Mission sind eigenständig und erfunden.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Eine Abweichung passt nicht ohne Weiteres zu einem beobachteten Muster. Sie kann auf einen Datenfehler, eine neue Gruppe oder eine Grenze des aktuellen Musters hinweisen. Wir untersuchen den Fall und löschen ihn nicht einfach.' },
+    { type: 'reflection', id: 'outlier-reflection', prompt: 'Warum sollte eine einzelne Abweichung nicht sofort gelöscht oder als Fehler festgelegt werden?', examples: ['Sie könnte ein Datenfehler sein, aber auch eine neue Gruppe oder eine Grenze des aktuellen Musters zeigen. Weitere erfundene Beispiele helfen beim Prüfen; die Abweichung bleibt dokumentiert.'] },
+  ],
+  tasks: [
+    { id: 'task-outlier', type: 'open-response', title: 'Eine Abweichung ernst nehmen', prompt: 'Eine fiktive Lernkarten-KI erkennt Karten mit blauem Rand und drei Symbolen. Eine erfundene Karte hat einen blauen Rand, aber fünf Symbole. Welche Erklärungen sind möglich, und solltest du die Karte löschen?', exampleAnswer: 'Es könnte ein Datenfehler sein, eine neue Gruppe oder eine Grenze des aktuellen Musters. Ich prüfe den Fall und lösche ihn nicht einfach, weil die Abweichung wichtige Hinweise enthalten kann.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-investigate', type: 'open-response', title: 'Einen Prüfplan entwerfen', prompt: 'Wie könntest du die Regel an neuen, erfundenen Beispielen prüfen und festhalten, was du dabei beobachtest?', exampleAnswer: 'Ich prüfe weitere erfundene Karten, vergleiche ihre Merkmale mit dem Muster, halte Abweichungen und offene Fragen fest und dokumentiere sie. Ich behaupte nicht vorschnell, dass eine Erklärung sicher stimmt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-apply', type: 'open-response', title: 'Ein Muster mit Grenzen beschreiben', prompt: 'Erfinde eine kleine Gruppe mit einem gemeinsamen Muster und einen abweichenden Fall. Beschreibe, welche drei Erklärungen für den Fall möglich sind und wie du weiterprüfen würdest.', exampleAnswer: 'Bei erfundenen Formen haben die meisten drei Ecken; eine hat vier. Das kann ein Datenfehler, eine neue Gruppe oder eine Grenze des Musters sein. Ich prüfe weitere erfundene Formen und dokumentiere die Abweichung, statt sie zu löschen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10 });
 
 export function getLesson(id) {
   return LESSONS[id];

@@ -10,6 +10,7 @@ import {
   KI_MISSION_07,
   KI_MISSION_08,
   KI_MISSION_09,
+  KI_MISSION_10,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -88,7 +89,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -170,7 +171,7 @@ assert.equal(KI_MISSION_07.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_07.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_07.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_07), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10']);
 assert.equal(getLesson('ki-08'), KI_MISSION_08);
 assert.equal(KI_MISSION_08.id, 'ki-08');
 assert.equal(KI_MISSION_08.title, 'Mission 08 – Verbessern, ohne den Test zu verraten');
@@ -209,7 +210,28 @@ assert.equal(KI_MISSION_09.resourceNotes.video.status, 'unconfirmed');
 assert.equal(KI_MISSION_09.resourceNotes.material.status, 'unconfirmed');
 assert.equal(KI_MISSION_09.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_09), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09']);
+assert.equal(getLesson('ki-10'), KI_MISSION_10);
+assert.equal(KI_MISSION_10.id, 'ki-10');
+assert.equal(KI_MISSION_10.title, 'Mission 10 – Muster prüfen und Ausreißer erkennen');
+assert.equal(KI_MISSION_10.duration, 45);
+assert.deepEqual(KI_MISSION_10.context, { subject: 'WP 8', module: 'Modul 4', hour: 'Stunde 2', overviewHref: '../modul-4.html#stunde-2' });
+assert.deepEqual(KI_MISSION_10.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_10.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_10.contentBlocks[0].text, /Datenfehler.*neue Gruppe.*Grenze des aktuellen Musters/i);
+const outlierTask = KI_MISSION_10.tasks.find(({ id }) => id === 'task-outlier');
+assert.match(outlierTask.prompt, /fiktiv|erfunden/i);
+assert.match(outlierTask.exampleAnswer, /Datenfehler.*neue Gruppe.*Grenze des aktuellen Musters/i);
+assert.match(outlierTask.exampleAnswer, /lösche.*nicht einfach/i);
+const outlierReviewTask = KI_MISSION_10.tasks.find(({ id }) => id === 'task-investigate');
+assert.match(outlierReviewTask.prompt, /neuen.*erfundenen Beispielen/i);
+assert.match(outlierReviewTask.exampleAnswer, /Abweichungen.*dokument/i);
+assert.equal(KI_MISSION_10.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_10.resourceNotes.material.status, 'unconfirmed');
+assert.equal(KI_MISSION_10.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_10.resourceNotes.material.license, 'not-stated');
+assert.equal(KI_MISSION_10.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_10), true);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10']);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [
