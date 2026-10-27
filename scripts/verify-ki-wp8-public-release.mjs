@@ -27,11 +27,16 @@ try {
   const entryResponse = await fetch(`${origin}/`);
   assert.equal(entryResponse.status, 200);
   const entry = await entryResponse.text();
-  assert.match(entry, /id="modules"/);
+  assert.match(entry, /id="mission-list"/);
+  assert.match(entry, /href="\.\/stunde-1\/"/);
+  assert.match(entry, /href="\.\/stunde-2\/"/);
+  assert.match(entry, /href="\.\/stunde-3\/"/);
+  assert.doesNotMatch(entry, /href="\.\/modul-\d+\.html#stunde-\d+"|id="modules"/);
   const appResponse = await fetch(`${origin}/app.mjs`);
   assert.equal(appResponse.status, 200);
   const app = await appResponse.text();
-  assert.match(app, /modul-\$\{index \+ 1\}\.html#stunde-\$\{hour\}/);
+  assert.match(app, /initCourseIntegration/);
+  assert.doesNotMatch(app, /modul-\$\{index \+ 1\}\.html#stunde-\$\{hour\}/);
   const style = await readFile(resolve(root, 'style.css'), 'utf8');
   assert.match(style, /header a span, \.eyebrow \{ color: var\(--accent\); \}/);
   assert.match(style, /\.activity input\[type=radio\] \{ min-width: 20px; min-height: 20px;/);
@@ -53,7 +58,7 @@ try {
   }
   assert.equal((await fetch(`${origin}/modul-1.html`)).status, 200);
   assert.equal((await fetch(`${origin}/../docs/ki-wp8/demo/index.html`)).status, 404);
-  console.log('PASS: static /ki8/ entry and all 18 lesson anchors are reachable; private demo path is absent.');
+  console.log('PASS: static /ki8/ mission-only entry and all 18 retained source-hour anchors are reachable; private demo path is absent.');
 } finally {
   server.close();
 }

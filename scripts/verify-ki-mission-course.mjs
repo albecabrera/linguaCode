@@ -9,12 +9,20 @@ assert.match(html, /id="course-progress"/);
 assert.match(html, /id="course-url"/);
 assert.match(html, /<a id="course-qr" class="course-qr" href="\.\/"/);
 assert.match(html, /<a id="mission-03-qr" class="course-qr" href="\.\/stunde-3\/"/);
-assert.match(html, /href="\.\/stunde-3\/">Mission 03 starten/);
+assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-3\/">/);
+assert.match(html, /<span>Mission 03 starten →<\/span>/);
+assert.match(html, /id="mission-list"/);
+assert.equal([...html.matchAll(/<article class="mission-panel">/g)].length, 3);
+assert.match(html, /href="\.\/stunde-1\/"/);
+assert.match(html, /href="\.\/stunde-2\/"/);
+assert.doesNotMatch(html, /href="\.\/modul-\d+\.html#stunde-\d+"/);
+assert.doesNotMatch(html, /id="modules"|id="threshold-form"/);
+assert.match(html, /id="course-page-link"/);
 assert.match(html, /\.\.\/assets\/qrcode-generator\.min\.js/);
 assert.equal(modules.reduce((total, module) => total + module.hours, 0), 18);
 const app = fs.readFileSync(new URL('../pages/ki8/app.mjs', import.meta.url), 'utf8');
-assert.match(app, /item\.hours/);
-assert.match(app, /#beispielkarte/);
+assert.match(app, /initCourseIntegration/);
+assert.doesNotMatch(app, /item\.hours|#beispielkarte|threshold-form/);
 
 assert.equal(derivePublicCourseUrl({href: 'https://example.test/linguaCode/ki8/'}), 'https://example.test/linguaCode/ki8/');
 assert.equal(derivePublicCourseUrl({href: 'https://example.test/linguaCode/ki8/index.html'}), 'https://example.test/linguaCode/ki8/');
@@ -37,7 +45,7 @@ class FakeElement {
   select() { this.selected = true; }
 }
 class FakeDocument {
-  constructor() { this.nodes = new Map(['#course-url', '#course-qr', '#mission-03-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
+  constructor() { this.nodes = new Map(['#course-url', '#course-page-link', '#course-qr', '#mission-03-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
   querySelector(selector) { return this.nodes.get(selector) ?? null; }
   node(selector) { return this.nodes.get(selector); }
 }
@@ -52,6 +60,8 @@ const initialized = initCourseIntegration({documentLike: dom, locationLike: {hre
 assert.equal(initialized.url, 'https://example.test/linguaCode/ki8/');
 assert.deepEqual(qrPayloads, [initialized.url, 'https://example.test/linguaCode/ki8/stunde-3/']);
 assert.deepEqual(qrAlts, ['QR-Code für die öffentliche Kursseite', 'QR-Code für Mission 03']);
+assert.equal(dom.node('#course-page-link').href, initialized.url);
+assert.equal(dom.node('#course-page-link').textContent, initialized.url);
 assert.equal(dom.node('#course-qr').href, initialized.url);
 assert.equal(dom.node('#mission-03-qr').href, 'https://example.test/linguaCode/ki8/stunde-3/');
 assert.match(dom.node('#course-qr').innerHTML, /<svg/);
@@ -65,15 +75,13 @@ Object.defineProperty(globalThis, 'localStorage', {configurable: true, get: () =
 const unavailableDom = new FakeDocument();
 initCourseIntegration({documentLike: unavailableDom, locationLike: {href: 'https://example.test/linguaCode/ki8/'}, qrFactory: null});
 assert.match(unavailableDom.node('#course-progress').textContent, /nicht verfügbar/);
+assert.equal(unavailableDom.node('#course-page-link').href, 'https://example.test/linguaCode/ki8/');
 assert.equal(unavailableDom.node('#course-qr').href, 'https://example.test/linguaCode/ki8/');
 assert.equal(unavailableDom.node('#mission-03-qr').href, 'https://example.test/linguaCode/ki8/stunde-3/');
 assert.match(unavailableDom.node('#mission-03-qr').innerHTML, /QR-Code konnte/);
 if (originalStorage) Object.defineProperty(globalThis, 'localStorage', originalStorage); else delete globalThis.localStorage;
 if (originalNavigator) Object.defineProperty(globalThis, 'navigator', originalNavigator); else delete globalThis.navigator;
 
-const links = modules.flatMap((module, moduleIndex) => Array.from({length: module.hours}, (_, hourIndex) => `./modul-${moduleIndex + 1}.html#stunde-${hourIndex + 1}`));
-assert.equal(links.length, 18);
-assert.equal(links.at(-1), './modul-6.html#stunde-5');
 assert.equal(classify(8, 8), 'unter oder gleich');
 assert.equal(classify(8, 7), 'über');
-console.log('PASS: public course URL, QR payload, progress fallback, real init/copy events, 18 links, and threshold behavior.');
+console.log('PASS: mission-only overview, GitHub Pages link, QR payloads, progress fallback, 18 retained source hours, and threshold behavior.');

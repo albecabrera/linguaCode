@@ -13,33 +13,51 @@
   <header><a href="../">Lingua<span>Code</span></a><span>Informatik · WP 8</span></header>
   <main id="main">
     <section class="hero">
-      <p class="eyebrow">Öffentlicher Lernpfad · 18 Unterrichtsstunden</p>
+      <p class="eyebrow">Öffentlicher Lernpfad · 3 Missionen</p>
       <h1>KI entdecken, verstehen und gestalten – WP Informatik 8</h1>
-      <p>Sechs Module führen von KI im Alltag über Daten und Entscheidungsbäume bis zum verantwortlichen Einsatz. Alle 18 Unterrichtsstunden sind als interaktive Einstiege verlinkt; Modul 3 enthält zusätzlich eine Beispielkarte.</p>
+      <p>Wähle eine Mission zu KI-Grundlagen, Daten oder Schwellenwerten. Deine Antworten und dein Fortschritt bleiben lokal auf diesem Gerät.</p>
       <p class="notice"><strong>Öffentliche Ausgabe:</strong> Keine Anmeldung und keine persönlichen Namen. Antworten und Fortschritt bleiben – sofern verfügbar – ausschließlich lokal in diesem Browser.</p>
     </section>
-    <section class="mission-callout" aria-labelledby="mission-title">
-      <p class="eyebrow">Neu · Mission 01</p>
-      <h2 id="mission-title">Was ist künstliche Intelligenz? – Maschinen, die lernen</h2>
-      <p>Entdecke, wie Maschinen aus Beispielen Muster lernen und warum auch KI Fehler machen kann.</p>
-      <a class="mission-link" href="./stunde-1/">Mission 01 starten →</a>
-      <p id="course-progress" role="status" aria-live="polite">Lokaler Fortschritt wird geladen …</p>
+    <section class="mission-index" aria-labelledby="mission-list-title">
+      <h2 id="mission-list-title">Wähle deine Mission</h2>
+      <div id="mission-list" class="mission-grid">
+        <article class="mission-panel">
+          <a class="mission-panel-link" href="./stunde-1/">
+            <p class="eyebrow">Mission 01 · KI-Grundlagen</p>
+            <h3>Was ist künstliche Intelligenz?</h3>
+            <p>Entdecke, wie Maschinen aus Beispielen Muster lernen und warum auch KI Fehler machen kann.</p>
+            <span>Mission 01 starten →</span>
+          </a>
+          <p id="course-progress" role="status" aria-live="polite">Lokaler Fortschritt wird geladen …</p>
+        </article>
+        <article class="mission-panel">
+          <a class="mission-panel-link" href="./stunde-2/">
+            <p class="eyebrow">Mission 02 · Training</p>
+            <h3>Regeln, Training und Grenzen</h3>
+            <p>Vergleiche feste Regeln mit gelernten Mustern und entdecke, wozu neue Testdaten dienen.</p>
+            <span>Mission 02 starten →</span>
+          </a>
+        </article>
+        <article class="mission-panel">
+          <a class="mission-panel-link" href="./stunde-3/">
+            <p class="eyebrow">Mission 03 · Daten</p>
+            <h3>Merkmale, Labels und Schwellenwerte</h3>
+            <p>Übe, wie ein Schwellenwert Beobachtungen in Labels einteilt.</p>
+            <span>Mission 03 starten →</span>
+          </a>
+          <p>Öffne oder teile diese Mission direkt mit dem QR-Code:</p>
+          <a id="mission-03-qr" class="course-qr" href="./stunde-3/" aria-label="Mission 03 direkt öffnen (QR-Code)"></a>
+        </article>
+      </div>
       <p class="shared-device-warning"><strong>Hinweis für gemeinsam genutzte Geräte:</strong> Der Fortschritt wird nicht übertragen, kann im privaten Modus fehlen und ist an diesen Browser und dieses Gerät gebunden.</p>
     </section>
-    <section class="mission-callout" aria-labelledby="mission-03-title">
-      <p class="eyebrow">Mission 03 · Modul 2</p>
-      <h2 id="mission-03-title">Merkmale, Labels und Schwellenwerte</h2>
-      <p>Übe, wie ein Schwellenwert Beobachtungen in Labels einteilt.</p>
-      <p><a class="mission-link" href="./stunde-3/">Mission 03 starten →</a></p>
-      <p>Öffne oder teile diese Mission direkt mit dem QR-Code:</p>
-      <a id="mission-03-qr" class="course-qr" href="./stunde-3/" aria-label="Mission 03 direkt öffnen (QR-Code)"></a>
-    </section>
     <section class="course-sharing" aria-labelledby="sharing-title">
-      <h2 id="sharing-title">Kurs teilen</h2>
-      <p>Dieser Link führt zur öffentlichen Kursseite. Der QR-Code enthält nur diese Kurs-URL, keine persönlichen Daten.</p>
+      <h2 id="sharing-title">GitHub-Pages-Link und QR-Code</h2>
+      <p>Der Link und der allgemeine QR-Code führen zu dieser Missionen-Übersicht. Der QR-Code enthält keine persönlichen Daten.</p>
       <div class="sharing-grid">
         <div>
-          <label for="course-url">Öffentliche Kurs-URL</label>
+          <label for="course-url">GitHub-Pages-Kurzlink</label>
+          <p><a id="course-page-link" class="course-page-link" href="./">GitHub Pages öffnen</a></p>
           <div class="copy-row">
             <input id="course-url" type="url" readonly>
             <button id="copy-course-url" type="button">Link kopieren</button>
@@ -49,29 +67,7 @@
         <a id="course-qr" class="course-qr" href="./" aria-label="Kursübersicht öffnen (QR-Code)"></a>
       </div>
     </section>
-    <h2>Dein Lernpfad</h2>
-    <p><a href="./modul-1.html#stunde-1">Mit Modul 1 beginnen →</a></p>
-    <div id="modules" class="modules"></div>
-    <section class="lesson" id="beispielkarte" aria-labelledby="card-title">
-      <p class="eyebrow">Modul 3 · Beispielkarte · etwa 5 Minuten</p>
-      <h2 id="card-title">Schwellenwerte ausprobieren</h2>
-      <p><strong>Lernziel:</strong> Du wendest eine Ja-Nein-Regel auf neue Daten an und erkennst den Unterschied zwischen Trainingsdaten und Testdaten.</p>
-      <h3>Erklären</h3>
-      <p>Ein <strong>Merkmal</strong> beschreibt ein Objekt durch einen Wert. Ein <strong>Schwellenwert</strong> teilt Werte in zwei Gruppen: kleiner oder gleich dem Grenzwert – oder größer. Trainingsbeispiele helfen beim Entwerfen einer Regel; mit bisher ungesehenen Testbeispielen prüfst du sie.</p>
-      <p class="notice"><strong>Vereinfachte Labels:</strong> Die in den Originalmaterialien verwendeten Kategorien sind Labels einer Datenaufgabe, keine allgemeingültigen Gesundheitsurteile. Diese Karte nutzt deshalb ausschließlich erfundene Zahlen und neutrale Gruppennamen.</p>
-      <h3>Ausprobieren</h3>
-      <p>Trainingsbeispiele: Wert 3 → Gruppe „unter oder gleich“, Wert 11 → Gruppe „über“. Probiere einen Grenzwert aus. Auf welche Seite fällt ein <em>neues</em> Beispiel mit Wert 8?</p>
-      <form id="threshold-form">
-        <label for="threshold">Schwellenwert (0 bis 20)</label>
-        <input id="threshold" type="number" min="0" max="20" step="0.1" value="8" required>
-        <button type="submit">Testbeispiel einordnen</button>
-      </form>
-      <p id="result" role="status" aria-live="polite">Noch keine Regel getestet.</p>
-      <h3>Anwenden</h3>
-      <p>Ändere den Schwellenwert auf 7. In welche Gruppe fällt Wert 8 jetzt? Begründe, warum ein Testbeispiel nicht zum Aussuchen des Grenzwerts benutzt werden sollte.</p>
-      <h3>Rückmeldung und Abschluss</h3>
-      <p>Vergleiche deine Begründung mit der Regel: Wert ≤ Schwellenwert liegt in der ersten Gruppe, sonst in der zweiten. Testdaten dienen zur Überprüfung – nicht zum heimlichen Nachtrainieren. Deine Antwort bleibt nur auf dieser Seite sichtbar und ist nach dem Neuladen weg.</p>
-    </section>
+
   </main>
   <script type="module" src="./app.mjs"></script>
 </body>

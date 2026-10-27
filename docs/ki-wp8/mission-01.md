@@ -37,7 +37,7 @@ Beide Quellen werden nur verlinkt. Arbeitsblätter werden nicht kopiert oder ein
 
 ### Mission 03: Merkmale, Labels und Schwellenwerte
 
-Die ergänzende Stunde ist lokal unter `/ki8/stunde-3/` verfügbar und über den CTA in Modul 2, Stunde 1 erreichbar. Die bisherigen Module-2-Inhalte, Aufgaben, der Abschnitt `#stunde-1` und die 18 Kursstundenanker bleiben erhalten.
+Die ergänzende Stunde ist lokal unter `/ki8/stunde-3/` verfügbar und über den CTA in Modul 2, Stunde 1 erreichbar. Die bisherigen Module-2-Inhalte, Aufgaben, der Abschnitt `#stunde-1` und alle 18 Stundenabschnitte bleiben in ihren Moduldateien erhalten; von der öffentlichen Übersicht werden sie nicht verlinkt.
 
 - [inf-schule: „Entscheide wie eine KI“](https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI) – optionale Lernstrecke mit Beispielen zu überwachtem Lernen, Schwellenwerten und Entscheidungsbäumen. Die geprüfte Seite empfiehlt als Voraussetzung die Lernstrecke „Lernende Systeme“.
 
@@ -96,7 +96,9 @@ Für direkte Aufrufe auf GitHub Pages sind vorgesehen:
 - `/ki8/stunde-2/` – Mission 02
 - `/ki8/stunde-3/` – Mission 03
 
-Der CTA für Mission 02 steht innerhalb von Modul 1, Stunde 2; der bisherige Abschnitt samt Aufgaben bleibt erhalten. Der Kurs-QR auf `/ki8/` führt weiterhin zur Kursübersicht; der zusätzliche klickbare QR und Link für Mission 03 führen direkt zu `/ki8/stunde-3/`. Die Kursübersicht enthält weiterhin einen QR-Code zum Kurs, einen kopierbaren Kurslink, sechs Modulübersichten und die lokale Fortschrittsanzeige. Die bestehenden 18 Stundenlinks sowie andere Fächer bleiben erhalten. QR-Scan und echte GitHub-Pages-Auslieferung sind nicht als Deployment verifiziert.
+Die öffentliche Kursübersicht unter `/ki8/` zeigt ausschließlich drei anklickbare Mission-Panels für `/ki8/stunde-1/`, `/ki8/stunde-2/` und `/ki8/stunde-3/`. Der GitHub-Pages-Link wird dynamisch aus der aktuellen Pages-Adresse erzeugt; er ist kein externer URL-Shortener. Der anklickbare Link und der allgemeine QR-Code führen zur Missionen-Übersicht, der zusätzliche QR-Code in Mission 03 direkt zu `/ki8/stunde-3/`.
+
+Die sechs Moduldateien und alle 18 Stundenabschnitte samt Aktivitäten bleiben im Repository und über ihre bisherigen direkten URLs erreichbar, werden aber nicht mehr von der öffentlichen Kursübersicht verlinkt. Andere Fächer bleiben unverändert. Ein physischer QR-Kameratest sowie eine echte GitHub-Pages-Auslieferung sind noch nicht verifiziert.
 
 ## Wiederverwendbare Datenstruktur: aktueller Stand
 

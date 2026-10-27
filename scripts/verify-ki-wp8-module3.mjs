@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 const html = readFileSync(new URL('../pages/ki8/modul-3.html', import.meta.url), 'utf8');
 const ui = readFileSync(new URL('../pages/ki8/module3-ui.mjs', import.meta.url), 'utf8');
 const app = readFileSync(new URL('../pages/ki8/app.mjs', import.meta.url), 'utf8');
-assert.match(app, /modul-\$\{index \+ 1\}\.html/);
+assert.doesNotMatch(app, /modul-\$\{index \+ 1\}\.html/);
 for (const id of ['stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'activities-1', 'activities-2', 'activities-3', 'activities-4']) assert.match(html, new RegExp(`id="${id}"`));
 assert.match(html, /Entscheidungsbaum/);
 assert.match(html, /Trainingsdaten/);

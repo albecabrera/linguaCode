@@ -54,6 +54,7 @@ function progressLabel(progress) {
 export function initCourseIntegration({documentLike = document, locationLike = globalThis.location, qrFactory = globalThis.qrcode} = {}) {
   const url = derivePublicCourseUrl(locationLike);
   const urlInput = documentLike.querySelector('#course-url');
+  const coursePageLink = documentLike.querySelector('#course-page-link');
   const qr = documentLike.querySelector('#course-qr');
   const mission03Qr = documentLike.querySelector('#mission-03-qr');
   const mission03Url = new URL('stunde-3/', url).href;
@@ -61,6 +62,11 @@ export function initCourseIntegration({documentLike = document, locationLike = g
   if (urlInput) {
     urlInput.value = url;
     urlInput.setAttribute('aria-label', 'Öffentliche URL des Kurses');
+  }
+  if (coursePageLink) {
+    coursePageLink.setAttribute('href', url);
+    coursePageLink.textContent = url;
+    coursePageLink.setAttribute('aria-label', 'GitHub-Pages-Link zur Missionen-Übersicht');
   }
   if (qr) {
     qr.setAttribute('href', url);
