@@ -522,7 +522,52 @@ export const KI_MISSION_10 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10 });
+const KI_MISSION_11_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Ein fiktiver Schulhof-Bot antwortet nur, wenn eine Nachricht das festgelegte Wort „Pausenplan“ enthält. Was beschreibt das?', choices: ['Eine feste Intent-Regel mit einem vorgegebenen Signal.', 'Ein Modell, das durch jede Nachricht automatisch dazulernt.', 'Eine Garantie, dass der Bot jede Frage versteht.'], correctIndex: 0, explanation: 'Das Signal und die Antwort wurden festgelegt; die Regel lernt nicht selbstständig.' },
+  { id: 'q2', prompt: 'Was macht ein gelerntes Intent-Modell anders als diese feste Regel?', choices: ['Es kann Muster aus gelabelten Beispielen ableiten, statt nur ein festgelegtes Wort zu prüfen.', 'Es kennt jede Absicht sicher, auch ohne Beispiele.', 'Es speichert automatisch die Namen aller fragenden Personen.'], correctIndex: 0, explanation: 'Ein Modell kann aus gelabelten Beispielen Muster ableiten, ist aber nicht fehlerfrei und braucht keine persönlichen Daten.' },
+  { id: 'q3', prompt: 'Was kann passieren, wenn jemand statt „Pausenplan“ die Frage „Wann ist die Pause?“ schreibt?', choices: ['Die feste Wortregel erkennt das Signal möglicherweise nicht.', 'Die feste Regel versteht die neue Formulierung sicher.', 'Das beweist, dass die Nachricht falsch ist.'], correctIndex: 0, explanation: 'Eine starre Wortbedingung kann andere Formulierungen übersehen.' },
+  { id: 'q4', prompt: 'Wer kann die Bedingung einer festen Regel ändern?', choices: ['Menschen, die den Bot entwerfen oder warten.', 'Die feste Regel selbst, sobald sie ein Beispiel sieht.', 'Niemand, auch nicht das Entwicklerteam.'], correctIndex: 0, explanation: 'Eine feste Bedingung wird von Menschen geändert; das ist nicht dasselbe wie selbstständiges Lernen.' },
+  { id: 'q5', prompt: 'Welche Aussage ist vorsichtig und richtig?', choices: ['Feste Regeln folgen vorgegebenen Bedingungen; gelernte Modelle können Muster ableiten und trotzdem irren.', 'Ein gelerntes Modell erkennt jede neue Absicht immer richtig.', 'Eine feste Regel und ein gelerntes Modell funktionieren genau gleich.'], correctIndex: 0, explanation: 'Die beiden Ansätze unterscheiden sich, und auch ein gelerntes Modell kann sich irren.' },
+]);
+
+export const KI_MISSION_11 = Object.freeze({
+  id: 'ki-11',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 1', overviewHref: '../modul-5.html#stunde-1' },
+  title: 'Mission 11 – Intents erkennen: Regel oder gelernte KI?',
+  description: 'Unterscheide bei einem fiktiven Schulhof-Bot eine festgelegte Intent-Regel von einem Modell, das Muster aus Beispielen ableitet.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission untersuchst du, wie gelabelte Beispiele neuen Formulierungen zugeordnet werden.',
+  objectives: [
+    'Du erklärst, dass eine feste Intent-Regel einem vorgegebenen Signal folgt.',
+    'Du vergleichst feste Bedingungen mit einem Modell, das Muster aus Beispielen ableitet, und benennst, dass auch ein Modell irren kann.',
+  ],
+  phases: [
+    { id: 'observe', title: 'Eine feste Intent-Regel erkennen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-intent-rule' }] },
+    { id: 'compare', title: 'Regel und gelerntes Modell vergleichen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-rule-model' }] },
+    { id: 'apply', title: 'Formulierungen vorsichtig prüfen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-apply' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_11_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_11_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zu festen Intent-Regeln und gelernten Chatbot-Modellen wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', candidateUrl: 'https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13', text: 'Experience AI, „Maschinelles Lernen: Regeln und Daten“, ist eine teilweise passende Quelle für den allgemeinen Unterschied zwischen Regeln und datenbasierten Systemen; eine direkte Aktivität zu Chatbot-Intents ist nicht bestätigt. Alterseignung und Lizenzstatus sind nicht angegeben.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Eine feste Intent-Regel prüft ein vorgegebenes Signal und liefert eine festgelegte Antwort. Ein gelerntes Modell leitet Muster aus Beispielen ab, kann aber irren. Diese Ansätze sind verschieden: Eine Regel wird von Menschen geändert; ein Modell wird anhand von Beispielen trainiert. Wir üben mit einem fiktiven Schulhof-Bot und ohne persönliche Nachrichten.' },
+    { type: 'reflection', id: 'intent-reflection', prompt: 'Warum könnte die feste Wortregel „Pausenplan“ eine anders formulierte Frage übersehen?', examples: ['Die Regel prüft nur das vorgegebene Signal. Ein gelerntes Modell kann Varianten aus Beispielen zuordnen, aber auch dabei Fehler machen.'] },
+  ],
+  tasks: [
+    { id: 'task-intent-rule', type: 'open-response', title: 'Das feste Signal erkennen', prompt: 'Ein fiktiver Schulhof-Bot antwortet auf „Pausenplan?“ mit einem vorab gespeicherten Hinweis. Er prüft nur, ob das Wort „Pausenplan“ vorkommt. Ist das eine feste Intent-Regel oder ein gelerntes Modell? Erkläre, was geschieht, wenn jemand „Wann ist die Pause?“ schreibt.', exampleAnswer: 'Das ist eine feste Intent-Regel: Das Signalwort „Pausenplan“ löst eine vorher festgelegte Antwort aus. Die andere Formulierung enthält das festgelegte Wort nicht und kann deshalb übersehen werden. Die Regel lernt nicht selbstständig.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-rule-model', type: 'open-response', title: 'Regel und Modell vergleichen', prompt: 'Vergleiche eine feste Wortregel mit einem Modell, das anhand gelabelter, erfundener Nachrichten trainiert wurde. Was ist festgelegt, was kann aus Beispielen entstehen, und welche Grenze bleibt?', exampleAnswer: 'Bei der Regel ist das Signal und die Antwort festgelegt. Ein Modell kann Muster aus gelabelten Beispielen ableiten und dadurch andere Formulierungen erkennen; es kann aber trotzdem irren. Für beide Ansätze braucht man keine echten Namen oder privaten Nachrichten.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-apply', type: 'open-response', title: 'Einen sicheren Prüfplan skizzieren', prompt: 'Erfinde zwei harmlose Fragen zum Pausenplan: eine mit dem festgelegten Signalwort und eine mit anderer Formulierung. Sage voraus, welche die feste Regel erkennt, und beschreibe, wie ein Team ein gelerntes Modell mit erfundenen Beispielen vorsichtig prüfen könnte.', exampleAnswer: '„Pausenplan?“ enthält das festgelegte Signal; „Wann ist die Pause?“ ist eine andere Formulierung und kann von der festen Regel übersehen werden. Ein Team kann ein gelerntes Modell mit erfundenen Beispielen prüfen und seine Grenzen festhalten. Echte Nachrichten oder Namen sind nicht nötig.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11 });
 
 export function getLesson(id) {
   return LESSONS[id];
