@@ -297,7 +297,53 @@ export const KI_MISSION_05 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05 });
+const KI_MISSION_06_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Wozu dienen Trainingsdaten beim Erstellen eines Entscheidungsbaums?', choices: ['Sie helfen, passende Merkmale und Schwellenwerte zu finden.', 'Sie beweisen, dass jede spätere Vorhersage stimmt.', 'Sie ersetzen die Testdaten.'], correctIndex: 0, explanation: 'Trainingsbeispiele helfen, Regeln für bekannte Fälle zu finden; sie garantieren keine fehlerfreie Vorhersage.' },
+  { id: 'q2', prompt: 'Warum werden einige gelabelte Beispiele als Testdaten zurückgehalten?', choices: ['Damit der fertige Baum an ungesehenen Fällen geprüft werden kann.', 'Damit der Baum die Testlabels beim Training auswendig lernt.', 'Damit nur die einfachsten Beispiele gezählt werden.'], correctIndex: 0, explanation: 'Getrennte Testdaten zeigen, wie eine Regel bei Beispielen funktioniert, die beim Training nicht verwendet wurden.' },
+  { id: 'q3', prompt: 'Was passiert, wenn Testdaten bereits beim Trainieren oder Auswählen der Regel benutzt wurden?', choices: ['Der Test ist nicht mehr unabhängig.', 'Der Baum wird dadurch automatisch fehlerfrei.', 'Die Testlabels verschwinden.'], correctIndex: 0, explanation: 'Wenn Testdaten in Training oder Regelwahl einfließen, prüfen sie die Regel nicht mehr unabhängig.' },
+  { id: 'q4', prompt: 'Eine fiktive Sortierkiste hat sechs gelabelte Trainingsbeispiele. Was können sie leisten?', choices: ['Sie helfen, passende Fragen und Schwellenwerte zu finden.', 'Sie beweisen, dass jede neue Sortierung richtig sein wird.', 'Sie ersetzen neue Testbeispiele.'], correctIndex: 0, explanation: 'Trainingsbeispiele helfen beim Finden von Regeln, sind aber kein Beweis für richtige Vorhersagen auf neuen Fällen.' },
+  { id: 'q5', prompt: 'Welche Reihenfolge hält Training und Test auseinander?', choices: ['Mit Trainingsbeispielen Regeln finden, danach getrennte ungesehene Testbeispiele prüfen.', 'Erst Testbeispiele ansehen, dann ihre Labels beim Training verwenden.', 'Testlabels nach jeder Vorhersage passend verändern.'], correctIndex: 0, explanation: 'Erst wird mit Trainingsdaten eine Regel gefunden; danach wird sie mit unabhängigen, ungesehenen Testdaten geprüft.' },
+]);
+
+export const KI_MISSION_06 = Object.freeze({
+  id: 'ki-06',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 2', overviewHref: '../modul-3.html#stunde-2' },
+  title: 'Mission 06 – Trainingsdaten und Aufteilungen',
+  description: 'Finde heraus, wie gelabelte Trainingsbeispiele Regeln unterstützen und warum getrennte Testdaten außen vor bleiben.',
+  duration: 45,
+  objectives: [
+    'Du erklärst, wie Trainingsdaten beim Finden von Entscheidungsregeln helfen.',
+    'Du begründest, warum ungesehene Testbeispiele nicht zum Training oder zur Regelwahl gehören.',
+  ],
+  phases: [
+    { id: 'training-data', title: 'Trainingsdaten verstehen', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'holdout-test', title: 'Testdaten getrennt halten', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }] },
+    { id: 'split-examples', title: 'Training und Test aufteilen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-training' }, { type: 'task', taskId: 'task-holdout' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_06_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_06_QUESTIONS },
+  ],
+  media: {
+    infSchule: { url: 'https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume', kind: 'official-learning-page', title: 'Überwachtes Lernen mit Entscheidungsbäumen', provider: 'inf-schule', observation: 'Die Seite erklärt Trainingsbeispiele, Schwellenwerte, Testobjekte und mögliche Fehler bei ungeeigneten Daten.', checkboxLabel: 'Ich habe die Seite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+    experienceAi: { url: 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4', kind: 'official-lesson', title: 'Lektion 4: Entscheidungsbäume', provider: 'Experience AI', observation: 'Die Lektion behandelt Entscheidungsbäume und zeigt, wie Trainingsdaten ein Modell beeinflussen.', checkboxLabel: 'Ich habe die Lektion angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein geeignetes, spezifisches Video für diese Stunde wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die verlinkten Lernseiten behandeln überwachte Entscheidungsbäume, Trainingsbeispiele und Testobjekte. Zieljahrgang und Lizenz sind auf den geprüften Seiten nicht angegeben.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Sechs gelabelte Trainingsbeispiele einer fiktiven Sortierkiste helfen, passende Fragen und Schwellenwerte zu finden. Einige getrennte Testdaten bleiben außen vor, bis die Regel geprüft wird. Sie wurden im Training nicht verwendet und dürfen weder in das Training noch in die Regelwahl einfließen; nur so bleiben sie ein unabhängiger Test.' },
+    { type: 'reflection', id: 'split-reflection', prompt: 'Was wäre anders, wenn die Regel schon mit den Testbeispielen ausgewählt würde?', examples: ['Dann würden die Beispiele nicht mehr unabhängig prüfen, ob die Regel mit ungesehenen Fällen funktioniert.'] },
+  ],
+  tasks: [
+    { id: 'task-training', type: 'open-response', title: 'Wozu trainieren?', prompt: 'Eine fiktive Sortierkiste hat sechs bereits gelabelte Trainingsbeispiele. Wozu dienen sie beim Trainieren eines Entscheidungsbaums?', exampleAnswer: 'Sie helfen, geeignete Fragen und Schwellenwerte für Regeln zu finden. Sie beweisen nicht, dass jede Vorhersage auf einem neuen Beispiel stimmt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-holdout', type: 'open-response', title: 'Testbeispiele zurückhalten', prompt: 'Warum bleiben einige gelabelte Beispiele getrennt, bis der Baum fertig trainiert ist? Was darf nicht mit diesen Testbeispielen gemacht werden?', exampleAnswer: 'Sie prüfen, ob die gefundene Regel auch bei ungesehenen Beispielen funktioniert. Die getrennten Testbeispiele dürfen weder zum Training noch zur Regelwahl verwendet werden. Sonst wären sie nicht mehr unabhängig.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06 });
 
 export function getLesson(id) {
   return LESSONS[id];

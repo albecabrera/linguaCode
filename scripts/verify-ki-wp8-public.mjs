@@ -7,6 +7,9 @@ const cards = [...catalog.matchAll(/<article data-subject="([^"]+)">([\s\S]*?)<\
 const matches = cards.filter(([, , html]) => html.includes('<h2>UV Künstliche Intelligenz</h2>'));
 assert.equal(matches.length, 1);
 assert.equal(matches[0][1], 'Informatik');
+assert.match(matches[0][2], /Informatik · WP 8 · 6 Missionen/);
+assert.match(matches[0][2], /Sechs interaktive Missionen/);
+assert.doesNotMatch(matches[0][2], /Zwei interaktive Unterrichtsstunden|Entwurf/);
 assert.match(matches[0][2], /href="ki8\//);
 assert.match(matches[0][2], /data-share="ki8\//);
 const folder = new URL('../pages/ki8/', import.meta.url);
@@ -15,7 +18,7 @@ const expectedFiles = [
   'modul-4.html', 'modul-5.html', 'modul-6.html', 'module1-core.mjs', 'module1-ui.mjs',
   'module2-core.mjs', 'module2-ui.mjs', 'module3-core.mjs', 'module3-ui.mjs',
   'module4-core.mjs', 'module4-ui.mjs', 'module5-core.mjs', 'module5-ui.mjs',
-  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5',
+  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
@@ -36,7 +39,10 @@ assert.match(missionFourRoute, /mission\.mjs/);
 const missionFiveRoute = readFileSync(new URL('stunde-5/index.html', folder), 'utf8');
 assert.match(missionFiveRoute, /data-lesson-id="ki-05"/);
 assert.match(missionFiveRoute, /mission\.mjs/);
-const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
+const missionSixRoute = readFileSync(new URL('stunde-6/index.html', folder), 'utf8');
+assert.match(missionSixRoute, /data-lesson-id="ki-06"/);
+assert.match(missionSixRoute, /mission\.mjs/);
+const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
 for (let module = 1; module <= 6; module += 1) {
   const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
   if (module === 1) assert.match(html, /href="stunde-2\/"[^>]*>Mission 02 starten[^<]*<\/a>/);
