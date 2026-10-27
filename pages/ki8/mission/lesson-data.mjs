@@ -747,7 +747,52 @@ export const KI_MISSION_15 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15 });
+const KI_MISSION_16_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Eine fiktive Rechtschreib-App möchte deinen Namen und deine Adresse speichern, obwohl sie nur einen Satz korrigieren soll. Was ist datensparsam?', choices: ['Nur den nötigen Satz ohne persönliche Angaben prüfen lassen und ihn nicht unnötig speichern.', 'Name, Adresse und mehrere private Chats mitschicken.', 'Alle Angaben dauerhaft speichern, damit die App mehr lernen kann.'], correctIndex: 0, explanation: 'Für die Rechtschreibkorrektur reichen die nötigen Wörter. Identifizierende Angaben und unnötige Speicherung sind nicht erforderlich.' },
+  { id: 'q2', prompt: 'Was ist ein gutes Beispiel für eine Frage ohne identifizierende Angaben?', choices: ['„Ich bin [echter Name] aus [Schule] und wohne in [Adresse] …“', '„Wie kann eine fiktive Gruppe eine Aufgabe fair aufteilen?“', 'Ein Foto eines privaten Chats mit Namen senden.'], correctIndex: 1, explanation: 'Eine allgemeine, erfundene Frage braucht keinen echten Namen, Schule, Adresse oder privaten Chat.' },
+  { id: 'q3', prompt: 'Warum solltest du private Nachrichten nicht ungeprüft in ein KI-Werkzeug kopieren?', choices: ['Sie können persönliche oder vertrauliche Angaben anderer Menschen enthalten.', 'Private Nachrichten sind immer bessere Trainingsdaten.', 'Ein KI-Werkzeug macht jede Nachricht automatisch anonym.'], correctIndex: 0, explanation: 'Private Nachrichten können andere Personen betreffen. Verwende keine identifizierenden oder vertraulichen Daten.' },
+  { id: 'q4', prompt: 'Eine Aufgabe lässt sich mit erfundenen Beispielen lösen. Was ist sinnvoll?', choices: ['Erfundene oder anonymisierte Beispiele nutzen und unnötige Details weglassen.', 'Echte Namen ergänzen, damit das Beispiel realistischer wirkt.', 'Adressen und private Chats sammeln.'], correctIndex: 0, explanation: 'Erfundene oder anonymisierte Beispiele reichen für die Übung; unnötige personenbezogene Angaben bleiben draußen.' },
+  { id: 'q5', prompt: 'Welche Regel hilft vor dem Eingeben einer Frage in ein KI-Werkzeug?', choices: ['Nur notwendige Informationen eingeben und persönliche Angaben weglassen.', 'Alles teilen, was das Werkzeug möglicherweise nützlich findet.', 'Eine private Nachricht kopieren, ohne die Beteiligten zu fragen.'], correctIndex: 0, explanation: 'Überlege, welche Information wirklich erforderlich ist, und lasse persönliche oder vertrauliche Angaben weg.' },
+]);
+
+export const KI_MISSION_16 = Object.freeze({
+  id: 'ki-16',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 3', overviewHref: '../modul-6.html#stunde-3' },
+  title: 'Mission 16 – Privatsphäre schützen',
+  description: 'Nutze nur notwendige Informationen und übe mit erfundenen oder anonymisierten Beispielen, statt persönliche Daten preiszugeben.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission untersuchst du, ob Trainingsdaten verschiedene Gruppen und Situationen abdecken und welche Verzerrungen entstehen können.',
+  objectives: [
+    'Du erkennst, warum Namen, Adressen und private Chats für viele KI-Aufgaben nicht notwendig sind.',
+    'Du formulierst Fragen mit erfundenen oder anonymisierten Beispielen und lässt identifizierende Angaben weg.',
+  ],
+  phases: [
+    { id: 'notice', title: 'Persönliche Angaben erkennen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-data-minimization' }] },
+    { id: 'reduce', title: 'Notwendige Daten auswählen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-necessary-data' }] },
+    { id: 'practice', title: 'Eine sichere Frage formulieren', minutes: 19, blocks: [{ type: 'task', taskId: 'task-safe-ai-question' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_16_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_16_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zu Datenschutz und datensparsamen KI-Fragen für diese Stunde wurde bestätigt; keines ist zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Kein direkt passendes externes Material für diese Datenschutzübung wurde bestätigt. Altersangemessenheit und Lizenz sind nicht verifiziert; die Stunde verwendet deshalb erfundene Beispiele.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Gib einem KI-Werkzeug nur Informationen, die für die Aufgabe wirklich nötig sind. Namen, Adressen und private Chats sind häufig überflüssig. Übe mit erfundenen oder anonymisierten Beispielen und frage allgemein, ohne identifizierende Angaben preiszugeben.' },
+    { type: 'reflection', id: 'privacy-reflection', prompt: 'Welche persönlichen Angaben könntest du vor einer KI-Frage weglassen?', examples: ['Ich lasse echte Namen, Adressen, Schule und private Nachrichten weg. Ich frage allgemein und verwende erfundene oder anonymisierte Beispiele.'] },
+  ],
+  tasks: [
+    { id: 'task-data-minimization', type: 'open-response', title: 'Nur notwendige Daten verwenden', prompt: 'Eine fiktive Rechtschreib-App möchte für die Korrektur eines Satzes auch Namen, Adresse und private Chats speichern. Welche Angaben sind für die Aufgabe notwendig, und was lässt du weg?', exampleAnswer: 'Für die Rechtschreibkorrektur reicht der nötige Satz. Namen, Adresse und private Chatdaten sind nicht notwendig; ich lasse sie weg und speichere nichts Unnötiges.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-necessary-data', type: 'open-response', title: 'Eine Frage datensparsam umformulieren', prompt: 'Formuliere eine fiktive Frage zu einer Gruppenaufgabe so um, dass sie ohne echten Namen, Schule, Adresse oder private Nachrichten auskommt.', exampleAnswer: '„Wie kann eine fiktive Gruppe eine Aufgabe fair aufteilen?“ Die Frage ist allgemein und enthält keine identifizierenden Angaben oder privaten Chatdaten.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-safe-ai-question', type: 'open-response', title: 'Eine sichere KI-Frage prüfen', prompt: 'Eine fiktive Person möchte ein persönliches Problem mit einem KI-Werkzeug besprechen. Welche Informationen sollte sie weglassen, und wie kann sie die Frage allgemein, ohne identifizierende Angaben und anonymisiert formulieren?', exampleAnswer: 'Sie lässt Namen, Schule, Adresse und private Nachrichten weg und beschreibt die Situation allgemein und anonymisiert, ohne identifizierende Angaben zu teilen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16 });
 
 export function getLesson(id) {
   return LESSONS[id];
