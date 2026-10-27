@@ -2,10 +2,10 @@ import {createProgressStore} from './progress.mjs';
 
 export const PROGRESS_KEY = 'ki-01';
 
-export function derivePublicCourseUrl(locationLike = globalThis.location) {
-  const current = new URL(locationLike?.href ?? './', 'https://invalid.example/');
-  const path = current.pathname.endsWith('/') ? current.pathname : current.pathname.replace(/[^/]*$/, '');
-  return new URL(path || '/', current.origin).href;
+export const PUBLIC_COURSE_URL = 'https://albecabrera.github.io/linguaCode/ki8/';
+
+export function derivePublicCourseUrl() {
+  return PUBLIC_COURSE_URL;
 }
 
 export function getCourseProgress(store) {
@@ -56,8 +56,14 @@ export function initCourseIntegration({documentLike = document, locationLike = g
   const urlInput = documentLike.querySelector('#course-url');
   const coursePageLink = documentLike.querySelector('#course-page-link');
   const qr = documentLike.querySelector('#course-qr');
-  const mission03Qr = documentLike.querySelector('#mission-03-qr');
-  const mission03Url = new URL('stunde-3/', url).href;
+  const missionQrs = [1, 2, 3].map((mission) => {
+    const number = String(mission).padStart(2, '0');
+    return {
+      number,
+      node: documentLike.querySelector(`#mission-${number}-qr`),
+      url: new URL(`stunde-${mission}/`, url).href,
+    };
+  });
   const progressOutput = documentLike.querySelector('#course-progress');
   if (urlInput) {
     urlInput.value = url;
@@ -74,11 +80,12 @@ export function initCourseIntegration({documentLike = document, locationLike = g
     const svg = renderQrSvg(url, qrFactory);
     qr.innerHTML = svg || '<p>QR-Code konnte in diesem Browser nicht dargestellt werden. Nutze den Kurslink.</p>';
   }
-  if (mission03Qr) {
-    mission03Qr.setAttribute('href', mission03Url);
-    mission03Qr.setAttribute('aria-label', 'Mission 03 direkt öffnen (QR-Code)');
-    const svg = renderQrSvg(mission03Url, qrFactory, 'QR-Code für Mission 03');
-    mission03Qr.innerHTML = svg || '<p>QR-Code konnte in diesem Browser nicht dargestellt werden. Nutze den Missionslink.</p>';
+  for (const {number, node, url: missionUrl} of missionQrs) {
+    if (!node) continue;
+    node.setAttribute('href', missionUrl);
+    node.setAttribute('aria-label', `Mission ${number} direkt öffnen (QR-Code)`);
+    const svg = renderQrSvg(missionUrl, qrFactory, `QR-Code für Mission ${number}`);
+    node.innerHTML = svg || `<p>QR-Code für Mission ${number} konnte in diesem Browser nicht dargestellt werden. Nutze den Missionslink.</p>`;
   }
 
   let store;

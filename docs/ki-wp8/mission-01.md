@@ -91,12 +91,12 @@ Wichtige Grenzen:
 
 Für direkte Aufrufe auf GitHub Pages sind vorgesehen:
 
-- `/ki8/` – Kursübersicht mit klickbarem Kurs-QR zur Übersicht und einem separaten klickbaren Mission-03-QR
+- `/ki8/` – Kursübersicht mit klickbarem QR zur Übersicht und je einem klickbaren Direkt-QR für Mission 01, 02 und 03
 - `/ki8/stunde-1/` – Mission 01
 - `/ki8/stunde-2/` – Mission 02
 - `/ki8/stunde-3/` – Mission 03
 
-Die öffentliche Kursübersicht unter `/ki8/` zeigt ausschließlich drei anklickbare Mission-Panels für `/ki8/stunde-1/`, `/ki8/stunde-2/` und `/ki8/stunde-3/`. Der GitHub-Pages-Link wird dynamisch aus der aktuellen Pages-Adresse erzeugt; er ist kein externer URL-Shortener. Der anklickbare Link und der allgemeine QR-Code führen zur Missionen-Übersicht, der zusätzliche QR-Code in Mission 03 direkt zu `/ki8/stunde-3/`.
+Die öffentliche Kursübersicht unter `/ki8/` zeigt ausschließlich drei anklickbare Mission-Panels für `/ki8/stunde-1/`, `/ki8/stunde-2/` und `/ki8/stunde-3/`; jedes Panel enthält einen eigenen klickbaren QR-Code zur Mission. Der anklickbare GitHub-Pages-Link und der allgemeine QR-Code führen zur Übersicht. Alle QR-Payloads und ihre Links verwenden die kanonische öffentliche Basis `https://albecabrera.github.io/linguaCode/ki8/`, auch in der lokalen Vorschau. Dadurch wird kein loopback-Ziel wie `127.0.0.1` in einen QR-Code geschrieben. Die URL ist kein externer URL-Shortener.
 
 Die sechs Moduldateien und alle 18 Stundenabschnitte samt Aktivitäten bleiben im Repository und über ihre bisherigen direkten URLs erreichbar, werden aber nicht mehr von der öffentlichen Kursübersicht verlinkt. Andere Fächer bleiben unverändert. Ein physischer QR-Kameratest sowie eine echte GitHub-Pages-Auslieferung sind noch nicht verifiziert.
 

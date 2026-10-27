@@ -7,8 +7,9 @@ const html = fs.readFileSync(new URL('../pages/ki8/index.html', import.meta.url)
 assert.match(html, /href="\.\/stunde-1\/"/);
 assert.match(html, /id="course-progress"/);
 assert.match(html, /id="course-url"/);
-assert.match(html, /<a id="course-qr" class="course-qr" href="\.\/"/);
-assert.match(html, /<a id="mission-03-qr" class="course-qr" href="\.\/stunde-3\/"/);
+assert.match(html, /<a id="course-qr" class="course-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/"/);
+for (const mission of [1, 2, 3]) assert.match(html, new RegExp(`<a id="mission-0${mission}-qr" class="course-qr mission-qr" href="https://albecabrera\\.github\\.io/linguaCode/ki8/stunde-${mission}/"`));
+assert.doesNotMatch(html, /127\.0\.0\.1/);
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-3\/">/);
 assert.match(html, /<span>Mission 03 starten →<\/span>/);
 assert.match(html, /id="mission-list"/);
@@ -24,9 +25,10 @@ const app = fs.readFileSync(new URL('../pages/ki8/app.mjs', import.meta.url), 'u
 assert.match(app, /initCourseIntegration/);
 assert.doesNotMatch(app, /item\.hours|#beispielkarte|threshold-form/);
 
-assert.equal(derivePublicCourseUrl({href: 'https://example.test/linguaCode/ki8/'}), 'https://example.test/linguaCode/ki8/');
-assert.equal(derivePublicCourseUrl({href: 'https://example.test/linguaCode/ki8/index.html'}), 'https://example.test/linguaCode/ki8/');
-assert.equal(derivePublicCourseUrl({href: 'https://school.example/linguaCode/ki8/'}), 'https://school.example/linguaCode/ki8/');
+const publicCourseUrl = 'https://albecabrera.github.io/linguaCode/ki8/';
+assert.equal(derivePublicCourseUrl({href: 'http://127.0.0.1:8108/ki8/'}), publicCourseUrl);
+assert.equal(derivePublicCourseUrl({href: 'https://example.test/linguaCode/ki8/index.html'}), publicCourseUrl);
+assert.equal(derivePublicCourseUrl({href: 'https://school.example/linguaCode/ki8/'}), publicCourseUrl);
 assert.equal(PROGRESS_KEY, 'ki-01');
 const savedValues = new Map();
 const savedStorage = {getItem: (key) => savedValues.get(key) ?? null, setItem: (key, value) => savedValues.set(key, value), removeItem: (key) => savedValues.delete(key)};
@@ -45,7 +47,7 @@ class FakeElement {
   select() { this.selected = true; }
 }
 class FakeDocument {
-  constructor() { this.nodes = new Map(['#course-url', '#course-page-link', '#course-qr', '#mission-03-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
+  constructor() { this.nodes = new Map(['#course-url', '#course-page-link', '#course-qr', '#mission-01-qr', '#mission-02-qr', '#mission-03-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
   querySelector(selector) { return this.nodes.get(selector) ?? null; }
   node(selector) { return this.nodes.get(selector); }
 }
@@ -56,16 +58,21 @@ Object.defineProperty(globalThis, 'navigator', {configurable: true, value: {clip
 const dom = new FakeDocument();
 const qrPayloads = [];
 const qrAlts = [];
-const initialized = initCourseIntegration({documentLike: dom, locationLike: {href: 'https://example.test/linguaCode/ki8/'}, qrFactory: () => ({addData(value) { qrPayloads.push(value); }, make() {}, createSvgTag(options) { qrAlts.push(options.alt); return '<svg></svg>'; }})});
-assert.equal(initialized.url, 'https://example.test/linguaCode/ki8/');
-assert.deepEqual(qrPayloads, [initialized.url, 'https://example.test/linguaCode/ki8/stunde-3/']);
-assert.deepEqual(qrAlts, ['QR-Code für die öffentliche Kursseite', 'QR-Code für Mission 03']);
-assert.equal(dom.node('#course-page-link').href, initialized.url);
-assert.equal(dom.node('#course-page-link').textContent, initialized.url);
-assert.equal(dom.node('#course-qr').href, initialized.url);
-assert.equal(dom.node('#mission-03-qr').href, 'https://example.test/linguaCode/ki8/stunde-3/');
+const initialized = initCourseIntegration({documentLike: dom, locationLike: {href: 'http://127.0.0.1:8108/ki8/'}, qrFactory: () => ({addData(value) { qrPayloads.push(value); }, make() {}, createSvgTag(options) { qrAlts.push(options.alt); return '<svg></svg>'; }})});
+const missionUrls = [1, 2, 3].map((mission) => `${publicCourseUrl}stunde-${mission}/`);
+assert.equal(initialized.url, publicCourseUrl);
+assert.deepEqual(qrPayloads, [publicCourseUrl, ...missionUrls]);
+assert.deepEqual(qrAlts, ['QR-Code für die öffentliche Kursseite', 'QR-Code für Mission 01', 'QR-Code für Mission 02', 'QR-Code für Mission 03']);
+assert.equal(dom.node('#course-page-link').href, publicCourseUrl);
+assert.equal(dom.node('#course-page-link').textContent, publicCourseUrl);
+assert.equal(dom.node('#course-qr').href, publicCourseUrl);
+for (const [index, url] of missionUrls.entries()) {
+  const qr = dom.node(`#mission-0${index + 1}-qr`);
+  assert.equal(qr.href, url);
+  assert.match(qr.innerHTML, /<svg/);
+  assert.doesNotMatch(qr.href, /127\.0\.0\.1|localhost/);
+}
 assert.match(dom.node('#course-qr').innerHTML, /<svg/);
-assert.match(dom.node('#mission-03-qr').innerHTML, /<svg/);
 assert.match(dom.node('#course-progress').textContent, /abgeschlossen/);
 await dom.node('#copy-course-url').events.click();
 assert.equal(dom.node('#course-url').selected, true);
@@ -75,10 +82,12 @@ Object.defineProperty(globalThis, 'localStorage', {configurable: true, get: () =
 const unavailableDom = new FakeDocument();
 initCourseIntegration({documentLike: unavailableDom, locationLike: {href: 'https://example.test/linguaCode/ki8/'}, qrFactory: null});
 assert.match(unavailableDom.node('#course-progress').textContent, /nicht verfügbar/);
-assert.equal(unavailableDom.node('#course-page-link').href, 'https://example.test/linguaCode/ki8/');
-assert.equal(unavailableDom.node('#course-qr').href, 'https://example.test/linguaCode/ki8/');
-assert.equal(unavailableDom.node('#mission-03-qr').href, 'https://example.test/linguaCode/ki8/stunde-3/');
-assert.match(unavailableDom.node('#mission-03-qr').innerHTML, /QR-Code konnte/);
+assert.equal(unavailableDom.node('#course-page-link').href, publicCourseUrl);
+assert.equal(unavailableDom.node('#course-qr').href, publicCourseUrl);
+for (const [index, url] of missionUrls.entries()) {
+  assert.equal(unavailableDom.node(`#mission-0${index + 1}-qr`).href, url);
+  assert.match(unavailableDom.node(`#mission-0${index + 1}-qr`).innerHTML, /QR-Code.*konnte/);
+}
 if (originalStorage) Object.defineProperty(globalThis, 'localStorage', originalStorage); else delete globalThis.localStorage;
 if (originalNavigator) Object.defineProperty(globalThis, 'navigator', originalNavigator); else delete globalThis.navigator;
 

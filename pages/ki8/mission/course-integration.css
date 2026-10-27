@@ -32,5 +32,6 @@
 #course-url { min-height: 44px; min-width: min(100%, 20rem); flex: 1; padding: .55rem; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: .5rem; }
 .course-qr { min-height: 180px; display: grid; place-items: center; overflow: auto; background: #fff; color: #162837; border-radius: .5rem; padding: .5rem; }
 .course-qr svg { display: block; width: min(100%, 220px); height: auto; }
+.mission-qr { width: min(100%, 200px); min-height: 200px; margin: .5rem 0; justify-self: start; }
 @media (max-width: 620px) { .sharing-grid { grid-template-columns: 1fr; } .course-qr { justify-self: start; } .mission-panel-link { min-height: 0; } }
 @media (prefers-reduced-motion: reduce) { .mission-callout { box-shadow: none; } }
