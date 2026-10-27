@@ -7,6 +7,12 @@ h1 { margin-block: .25rem 1rem; }
 .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem 2rem; }
 button { padding: .7rem 1rem; border: 1px solid #155b8b; border-radius: .35rem; color: white; background: #155b8b; font: inherit; cursor: pointer; }
 table { width: 100%; border-collapse: collapse; background: white; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem; margin-block: 1rem 2rem; }
+.summary-grid article, fieldset { padding: 1rem; border: 1px solid #c5d3df; background: white; }
+fieldset { margin-block: 1rem; }
+fieldset label { display: block; margin: .5rem 0; }
+fieldset input[type="number"] { width: 4rem; }
+#follow-up { margin-block: 2rem; padding: 1rem; border: 2px solid #155b8b; background: white; }
 th, td { padding: .65rem; border: 1px solid #c5d3df; text-align: left; }
 th { background: #e8f0f7; }
-@media print { .actions { display: none; } .teacher-shell { max-width: none; padding: 0; } .privacy { border: 1px solid #162837; } }
+@media print { .actions, #evaluation-mode { display: none; } .teacher-shell { max-width: none; padding: 0; } .privacy { border: 1px solid #162837; } #follow-up { break-before: page; } }

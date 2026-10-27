@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createTeacherView, readTeacherProgress, toCsv, MISSION_KEYS } from '../pages/ki8/teacher/teacher.mjs';
+import {
+  createTeacherView,
+  readTeacherProgress,
+  toCsv,
+  MISSION_KEYS,
+  buildTeacherSummary,
+  buildEvaluationExport,
+  readTeacherEvaluation,
+  saveTeacherEvaluation,
+  TEACHER_EVALUATION_KEY,
+} from '../pages/ki8/teacher/teacher.mjs';
 
 assert.equal(MISSION_KEYS.length, 19);
 assert.equal(MISSION_KEYS[0], 'ki-01');
@@ -8,6 +18,9 @@ assert.equal(MISSION_KEYS.at(-1), 'ki-19');
 const teacherHtml = fs.readFileSync(new URL('../pages/ki8/teacher/index.html', import.meta.url), 'utf8');
 assert.match(teacherHtml, /Privat und nur lokal/);
 assert.match(teacherHtml, /JSON exportieren/);
+assert.match(teacherHtml, /evaluation-mode/);
+assert.match(teacherHtml, /Bewertung exportieren/);
+assert.equal(TEACHER_EVALUATION_KEY, 'linguacode:ki-wp8:teacher-evaluation:v1');
 
 class MemoryStorage {
   #values = new Map();
@@ -31,6 +44,20 @@ const csv = toCsv(progress);
 assert.match(csv, /^Mission,Status,Phase,Completed/m);
 assert.match(csv, /ki-01,available,2,false/);
 assert.ok(!csv.includes('studentName'));
+
+const summary = buildTeacherSummary(progress);
+assert.equal(summary.modules.length, 6);
+assert.equal(summary.checkpoints.length, 3);
+assert.deepEqual(summary.modules[0], { name: 'Grundlagen', completed: 1, inProgress: 1, total: 3, evidence: '1/3 abgeschlossen' });
+assert.deepEqual(summary.checkpoints[0], { id: 'checkpoint-1', number: 1, completed: 0, total: 3, status: 'in-progress' });
+
+const savedEvaluation = saveTeacherEvaluation(storage, { 'Grundlagen': { criteria: [true, false], score: 3 } });
+assert.equal(savedEvaluation.status, 'success');
+assert.deepEqual(readTeacherEvaluation(storage), { 'Grundlagen': { criteria: [true, false, false], score: 3 } });
+const evaluationExport = buildEvaluationExport(summary, readTeacherEvaluation(storage));
+assert.equal(evaluationExport.schema, 'linguacode-ki-teacher-evaluation-v1');
+assert.equal(evaluationExport.localOnly, true);
+assert.ok(!JSON.stringify(evaluationExport).includes('studentName'));
 
 const events = [];
 const documentLike = {
@@ -57,13 +84,15 @@ const windowLike = {
 };
 createTeacherView({ documentLike, storage, windowLike });
 assert.deepEqual(events.map(({ selector, type }) => [selector, type]), [
+  ['#evaluation-form', 'change'],
   ['#export-json', 'click'],
   ['#export-csv', 'click'],
+  ['#export-evaluation', 'click'],
   ['#print-view', 'click'],
 ]);
 assert.ok(events.every(({ handler }) => !handler || typeof handler === 'function'));
 for (const event of events.filter((entry) => entry.handler)) event.handler();
-assert.equal(downloads.length, 2);
+assert.equal(downloads.length, 3);
 assert.ok(downloads.every(({ clicked }) => clicked === true));
 assert.deepEqual(events.at(-1), { type: 'print' });
 

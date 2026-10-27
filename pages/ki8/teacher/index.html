@@ -20,9 +20,17 @@
         <button id="export-json" type="button">JSON exportieren</button>
         <button id="export-csv" type="button">CSV exportieren</button>
         <button id="print-view" type="button">Druckansicht öffnen</button>
+        <button id="export-evaluation" type="button">Bewertung exportieren</button>
       </div>
     </section>
-    <section id="progress-table" aria-live="polite"></section>
+    <section id="summary-table" aria-live="polite"></section>
+    <section id="progress-table" aria-live="polite"><h2>Missionsdetails</h2></section>
+    <section id="evaluation-mode" aria-labelledby="evaluation-title">
+      <h2 id="evaluation-title">Lokale Bewertung</h2>
+      <p>Bewerte nur auf Modulebene mit Kriterien und einem Score. Die Eingaben bleiben lokal auf diesem Gerät.</p>
+      <div id="evaluation-form"></div>
+    </section>
+    <section id="follow-up" aria-live="polite"></section>
     <p class="privacy">Keine Namen, Antworten, Aufgabeninhalte oder anderen personenbezogenen Schülerdaten werden ausgelesen oder exportiert.</p>
   </main>
   <script type="module" src="./teacher.mjs"></script>

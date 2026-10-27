@@ -1,6 +1,11 @@
 import { createProgressStore, PROGRESS_NAMESPACE } from '../mission/progress.mjs';
+import { COURSE_CATALOG } from '../catalog.mjs';
+import { CHECKPOINTS } from '../checkpoints.mjs';
 
 export const MISSION_KEYS = Object.freeze(Array.from({ length: 19 }, (_, index) => `ki-${String(index + 1).padStart(2, '0')}`));
+export const TEACHER_EVALUATION_KEY = 'linguacode:ki-wp8:teacher-evaluation:v1';
+const EVALUATION_VERSION = 1;
+export const RUBRIC_CRITERIA = Object.freeze(['Fortschritt sichtbar', 'Checkpoint-Bereitschaft', 'Nächster Schritt geklärt']);
 
 const columns = Object.freeze([
   ['mission', 'Mission'],
@@ -11,6 +16,10 @@ const columns = Object.freeze([
 
 function browserStorage() {
   try { return globalThis.localStorage; } catch { return null; }
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 }
 
 function escapeCsv(value) {
@@ -30,6 +39,88 @@ export function readTeacherProgress(storage = browserStorage()) {
       completed: loaded.state.completed === true,
     };
   });
+}
+
+function checkpointSummary(progress, checkpoint) {
+  const relevant = checkpoint.missionIds.map((mission) => progress.find(({ mission: id }) => id === mission));
+  const completed = relevant.filter((entry) => entry?.completed === true).length;
+  const inProgress = relevant.filter((entry) => entry?.status === 'available' && entry?.completed !== true).length;
+  return {
+    id: checkpoint.id,
+    number: checkpoint.number,
+    completed,
+    total: relevant.length,
+    status: completed === relevant.length ? 'completed' : inProgress > 0 ? 'in-progress' : 'open',
+  };
+}
+
+export function buildTeacherSummary(progress) {
+  const modules = [];
+  for (const [index, card] of COURSE_CATALOG.entries()) {
+    let module = modules.find(({ name }) => name === card.module);
+    if (!module) {
+      module = { name: card.module, completed: 0, inProgress: 0, total: 0 };
+      modules.push(module);
+    }
+    const entry = progress[index];
+    module.total += 1;
+    if (entry?.completed === true) module.completed += 1;
+    else if (entry?.status === 'available') module.inProgress += 1;
+  }
+  return {
+    modules: modules.map((module) => ({ ...module, evidence: `${module.completed}/${module.total} abgeschlossen` })),
+    checkpoints: CHECKPOINTS.map((checkpoint) => checkpointSummary(progress, checkpoint)),
+  };
+}
+
+function evaluationStorageKey() {
+  return `${TEACHER_EVALUATION_KEY}`;
+}
+
+function normalizeEvaluation(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const result = {};
+  for (const module of COURSE_CATALOG.map(({ module: name }) => name).filter((name, index, names) => names.indexOf(name) === index)) {
+    const entry = value[module];
+    if (!entry || typeof entry !== 'object') continue;
+    result[module] = {
+      criteria: RUBRIC_CRITERIA.map((_, index) => entry.criteria?.[index] === true),
+      score: Number.isInteger(entry.score) ? Math.max(0, Math.min(4, entry.score)) : 0,
+    };
+  }
+  return result;
+}
+
+export function readTeacherEvaluation(storage = browserStorage()) {
+  try {
+    const raw = storage?.getItem?.(evaluationStorageKey());
+    if (!raw) return {};
+    const envelope = JSON.parse(raw);
+    return envelope?.version === EVALUATION_VERSION ? normalizeEvaluation(envelope.evaluation) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function saveTeacherEvaluation(storage, evaluation) {
+  const normalized = normalizeEvaluation(evaluation);
+  if (!storage?.setItem) return { status: 'unavailable', reason: 'storage-error' };
+  try {
+    storage.setItem(evaluationStorageKey(), JSON.stringify({ version: EVALUATION_VERSION, evaluation: normalized }));
+    return { status: 'success' };
+  } catch {
+    return { status: 'unavailable', reason: 'storage-error' };
+  }
+}
+
+export function buildEvaluationExport(summary, evaluation) {
+  return {
+    schema: 'linguacode-ki-teacher-evaluation-v1',
+    localOnly: true,
+    generatedAt: new Date().toISOString(),
+    modules: summary.modules.map(({ name, completed, inProgress, total, evidence }) => ({ name, completed, inProgress, total, evidence, rubric: evaluation[name] ?? { criteria: RUBRIC_CRITERIA.map(() => false), score: 0 } })),
+    checkpoints: summary.checkpoints.map(({ id, number, completed, total, status }) => ({ id, number, completed, total, status })),
+  };
 }
 
 export function buildExportData(progress) {
@@ -62,19 +153,52 @@ function download(windowLike, content, filename, type) {
 function renderTable(documentLike, progress) {
   const output = documentLike.querySelector('#progress-table');
   if (!output) return;
-  output.innerHTML = `<table><caption>Lokaler Missionsfortschritt</caption><thead><tr>${columns.map(([, label]) => `<th scope="col">${label}</th>`).join('')}</tr></thead><tbody>${progress.map((entry) => `<tr><th scope="row">${entry.mission}</th><td>${entry.status}</td><td>${entry.phase}</td><td>${entry.completed}</td></tr>`).join('')}</tbody></table>`;
+  output.innerHTML = `<table><caption>Lokaler Missionsfortschritt</caption><thead><tr>${columns.map(([, label]) => `<th scope="col">${label}</th>`).join('')}</tr></thead><tbody>${progress.map((entry) => `<tr><th scope="row">${escapeHtml(entry.mission)}</th><td>${escapeHtml(entry.status)}</td><td>${escapeHtml(entry.phase)}</td><td>${escapeHtml(entry.completed)}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function renderSummary(documentLike, summary) {
+  const output = documentLike.querySelector('#summary-table');
+  if (output) output.innerHTML = `<h2>Module und Checkpoints</h2><div class="summary-grid">${summary.modules.map(({ name, completed, inProgress, total, evidence }) => `<article><h3>${escapeHtml(name)}</h3><p>${completed} von ${total} abgeschlossen · ${inProgress} in Bearbeitung</p><p class="evidence">${escapeHtml(evidence)}</p></article>`).join('')}</div><table><caption>Checkpoint-Zusammenfassung</caption><thead><tr><th scope="col">Checkpoint</th><th scope="col">Fortschritt</th><th scope="col">Status</th></tr></thead><tbody>${summary.checkpoints.map(({ number, completed, total, status }) => `<tr><th scope="row">Checkpoint ${number}</th><td>${completed} von ${total}</td><td>${escapeHtml(status)}</td></tr>`).join('')}</tbody></table>`;
+  const followUp = documentLike.querySelector('#follow-up');
+  if (followUp) followUp.innerHTML = `<h2>Follow-up für den Ausdruck</h2><ul>${summary.modules.map(({ name, completed, total }) => `<li><strong>${escapeHtml(name)}:</strong> ${completed < total ? 'Fortschritt gemeinsam prüfen.' : 'Erreichten Fortschritt sichern.'}</li>`).join('')}</ul><p>Nur aggregierte lokale Fortschrittsmetadaten; keine Namen, Antworten oder Aufgabeninhalte.</p>`;
+}
+
+function renderEvaluation(documentLike, storage, summary) {
+  const output = documentLike.querySelector('#evaluation-form');
+  if (!output) return;
+  const evaluation = readTeacherEvaluation(storage);
+  output.innerHTML = summary.modules.map(({ name }) => {
+    const entry = evaluation[name] ?? { criteria: RUBRIC_CRITERIA.map(() => false), score: 0 };
+    return `<fieldset><legend>${escapeHtml(name)}</legend>${RUBRIC_CRITERIA.map((criterion, index) => `<label><input type="checkbox" data-module="${escapeHtml(name)}" data-criterion="${index}" ${entry.criteria[index] ? 'checked' : ''}> ${escapeHtml(criterion)}</label>`).join('')}<label>Score (0–4) <input type="number" min="0" max="4" step="1" value="${entry.score}" data-score-module="${escapeHtml(name)}"></label></fieldset>`;
+  }).join('');
 }
 
 export function createTeacherView({ documentLike = globalThis.document, storage = browserStorage(), windowLike = globalThis } = {}) {
   const progress = readTeacherProgress(storage);
+  const summary = buildTeacherSummary(progress);
   renderTable(documentLike, progress);
+  renderSummary(documentLike, summary);
+  renderEvaluation(documentLike, storage, summary);
   const jsonButton = documentLike?.querySelector('#export-json');
   const csvButton = documentLike?.querySelector('#export-csv');
   const printButton = documentLike?.querySelector('#print-view');
+  const evaluationButton = documentLike?.querySelector('#export-evaluation');
+  const evaluationForm = documentLike?.querySelector('#evaluation-form');
+  evaluationForm?.addEventListener('change', (event = {}) => {
+    const current = readTeacherEvaluation(storage);
+    const module = event.target?.dataset?.module ?? event.target?.dataset?.scoreModule;
+    if (!module) return;
+    const entry = current[module] ?? { criteria: RUBRIC_CRITERIA.map(() => false), score: 0 };
+    if (event.target.dataset.module) entry.criteria[Number(event.target.dataset.criterion)] = event.target.checked === true;
+    if (event.target.dataset.scoreModule) entry.score = Number(event.target.value);
+    current[module] = entry;
+    saveTeacherEvaluation(storage, current);
+  });
   jsonButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildExportData(progress), null, 2), 'ki-teacher-progress.json', 'application/json'));
   csvButton?.addEventListener('click', () => download(windowLike, toCsv(progress), 'ki-teacher-progress.csv', 'text/csv;charset=utf-8'));
+  evaluationButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildEvaluationExport(summary, readTeacherEvaluation(storage)), null, 2), 'ki-teacher-evaluation.json', 'application/json'));
   printButton?.addEventListener('click', () => windowLike.print?.());
-  return { progress };
+  return { progress, summary, evaluation: readTeacherEvaluation(storage) };
 }
 
 if (typeof document !== 'undefined') createTeacherView();
