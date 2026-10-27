@@ -50,6 +50,7 @@ main { max-width: none; margin: 0; padding: clamp(1rem, 3vw, 3rem); }
 h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
 .eyebrow { font-size: .8rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; }
 .notice { border-left: 4px solid var(--accent); padding: .8rem 1rem; background: var(--surface); }
+.offline-status { display: inline-flex; align-items: center; min-height: 2.5rem; margin: .75rem 0 0; padding: .45rem .75rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); font-weight: 700; }
 .lesson { border: 1px solid var(--line); background: var(--surface); border-radius: 1rem; padding: 1.25rem; margin: 2rem 0; max-width: 800px; }
 .hour-nav { display: flex; flex-wrap: wrap; gap: .8rem; }
 .hour-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: .5rem .8rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); }

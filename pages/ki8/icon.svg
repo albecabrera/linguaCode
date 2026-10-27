@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">KI WP 8</title>
+  <desc id="desc">Symbol für den KI-Lernpfad</desc>
+  <rect width="512" height="512" rx="96" fill="#155b8b"/>
+  <path fill="#f5f8fb" d="M148 148h216v56H204v52h132v52H204v56h160v56H148z"/>
+  <circle cx="112" cy="176" r="20" fill="#8dd5ff"/>
+  <circle cx="400" cy="336" r="20" fill="#8dd5ff"/>
+</svg>

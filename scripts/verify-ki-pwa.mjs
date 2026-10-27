@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+
+const root = new URL('../pages/ki8/', import.meta.url);
+const read = (name) => readFileSync(new URL(name, root), 'utf8');
+const entry = read('index.html');
+const app = read('app.mjs');
+const style = read('style.css');
+const manifest = JSON.parse(read('manifest.webmanifest'));
+const worker = read('sw.js');
+const icon = read('icon.svg');
+
+assert.equal(manifest.name, 'KI entdecken, verstehen und gestalten – WP Informatik 8');
+assert.equal(manifest.start_url, './');
+assert.equal(manifest.display, 'standalone');
+assert.equal(manifest.lang, 'de');
+assert.equal(manifest.icons[0].src, './icon.svg');
+assert.match(icon, /<svg[^>]+viewBox="0 0 512 512"/);
+assert.match(entry, /<link rel="manifest" href="\.\/manifest\.webmanifest">/);
+assert.match(entry, /id="offline-status"[^>]*role="status"/);
+assert.match(app, /navigator\.serviceWorker\.register\('\.\/sw\.js'/);
+assert.match(app, /Offline-Bereitschaft aktiv/);
+assert.match(app, /Offline-Bereitschaft[^\n]*nicht verfügbar/);
+assert.match(style, /\.offline-status\s*\{/);
+
+assert.match(worker, /const CACHE_NAME = 'ki8-shell-v\d+'/);
+assert.match(worker, /new URL\(event\.request\.url\)/);
+assert.match(worker, /requestURL\.origin === self\.location\.origin/);
+assert.match(worker, /request\.mode === 'navigate'/);
+assert.match(worker, /event\.request\.method !== 'GET'/);
+assert.match(worker, /const SHELL_ASSETS = \[/);
+assert.match(worker, /Array.from\(\{length: 19\}/);
+assert.match(worker, /\.\/mission\/progress\.mjs/);
+assert.match(worker, /\.\/mission\/lesson-data\.mjs/);
+assert.match(worker, /\.\.\/assets\/qrcode-generator\.min\.js/);
+assert.match(worker, /const ASSET_PATHS = new Set/);
+assert.match(worker, /caches\.match\(event\.request\)/);
+assert.match(worker, /caches\.delete\(key\)/);
+assert.match(worker, /event\.respondWith/);
+assert.doesNotMatch(worker, /https?:\/\//);
+assert.doesNotMatch(worker, /\b(localStorage|sessionStorage|indexedDB)\b|learner data/i);
+console.log('PASS: KI PWA manifest, bounded same-origin worker, local German readiness status, and external/privacy boundaries.');

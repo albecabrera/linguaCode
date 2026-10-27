@@ -8,6 +8,20 @@ function browserStorage() {
   try { return globalThis.localStorage; } catch { return null; }
 }
 
+function registerOfflineShell() {
+  const status = document.querySelector('#offline-status');
+  if (!('serviceWorker' in navigator)) {
+    if (status) status.textContent = 'Offline-Bereitschaft ist in diesem Browser nicht verfügbar.';
+    return;
+  }
+  navigator.serviceWorker.register('./sw.js', {scope: './'}).then(() => {
+    if (status) status.textContent = 'Offline-Bereitschaft aktiv. Dieser Kurs kann als App installiert werden.';
+  }).catch(() => {
+    if (status) status.textContent = 'Offline-Bereitschaft ist derzeit nicht verfügbar.';
+  });
+}
+
+registerOfflineShell();
 createThemeController();
 createPresentationController({storage: browserStorage()}).bind();
 initCourseIntegration();

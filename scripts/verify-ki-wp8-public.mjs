@@ -15,7 +15,7 @@ assert.match(matches[0][2], /data-share="ki8\//);
 assert.match(catalog, /<article\b[^>]*class="course-featured"[^>]*>[\s\S]*?<h2>UV Künstliche Intelligenz<\/h2>/);
 const folder = new URL('../pages/ki8/', import.meta.url);
 const expectedFiles = [
-  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'mission', 'portfolio', 'presentation.mjs', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
+  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'manifest.webmanifest', 'sw.js', 'icon.svg', 'mission', 'portfolio', 'presentation.mjs', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
@@ -23,6 +23,8 @@ assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="mission-list"/);
 assert.match(entry, /Öffentlicher Lernpfad · 19 Missionen/);
 assert.match(entry, /<button[^>]*data-theme-toggle[^>]*aria-pressed="false"[^>]*>[\s\S]*data-theme-icon/);
+assert.match(entry, /<link rel="manifest" href="\.\/manifest\.webmanifest">/);
+assert.match(entry, /id="offline-status"[^>]*role="status"/);
 assert.match(entry, /id="course-roadmap"/);
 assert.match(entry, /6 Module · 19 Missionen/);
 for (const label of ['Grundlagen', 'Entscheidungsbäume', 'Muster erkennen', 'Chatbots', 'Kritisch &amp; verantwortlich']) assert.match(entry, new RegExp(`>${label}<`));

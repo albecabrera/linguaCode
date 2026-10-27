@@ -1,0 +1,14 @@
+{
+  "name": "KI entdecken, verstehen und gestalten – WP Informatik 8",
+  "short_name": "KI WP 8",
+  "description": "Ein lokaler, installierbarer Lernpfad zu künstlicher Intelligenz.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f8fb",
+  "theme_color": "#155b8b",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
