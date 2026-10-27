@@ -35,12 +35,14 @@ const systemController = createThemeController(systemDark);
 assert.equal(systemController.getTheme(), 'dark');
 assert.equal(systemDark.root.getAttribute('data-theme'), 'dark', 'system preference should be applied without being persisted as an override');
 assert.equal(systemDark.buttonAttributes.get('aria-pressed'), 'true');
+assert.equal(systemDark.buttonAttributes.get('aria-label'), 'Hellmodus aktivieren');
 assert.equal(systemDark.values.has(THEME_STORAGE_KEY), false);
 systemDark.documentLike.clickThemeButton();
 assert.equal(systemController.getTheme(), 'light');
 assert.equal(systemDark.root.getAttribute('data-theme'), 'light');
 assert.equal(systemDark.values.get(THEME_STORAGE_KEY), 'light');
 assert.equal(systemDark.buttonAttributes.get('aria-pressed'), 'false');
+assert.equal(systemDark.buttonAttributes.get('aria-label'), 'Dunkelmodus aktivieren');
 
 const reload = createHarness({storedTheme: 'light', systemTheme: 'dark'});
 const reloadController = createThemeController(reload);
@@ -50,6 +52,7 @@ reload.documentLike.clickThemeButton();
 assert.equal(reloadController.getTheme(), 'dark');
 assert.equal(reload.values.get(THEME_STORAGE_KEY), 'dark');
 assert.equal(reload.buttonAttributes.get('aria-pressed'), 'true');
+assert.equal(reload.buttonAttributes.get('aria-label'), 'Hellmodus aktivieren');
 
 const catalogCss = readFileSync(new URL('../pages/ki8/style.css', import.meta.url), 'utf8');
 const missionCss = readFileSync(new URL('../pages/ki8/mission/mission.css', import.meta.url), 'utf8');
@@ -59,5 +62,8 @@ assert.match(missionCss, /:root\[data-theme="light"\]\{color-scheme:light\}/);
 assert.match(missionCss, /:root\[data-theme="dark"\]\{[^}]*--navy:#071425/);
 assert.match(missionCss, /background:var\(--input-bg\)/, 'mission inputs use theme-aware surfaces');
 assert.match(missionCss, /background:var\(--inset-bg\)/, 'mission examples use theme-aware surfaces');
+assert.match(missionCss, /\.mission-shell\{max-width:1760px/);
+assert.match(missionCss, /grid-template-columns:minmax\(280px,340px\)/);
+assert.match(missionCss, /\.theme-toggle\{[^}]*width:46px/);
 
 console.log('PASS: system default, accessible theme toggle, local persistence, and explicit light/dark UI palettes.');

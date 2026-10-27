@@ -28,7 +28,7 @@ assert.match(missionCss, /\.phase-nav li > span\[aria-disabled="true"\]/);
 assert.doesNotMatch(missionCss, /\.phase-nav li span\{/);
 assert.match(missionCss, /overflow-wrap:anywhere/);
 assert.match(missionCss, /\.journey-sidebar\{[^}]*position:sticky/);
-assert.match(missionCss, /@media\(max-width:900px\)\{\.mission-shell\{grid-template-columns/);
+assert.match(missionCss, /@media\(max-width:1000px\)\{\.mission-shell\{grid-template-columns/);
 assert.match(missionCss, /\.journey-phase\.is-complete/);
 assert.match(missionCss, /min-height:44px/);
 assert.match(missionCss, /#phase-film/);
@@ -238,7 +238,7 @@ for (const [label, savedBytes] of [['malformed', '{not valid JSON'], ['future', 
 const eventMemory = new Map();
 const eventStorage = { getItem: (key) => eventMemory.get(key) ?? null, setItem: (key, value) => eventMemory.set(key, value), removeItem: (key) => eventMemory.delete(key) };
 const eventRoot = new FakeRoot();
-const renderer = createMissionRenderer({ root: eventRoot, storage: eventStorage }); assert.match(eventRoot.innerHTML, /data-theme-toggle/); assert.doesNotMatch(eventRoot.innerHTML, /Modul 1/); assert.match(eventRoot.innerHTML, /Stunde 1/); assert.match(eventRoot.innerHTML, /href="\.\.\/"/); assert.match(eventRoot.innerHTML, /Zur Missionsübersicht/); assert.match(eventRoot.innerHTML, /WP 8/); assert.match(eventRoot.innerHTML, /Planet Schule/); assert.match(eventRoot.innerHTML, /Achte besonders darauf, wie die Hunde-App lernt und warum sie sich manchmal irrt\./); assert.match(eventRoot.innerHTML, /Ich habe den Film angesehen/);
+const renderer = createMissionRenderer({ root: eventRoot, storage: eventStorage }); assert.match(eventRoot.innerHTML, /data-theme-toggle/); assert.match(eventRoot.innerHTML, /data-theme-icon/); assert.doesNotMatch(eventRoot.innerHTML, />Dunkelmodus<\/button>/); assert.doesNotMatch(eventRoot.innerHTML, /Modul 1/); assert.match(eventRoot.innerHTML, /Stunde 1/); assert.match(eventRoot.innerHTML, /href="\.\.\/"/); assert.match(eventRoot.innerHTML, /Zur Missionsübersicht/); assert.match(eventRoot.innerHTML, /WP 8/); assert.match(eventRoot.innerHTML, /Planet Schule/); assert.match(eventRoot.innerHTML, /Achte besonders darauf, wie die Hunde-App lernt und warum sie sich manchmal irrt\./); assert.match(eventRoot.innerHTML, /Ich habe den Film angesehen/);
 const film = eventRoot.querySelector('[data-film-done]'); film.checked = true; film.dispatch('change'); assert.equal(renderer.getState().answers.filmDone, true); eventRoot.querySelector('[data-advance]').dispatch('click');
 assert.equal(renderer.getState().phase, 1);
 const answer = eventRoot.querySelector('[data-answer="task-a"]'); answer.value = 'Mehr als ein Zeichen'; answer.dispatch('input'); assert.equal(renderer.getState().answers['task-a'], 'Mehr als ein Zeichen'); assert.equal(answer.focused, undefined, 'typing must not require replacing the input');

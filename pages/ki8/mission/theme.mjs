@@ -29,8 +29,17 @@ export function createThemeController({documentLike = globalThis.document, stora
   })();
 
   const syncButtons = () => {
+    const darkMode = theme === 'dark';
+    const nextLabel = darkMode ? 'Hellmodus aktivieren' : 'Dunkelmodus aktivieren';
+    const nextIcon = darkMode ? '☀' : '☾';
     for (const button of documentLike?.querySelectorAll?.('[data-theme-toggle]') ?? []) {
-      button.setAttribute('aria-pressed', String(theme === 'dark'));
+      button.setAttribute('aria-pressed', String(darkMode));
+      button.setAttribute('aria-label', nextLabel);
+      button.setAttribute('title', nextLabel);
+      const icon = button.querySelector?.('[data-theme-icon]');
+      if (icon) icon.textContent = nextIcon;
+      const label = button.querySelector?.('[data-theme-label]');
+      if (label) label.textContent = nextLabel;
     }
   };
   const apply = (nextTheme, persist) => {

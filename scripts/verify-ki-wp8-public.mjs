@@ -22,7 +22,7 @@ const entry = readFileSync(new URL('index.html', folder), 'utf8');
 assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="mission-list"/);
 assert.match(entry, /Öffentlicher Lernpfad · 18 Missionen/);
-assert.match(entry, /<button[^>]*data-theme-toggle[^>]*aria-pressed="false"[^>]*>Dunkelmodus<\/button>/);
+assert.match(entry, /<button[^>]*data-theme-toggle[^>]*aria-pressed="false"[^>]*>[\s\S]*data-theme-icon/);
 assert.match(entry, /id="course-roadmap"/);
 assert.match(entry, /6 Module · 18 Missionen/);
 for (const label of ['Grundlagen', 'Entscheidungsbäume', 'Muster erkennen', 'Chatbots', 'Kritisch &amp; verantwortlich']) assert.match(entry, new RegExp(`>${label}<`));
@@ -31,6 +31,7 @@ assert.doesNotMatch(entry, /href="\.\/modul-\d+\.html#stunde-\d+"|id="modules"|i
 const catalogStyle = readFileSync(new URL('style.css', folder), 'utf8');
 const integrationStyle = readFileSync(new URL('mission/course-integration.css', folder), 'utf8');
 assert.match(catalogStyle, /main \{ max-width: none;/);
+assert.match(catalogStyle, /padding: 1rem max\(1rem, calc\(\(100vw - 1760px\)\/2\)\)/);
 assert.match(integrationStyle, /grid-template-columns: repeat\(auto-fit, minmax\(min\(100%, 18rem\), 1fr\)\)/);
 for (const tone of [/mission-panel:nth-child\(6n \+ 1\)/, /mission-panel:nth-child\(6n \+ 2\)/, /mission-panel:nth-child\(6n \+ 3\)/]) assert.match(integrationStyle, tone);
 const app = readFileSync(new URL('app.mjs', folder), 'utf8');
