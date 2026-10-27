@@ -205,7 +205,53 @@ export const KI_MISSION_03 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03 });
+const KI_MISSION_04_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Wozu dienen Trainingsdaten beim Erstellen eines Entscheidungsbaums?', choices: ['Sie helfen, passende Merkmale und Schwellenwerte zu finden.', 'Sie beweisen, dass jede spätere Vorhersage stimmt.', 'Sie ersetzen die Testdaten.'], correctIndex: 0, explanation: 'Trainingsdaten helfen, Regeln und Schwellenwerte für die bekannten Beispiele zu finden.' },
+  { id: 'q2', prompt: 'Warum nutzen wir getrennte, neue Testdaten?', choices: ['Damit das Modell mehr Zeit zum Lernen hat.', 'Damit wir prüfen, ob es auch bei neuen Beispielen funktioniert.', 'Damit das Modell die Testlabels schon beim Training sieht.'], correctIndex: 1, explanation: 'Getrennte Testdaten zeigen, ob das Modell mit ungesehenen Beispielen zurechtkommt.' },
+  { id: 'q3', prompt: 'Ein Testobjekt hat das Label „gesund“, das Modell sagt aber „ungesund“. Was ist passiert?', choices: ['Dieses Testobjekt wurde falsch klassifiziert.', 'Das Modell hat sich selbst neu programmiert.', 'Die Testdaten sind jetzt Trainingsdaten.'], correctIndex: 0, explanation: 'Vorhersage und bekanntes Label stimmen bei diesem Testobjekt nicht überein.' },
+  { id: 'q4', prompt: 'Was ist ein fairer Umgang mit einem Fehler im Test?', choices: ['Das Testlabel ändern, bis die Vorhersage stimmt.', 'Den Fehler notieren und weitere getrennte Testbeispiele prüfen.', 'Das fehlerhafte Beispiel aus allen Auswertungen entfernen.'], correctIndex: 1, explanation: 'Ein Test soll unabhängig bleiben; das Testlabel wird nicht passend gemacht.' },
+  { id: 'q5', prompt: 'Beweist eine einzelne falsche Testvorhersage, dass das Modell unbrauchbar ist?', choices: ['Ja, ein Fehler beweist immer, dass kein Modell helfen kann.', 'Nein. Sie zeigt einen Fehler bei diesem Beispiel; weitere Ergebnisse helfen bei der Beurteilung.', 'Ja, denn Testdaten dürfen nie Fehler enthalten.'], correctIndex: 1, explanation: 'Ein Fehler ist ein wichtiger Hinweis, aber allein kein Beweis, dass ein Modell insgesamt unbrauchbar ist.' },
+]);
+
+export const KI_MISSION_04 = Object.freeze({
+  id: 'ki-04',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 2', overviewHref: '../modul-2.html#stunde-2' },
+  title: 'Mission 04 – Trainieren, testen und Fehler untersuchen',
+  description: 'Trenne Trainings- und Testdaten und untersuche, was eine falsche Vorhersage wirklich zeigt.',
+  duration: 45,
+  objectives: [
+    'Du unterscheidest Trainingsdaten von getrennten Testdaten.',
+    'Du beschreibst eine Fehlklassifikation und erklärst, warum ein einzelner Fehler ein Modell nicht automatisch unbrauchbar macht.',
+  ],
+  phases: [
+    { id: 'decision-trees', title: 'Entscheidungsbäume kennenlernen', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }] },
+    { id: 'training-and-test', title: 'Training und Test unterscheiden', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'investigate-errors', title: 'Fehler untersuchen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-split' }, { type: 'task', taskId: 'task-error' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_04_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_04_QUESTIONS },
+  ],
+  media: {
+    experienceAi: { url: 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4', kind: 'official-lesson', title: 'Lektion 4: Entscheidungsbäume', provider: 'Experience AI', observation: 'Die Lektion erklärt, wie Entscheidungsbäume Klassifizierungsmodelle bilden und wie Trainingsdaten ein Modell verändern.', checkboxLabel: 'Ich habe die Lektion angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+    infSchule: { url: 'https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume', kind: 'official-learning-page', title: 'Überwachtes Lernen mit Entscheidungsbäumen', provider: 'inf-schule', observation: 'Die Seite erklärt Trainingsbeispiele, Schwellenwerte, Testobjekte und mögliche Fehler bei ungeeigneten Daten.', checkboxLabel: 'Ich habe die Seite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein geeignetes, spezifisches Video für diese Stunde wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die verlinkten Seiten erläutern Entscheidungsbäume, Trainingsdaten und Testobjekte. Zieljahrgang und Lizenz sind auf den geprüften Seiten nicht angegeben.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Beim Training sucht ein Modell passende Merkmale und Schwellenwerte in bekannten Beispielen. Mit getrennten, ungesehenen Testdaten prüfen wir, ob die Vorhersage auch bei neuen Beispielen funktioniert. Eine falsche Vorhersage ist ein Fehler, aber kein Beweis, dass das ganze Modell unbrauchbar ist.' },
+    { type: 'reflection', id: 'test-reflection', prompt: 'Warum sollte ein Testbeispiel nach dem Test nicht einfach zum Trainingsbeispiel werden?', examples: ['Sonst wäre es nicht mehr unabhängig und würde nicht zeigen, wie das Modell mit neuen Beispielen umgeht.'] },
+  ],
+  tasks: [
+    { id: 'task-split', type: 'open-response', title: 'Training und Test trennen', prompt: 'Ein Modell wird mit bekannten, gelabelten Beispielen trainiert. Warum prüfen wir es danach mit neuen Testbeispielen, die es beim Training nicht gesehen hat?', exampleAnswer: 'Getrennte Testdaten zeigen, ob das gelernte Muster auch bei neuen Beispielen funktioniert. Testdaten werden nicht zum Training oder zum Anpassen der Regel verwendet. Werden sie dafür genutzt, prüfen wir das Modell nicht mehr unabhängig.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-error', type: 'open-response', title: 'Eine Fehlklassifikation untersuchen', prompt: 'Bei einem getrennten Test sagt ein Modell „ungesund“ voraus, das bekannte Label lautet aber „gesund“. Was kannst du daraus schließen – und was noch nicht?', exampleAnswer: 'Das Modell hat dieses Testobjekt falsch klassifiziert. Der Fehler ist ein Hinweis, den wir mit weiteren unabhängigen Testbeispielen untersuchen. Allein beweist er nicht, dass das Modell unbrauchbar ist; das Testlabel darf nicht passend geändert werden.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04 });
 
 export function getLesson(id) {
   return LESSONS[id];

@@ -6,6 +6,7 @@ export const MISSION_ROUTES = Object.freeze([
   Object.freeze({ path: '/ki8/stunde-1/', lessonId: 'ki-01', progressKey: 'ki-01' }),
   Object.freeze({ path: '/ki8/stunde-2/', lessonId: 'ki-02', progressKey: 'ki-02' }),
   Object.freeze({ path: '/ki8/stunde-3/', lessonId: 'ki-03', progressKey: 'ki-03' }),
+  Object.freeze({ path: '/ki8/stunde-4/', lessonId: 'ki-04', progressKey: 'ki-04' }),
 ]);
 
 export function resolveMissionRoute(pathname = globalThis.location?.pathname) {

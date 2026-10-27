@@ -1,6 +1,6 @@
 # Mission 01 – Was ist künstliche Intelligenz?
 
-> **Status: lokale Vorschau.** Mission 01 ist auf dem Feature-Branch implementiert und nicht veröffentlicht. Die Prüfung auf physischen iPads und Smartboards sowie ein QR-Kameratest stehen noch aus.
+> **Status: veröffentlicht.** Mission 01 ist zusammen mit der mission-only Kursübersicht auf GitHub Pages verfügbar. Die Prüfung auf physischen iPads und Smartboards sowie ein QR-Kameratest stehen noch aus.
 
 ## Zweck und Ablauf
 
@@ -78,7 +78,7 @@ Bewertungsbänder: **5/5** „Hervorragend! Du hast die Mission erfolgreich abge
 
 ## Lokaler Fortschritt und Datenschutzgrenzen
 
-Der Fortschritt wird ausschließlich lokal im Browser gespeichert. Die Speicherung ist namespaced und versioniert. Die Schlüssel lauten `linguacode:ki-wp8:mission-01:v1:ki-01`, `linguacode:ki-wp8:mission-01:v1:ki-02` und `linguacode:ki-wp8:mission-01:v1:ki-03`; die Missionen überschreiben einander nicht. Antworten, Phasen, Obst-Labor und Quizstatus werden nicht übertragen und es gibt kein Schülerkonto, keine Datenbank und kein zentrales Feedback.
+Der Fortschritt wird ausschließlich lokal im Browser gespeichert. Die Speicherung ist namespaced und versioniert. Die Schlüssel lauten `linguacode:ki-wp8:mission-01:v1:ki-01`, `linguacode:ki-wp8:mission-01:v1:ki-02`, `linguacode:ki-wp8:mission-01:v1:ki-03` und `linguacode:ki-wp8:mission-01:v1:ki-04`; die Missionen überschreiben einander nicht. Antworten, Phasen, Obst-Labor und Quizstatus werden nicht übertragen und es gibt kein Schülerkonto, keine Datenbank und kein zentrales Feedback.
 
 Wichtige Grenzen:
 
@@ -95,10 +95,11 @@ Für direkte Aufrufe auf GitHub Pages sind vorgesehen:
 - `/ki8/stunde-1/` – Mission 01
 - `/ki8/stunde-2/` – Mission 02
 - `/ki8/stunde-3/` – Mission 03
+- `/ki8/stunde-4/` – Mission 04 (lokale Implementierung)
 
-Die öffentliche Kursübersicht unter `/ki8/` zeigt ausschließlich drei anklickbare Mission-Panels für `/ki8/stunde-1/`, `/ki8/stunde-2/` und `/ki8/stunde-3/`; jedes Panel enthält einen eigenen klickbaren QR-Code zur Mission. Der anklickbare GitHub-Pages-Link und der allgemeine QR-Code führen zur Übersicht. Alle QR-Payloads und ihre Links verwenden die kanonische öffentliche Basis `https://albecabrera.github.io/linguaCode/ki8/`, auch in der lokalen Vorschau. Dadurch wird kein loopback-Ziel wie `127.0.0.1` in einen QR-Code geschrieben. Die URL ist kein externer URL-Shortener.
+Die öffentliche Kursübersicht unter `/ki8/` zeigt aktuell vier anklickbare Mission-Panels für `/ki8/stunde-1/`, `/ki8/stunde-2/`, `/ki8/stunde-3/` und `/ki8/stunde-4/`; jedes Panel enthält einen eigenen klickbaren QR-Code zur Mission. Der anklickbare GitHub-Pages-Link und der allgemeine QR-Code führen zur Übersicht. Alle QR-Payloads und ihre Links verwenden die kanonische öffentliche Basis `https://albecabrera.github.io/linguaCode/ki8/`, auch in der lokalen Vorschau. Dadurch wird kein loopback-Ziel wie `127.0.0.1` in einen QR-Code geschrieben. Die URL ist kein externer URL-Shortener.
 
-Die sechs Moduldateien und alle 18 Stundenabschnitte samt Aktivitäten bleiben im Repository und über ihre bisherigen direkten URLs erreichbar, werden aber nicht mehr von der öffentlichen Kursübersicht verlinkt. Andere Fächer bleiben unverändert. Ein physischer QR-Kameratest sowie eine echte GitHub-Pages-Auslieferung sind noch nicht verifiziert.
+Die sechs Moduldateien und alle 18 Stundenabschnitte samt Aktivitäten bleiben im Repository und über ihre bisherigen direkten URLs erreichbar, werden aber nicht mehr von der öffentlichen Kursübersicht verlinkt. Andere Fächer bleiben unverändert. Die GitHub-Pages-Auslieferung ist für Mission 01–03 verifiziert; Mission 04 ist noch nicht veröffentlicht. Ein physischer QR-Kameratest wurde nicht durchgeführt.
 
 ## Wiederverwendbare Datenstruktur: aktueller Stand
 
@@ -113,7 +114,7 @@ Die Daten liegen aktuell in `pages/ki8/mission/lesson-data.mjs`; die Renderer- u
 
 ### Bestehende Wiederverwendung und nächste Stunde
 
-Die Registry enthält `ki-01`, `ki-02` und `ki-03`. Eine Lesson-ID wird durch statische Pfadzuordnung mit einer eigenen Browser-Speicherschlüsselung verbunden; alle drei behalten getrennten Fortschritt. Mission 02 nutzt bestehende Blocktypen (Medienlink, offene Antwort und Quiz), keine Sonderkopie des Renderers. Mission 03 ergänzt Modul 2 Stunde 1 mit Merkmalen, Labels und der bestehenden Schwellenwertregel; der CTA lässt die bisherige Stunde und ihre Interaktionen bestehen.
+Die Registry enthält `ki-01`, `ki-02`, `ki-03` und `ki-04`. Eine Lesson-ID wird durch statische Pfadzuordnung mit einer eigenen Browser-Speicherschlüsselung verbunden; jede Mission behält getrennten Fortschritt. Mission 02 nutzt bestehende Blocktypen (Medienlink, offene Antwort und Quiz), keine Sonderkopie des Renderers. Mission 03 ergänzt Modul 2 Stunde 1 mit Merkmalen, Labels und der bestehenden Schwellenwertregel; der CTA lässt die bisherige Stunde und ihre Interaktionen bestehen.
 
 Für weitere Stunden:
 
@@ -144,6 +145,6 @@ Die Prüfungen decken Daten, Gap-Fill-Regeln, Quiz, lokalen Speicher, Obst-Labor
 
 ## Arbeitsgrenzen
 
-Der aktuelle Auftrag umfasst lokale Implementierung, Dokumentation und reviewbare Feature-Branch-Commits. **Kein Build** nach Projektregel und kein Push, keine Veröffentlichung und kein Deployment ohne ausdrückliche Freigabe. Bestehende öffentliche Stunden und andere Fächer bleiben erhalten.
+Der aktuelle Auftrag umfasst lokale Implementierung, Dokumentation und reviewbare Feature-Branch-Commits. **Kein Build** nach Projektregel. Jede fertig geprüfte Mission darf per normalem Fast-forward auf `main` veröffentlicht werden; das geschützte GitHub-Pages-Environment erlaubt nur `main` und der Workflow lädt ausschließlich `pages/` hoch. Bestehende öffentliche Stunden und andere Fächer bleiben erhalten.
 
 Lokale Vorschau aus dem Worktree: `python3 -m http.server 8108 --bind 127.0.0.1 --directory pages`, dann `http://127.0.0.1:8108/ki8/stunde-1/` öffnen. Mit `Ctrl-C` beenden. Der Loopback-Server ist nur eine Vorschau, kein geschützter Dienst.
