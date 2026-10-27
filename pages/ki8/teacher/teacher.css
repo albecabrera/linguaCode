@@ -1,0 +1,12 @@
+:root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #162837; background: #f5f8fb; }
+body { margin: 0; }
+.teacher-shell { max-width: 70rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+.eyebrow { color: #155b8b; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+h1 { margin-block: .25rem 1rem; }
+.privacy { padding: 1rem; border: 2px solid #155b8b; background: #e8f3fb; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem 2rem; }
+button { padding: .7rem 1rem; border: 1px solid #155b8b; border-radius: .35rem; color: white; background: #155b8b; font: inherit; cursor: pointer; }
+table { width: 100%; border-collapse: collapse; background: white; }
+th, td { padding: .65rem; border: 1px solid #c5d3df; text-align: left; }
+th { background: #e8f0f7; }
+@media print { .actions { display: none; } .teacher-shell { max-width: none; padding: 0; } .privacy { border: 1px solid #162837; } }

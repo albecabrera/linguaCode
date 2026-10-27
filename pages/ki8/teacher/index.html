@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KI 8 · Lokale Lehransicht</title>
+  <link rel="stylesheet" href="./teacher.css">
+</head>
+<body>
+  <main class="teacher-shell">
+    <header>
+      <p class="eyebrow">KI 8 · Lehransicht</p>
+      <h1>Lokaler Missionsfortschritt</h1>
+      <p class="privacy" role="note"><strong>Privat und nur lokal:</strong> Diese Ansicht liest ausschließlich versionierte Fortschrittsdaten aus dem localStorage dieses Browsers. Es werden keine Daten übertragen oder an einen Server gesendet. Nutze Exporte nur auf diesem Gerät.</p>
+    </header>
+    <section aria-labelledby="actions-title">
+      <h2 id="actions-title">Ansicht und Export</h2>
+      <p>Die Aktionen starten erst nach deinem Klick und enthalten nur Missionsstatus, Phasen und Abschlussmarkierungen.</p>
+      <div class="actions">
+        <button id="export-json" type="button">JSON exportieren</button>
+        <button id="export-csv" type="button">CSV exportieren</button>
+        <button id="print-view" type="button">Druckansicht öffnen</button>
+      </div>
+    </section>
+    <section id="progress-table" aria-live="polite"></section>
+    <p class="privacy">Keine Namen, Antworten, Aufgabeninhalte oder anderen personenbezogenen Schülerdaten werden ausgelesen oder exportiert.</p>
+  </main>
+  <script type="module" src="./teacher.mjs"></script>
+</body>
+</html>
