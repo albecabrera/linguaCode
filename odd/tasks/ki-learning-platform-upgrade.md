@@ -10,11 +10,11 @@ Scope: Extend the public KI course with continuation, catalog filtering, integra
 5. **S5** — User request verbatim: "5. Vista docente local y exportable"
 
 ## Tasks
-- T1 (S1,S2): Add a local-only continuation CTA and catalog filters without changing existing mission routes; route: `pages/ki8/index.html`, `pages/ki8/app.mjs`, catalog modules/styles/verifiers; commit: pending.
-- T2 (S3): Add three integrative checkpoint definitions, progress-safe summaries, and learner-facing checkpoint UI; route: `pages/ki8/checkpoints.*`, catalog/mission integration/verifiers; commit: pending.
-- T3 (S4): Add Mission 19 as the final integrative project with route, lesson data, catalog card, local progress, and public checks; route: `pages/ki8/stunde-19/`, mission data/runtime/catalog/verifiers; commit: pending.
-- T4 (S5): Add an explicit local-only teacher view with privacy-labeled JSON/CSV/print export; route: `pages/ki8/teacher/`, local teacher modules/styles/verifiers; commit: pending.
-- T5 (S1-S5): Run full local verification, differential checks for shared renderer/progress contracts, and record delivery evidence; route: verifier scripts/task log; commit: pending.
+- T1 (S1,S2): Add a local-only continuation CTA and catalog filters without changing existing mission routes; route: `pages/ki8/index.html`, `pages/ki8/app.mjs`, catalog modules/styles/verifiers; commit: `e1729fd`.
+- T2 (S3): Add three integrative checkpoint definitions, progress-safe summaries, and learner-facing checkpoint UI; route: `pages/ki8/checkpoints.*`, catalog/mission integration/verifiers; commit: `e1729fd`.
+- T3 (S4): Add Mission 19 as the final integrative project with route, lesson data, catalog card, local progress, and public checks; route: `pages/ki8/stunde-19/`, mission data/runtime/catalog/verifiers; commit: `e1729fd`.
+- T4 (S5): Add an explicit local-only teacher view with privacy-labeled JSON/CSV/print export; route: `pages/ki8/teacher/`, local teacher modules/styles/verifiers; commit: `c4a150d`.
+- T5 (S1-S5): Run full local verification, differential checks for shared renderer/progress contracts, and record delivery evidence; route: verifier scripts/task log; commit: `c4a150d`.
 
 ## Log
 - L1: User request verbatim: "Empezamos con los cambios.
@@ -29,3 +29,4 @@ Scope: Extend the public KI course with continuation, catalog filtering, integra
 - L5: T4 implementation evidence: the local teacher view reads only the 19 versioned mission progress keys and provides explicit JSON, CSV, and print actions with privacy labeling. `verify-ki-teacher-view.mjs` passed; the learner renderer remains untouched. The catalog now links to the teacher view, and focused catalog/teacher checks pass.
 - L6: Parent integration verification passed: all seven existing mission/WP8 verifiers plus catalog, checkpoint, teacher, theme, and diff checks passed. Mission 19 and teacher progress coverage both include `ki-19`; no build, deploy, backend, or `.mission-qa/` changes were made.
 - L7: Core course slice committed as `e1729fd` (`feat(ki): add course checkpoints and mission 19`). It contains the continuation/filter catalog, three checkpoints, Mission 19, public route updates, focused verifiers, and this feature document. The slice is intentionally above the normal 400-line review target because the catalog/runtime/public-route contract moves together; the teacher view remains a separate slice.
+- L8: Teacher slice committed as `c4a150d` (`feat(ki): add local teacher progress export`). All local verifiers passed after both commits, including catalog, checkpoints, teacher export, theme, mission, WP8 public/release, and `git diff --check`. Differential verification confirmed M01–M18 route resolution and lesson definitions remain unchanged against `origin/main`. No build, push, deploy, backend, or `.mission-qa/` changes were made.
