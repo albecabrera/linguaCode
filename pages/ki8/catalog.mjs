@@ -1,0 +1,88 @@
+import {createProgressStore} from './mission/progress.mjs';
+
+export const PROGRESS_FILTERS = Object.freeze(['all', 'in-progress', 'completed']);
+
+export const COURSE_CATALOG = Object.freeze([
+  ['Grundlagen', 'KI-Grundlagen'], ['Grundlagen', 'Training'], ['Grundlagen', 'Daten'],
+  ['Entscheidungsbäume', 'Training'], ['Entscheidungsbäume', 'Merkmale'], ['Entscheidungsbäume', 'Trainingsdaten'],
+  ['Entscheidungsbäume', 'Testen'], ['Entscheidungsbäume', 'Regeln'], ['Muster erkennen', 'Muster'],
+  ['Muster erkennen', 'Ausreißer'], ['Chatbots', 'Intents'], ['Chatbots', 'Training'],
+  ['Chatbots', 'Fallbacks'], ['Kritisch & verantwortlich', 'Prüfen'], ['Kritisch & verantwortlich', 'Fehlinformation'],
+  ['Kritisch & verantwortlich', 'Privatsphäre'], ['Kritisch & verantwortlich', 'Bias'], ['Kritisch & verantwortlich', 'Verantwortung'], ['Abschlussprojekt', 'Projekt'],
+].map(([module, topic], index) => Object.freeze({
+  id: `ki-${String(index + 1).padStart(2, '0')}`,
+  mission: index + 1,
+  module,
+  topic,
+  href: `./stunde-${index + 1}/`,
+})))
+;
+
+function statusForState(state) {
+  if (!state || typeof state !== 'object') return 'not-started';
+  return state.completed || state.quizSubmitted ? 'completed' : 'in-progress';
+}
+
+export function readCatalogProgress(storage, cards = COURSE_CATALOG) {
+  return cards.map((card) => {
+    let result;
+    try {
+      result = createProgressStore(storage, card.id).load();
+    } catch {
+      result = {status: 'unavailable', reason: 'storage-error'};
+    }
+    if (!result || result.status !== 'success') {
+      return {...card, status: 'unavailable', reason: result?.reason ?? 'storage-error'};
+    }
+    return {...card, status: statusForState(result.state), reason: null};
+  });
+}
+
+export function filterCatalog(cards, {progress = 'all', module = '', topic = ''} = {}) {
+  return cards.filter((card) => {
+    const progressMatches = progress === 'all' || card.status === progress;
+    const moduleMatches = !module || card.module === module;
+    const topicMatches = !topic || card.topic === topic;
+    return progressMatches && moduleMatches && topicMatches;
+  });
+}
+
+export function selectContinuation(cards, progress = cards) {
+  const byId = new Map(progress.map((card) => [card.id, card]));
+  return cards.find((card) => byId.get(card.id)?.status === 'in-progress')
+    ?? cards.find((card) => byId.get(card.id)?.status === 'not-started')
+    ?? cards.find((card) => byId.get(card.id)?.status === 'unavailable')
+    ?? cards[0];
+}
+
+export function createCatalogController({documentLike = globalThis.document, storage = null, cards = COURSE_CATALOG} = {}) {
+  const nodes = [...(documentLike?.querySelectorAll?.('[data-catalog-card]') ?? [])];
+  const state = {progress: 'all', module: '', topic: ''};
+  const cardById = new Map(cards.map((card) => [card.id, card]));
+  const progress = readCatalogProgress(storage, cards);
+  const progressById = new Map(progress.map((card) => [card.id, card]));
+
+  function apply(nextState = state) {
+    Object.assign(state, nextState);
+    for (const node of nodes) {
+      const card = cardById.get(node.dataset.catalogCard);
+      const current = progressById.get(card?.id);
+      node.hidden = !current || !filterCatalog([current], state).length;
+      if (current) node.dataset.progress = current.status;
+    }
+    const empty = documentLike?.querySelector?.('#catalog-empty');
+    if (empty) empty.hidden = nodes.some((node) => !node.hidden);
+    return state;
+  }
+
+  for (const button of documentLike?.querySelectorAll?.('[data-progress-filter]') ?? []) {
+    button.addEventListener('click', () => {
+      apply({progress: button.dataset.progressFilter});
+      for (const candidate of documentLike.querySelectorAll('[data-progress-filter]')) candidate.setAttribute('aria-pressed', String(candidate === button));
+    });
+  }
+  for (const select of documentLike?.querySelectorAll?.('[data-module-filter], [data-topic-filter]') ?? []) {
+    select.addEventListener('change', () => apply({[select.dataset.moduleFilter !== undefined ? 'module' : 'topic']: select.value}));
+  }
+  return {apply, progress, continuation: selectContinuation(cards, progress)};
+}

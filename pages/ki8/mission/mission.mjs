@@ -22,6 +22,7 @@ export const MISSION_ROUTES = Object.freeze([
   Object.freeze({ path: '/ki8/stunde-16/', lessonId: 'ki-16', progressKey: 'ki-16' }),
   Object.freeze({ path: '/ki8/stunde-17/', lessonId: 'ki-17', progressKey: 'ki-17' }),
   Object.freeze({ path: '/ki8/stunde-18/', lessonId: 'ki-18', progressKey: 'ki-18' }),
+  Object.freeze({ path: '/ki8/stunde-19/', lessonId: 'ki-19', progressKey: 'ki-19' }),
 ]);
 
 export function resolveMissionRoute(pathname = globalThis.location?.pathname) {
@@ -79,7 +80,7 @@ function renderJourneySidebar(activeLesson, activeState, storage) {
   const unavailableMissions = snapshots.length - availableMissions;
   const completedSummary = `${completedMissions} von ${availableMissions} lesbaren Missionen abgeschlossen`;
   const unavailableSummary = unavailableMissions ? `<p class="journey-unavailable" role="status">Fortschritt für ${unavailableMissions} Missionen nicht verfügbar.</p>` : '';
-  return `<aside class="journey-sidebar" aria-label="Missionsfortschritt"><details open><summary class="journey-summary"><span class="eyebrow">Lernpfad</span><strong>Alle 18 Missionen</strong><span>${esc(completedSummary)}</span><progress max="${availableMissions}" value="${completedMissions}" aria-label="${esc(completedSummary)}">${completedMissions}/${availableMissions}</progress>${unavailableSummary}</summary><nav class="journey-nav" aria-label="Alle Missionen"><ol>${items}</ol></nav><p class="journey-privacy">Der Fortschritt wird nur lokal in diesem Browser gelesen.</p></details></aside>`;
+  return `<aside class="journey-sidebar" aria-label="Missionsfortschritt"><details open><summary class="journey-summary"><span class="eyebrow">Lernpfad</span><strong>Alle 19 Missionen</strong><span>${esc(completedSummary)}</span><progress max="${availableMissions}" value="${completedMissions}" aria-label="${esc(completedSummary)}">${completedMissions}/${availableMissions}</progress>${unavailableSummary}</summary><nav class="journey-nav" aria-label="Alle Missionen"><ol>${items}</ol></nav><p class="journey-privacy">Der Fortschritt wird nur lokal in diesem Browser gelesen.</p></details></aside>`;
 }
 
 export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progressKey = lesson?.id, storage = browserStorage(), themeController = createThemeController() } = {}) {

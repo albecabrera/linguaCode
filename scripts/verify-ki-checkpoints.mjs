@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {CHECKPOINTS, createCheckpointController, renderCheckpoints} from '../pages/ki8/checkpoints.mjs';
+
+assert.equal(CHECKPOINTS.length, 3);
+assert.deepEqual(CHECKPOINTS.map(({id, afterMission}) => [id, afterMission]), [['checkpoint-1', 6], ['checkpoint-2', 12], ['checkpoint-3', 18]]);
+assert.ok(CHECKPOINTS.every(({prompt, summary, missionIds}) => prompt && summary && missionIds.length > 0));
+assert.ok(CHECKPOINTS.every(({localOnly}) => localOnly === true));
+const html = fs.readFileSync(new URL('../pages/ki8/index.html', import.meta.url), 'utf8');
+assert.match(html, /id="integrative-checkpoints"/);
+assert.match(html, /src="\.\/checkpoints\.mjs"/);
+assert.match(html, /href="\.\/stunde-19\/"/);
+const storage = {getItem: () => null, setItem() { throw new Error('checkpoints must not write'); }, removeItem() {}};
+const rendered = renderCheckpoints({storage, documentLike: null});
+assert.match(rendered, /Integrative Checkpoints/);
+assert.match(rendered, /Nur auf diesem Gerät/);
+assert.match(rendered, /Checkpoint 1/);
+assert.match(rendered, /Mission 19/);
+const controller = createCheckpointController({storage, cards: [{id: 'ki-01', status: 'completed'}, {id: 'ki-03', status: 'completed'}, {id: 'ki-06', status: 'completed'}]});
+assert.equal(controller.summary.completed, 1);
+assert.equal(controller.summary.available, 3);
+console.log('PASS: three local-only integrative checkpoints render safely without backend state.');

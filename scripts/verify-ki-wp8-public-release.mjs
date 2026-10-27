@@ -43,7 +43,7 @@ try {
   assert.match(style, /\.activity button \{ margin: \.7rem 0; \}/);
   assert.match(style, /\.hero \{/);
   assert.doesNotMatch(style, /(?:^|\n)input,button \{/);
-  for (let mission = 1; mission <= 18; mission += 1) {
+  for (let mission = 1; mission <= 19; mission += 1) {
     const response = await fetch(`${origin}/stunde-${mission}/`);
     assert.equal(response.status, 200);
     const route = await response.text();
@@ -51,7 +51,7 @@ try {
   }
   assert.equal((await fetch(`${origin}/modul-1.html`)).status, 404);
   assert.equal((await fetch(`${origin}/../docs/ki-wp8/demo/index.html`)).status, 404);
-  console.log('PASS: static /ki8/ mission-only entry and all 18 mission routes are reachable; legacy modules and private demo paths are absent.');
+  console.log('PASS: static /ki8/ mission-only entry and all 19 mission routes are reachable; legacy modules and private demo paths are absent.');
 } finally {
   server.close();
 }

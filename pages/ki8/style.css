@@ -61,6 +61,18 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 .course-roadmap { margin: 2rem 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
 .section-heading h2 { margin: .15rem 0; }
 .section-heading p:last-child { margin-bottom: 0; }
+.catalog-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.catalog-heading h2 { margin-bottom: .15rem; }
+.catalog-heading p { margin: 0; }
+.continue-course { white-space: nowrap; }
+.catalog-filters { display: flex; flex-wrap: wrap; align-items: end; gap: .8rem; margin: 1rem 0 1.25rem; padding: 1rem; border: 1px solid var(--line); border-radius: .75rem; background: var(--bg); }
+.filter-group { display: flex; flex-wrap: wrap; gap: .45rem; }
+.filter-group button { background: var(--surface); color: var(--fg); }
+.filter-group button[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+.catalog-filters label { display: grid; gap: .25rem; font-weight: 700; }
+.catalog-filters select { min-height: 44px; padding: .5rem .7rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); color: var(--fg); font: inherit; }
+.catalog-empty { padding: 1rem; border: 1px dashed var(--line); border-radius: .75rem; background: var(--surface); }
+@media (max-width: 680px) { .catalog-heading { align-items: start; flex-direction: column; } .continue-course { width: 100%; justify-content: center; } }
 .roadmap-stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem; padding: 0; margin: 1.25rem 0 0; list-style: none; }
 .roadmap-stages li { min-width: 0; }
 .roadmap-stages a { display: grid; gap: .25rem; min-height: 100%; padding: 1rem; border: 1px solid var(--roadmap-tone, var(--accent)); border-top: 5px solid var(--roadmap-tone, var(--accent)); border-radius: .75rem; background: var(--bg); color: var(--fg); text-decoration: none; box-shadow: 0 .3rem 0 color-mix(in srgb, var(--roadmap-tone, var(--accent)) 26%, transparent); }

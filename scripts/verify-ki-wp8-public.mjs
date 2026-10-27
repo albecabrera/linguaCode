@@ -15,18 +15,18 @@ assert.match(matches[0][2], /data-share="ki8\//);
 assert.match(catalog, /<article\b[^>]*class="course-featured"[^>]*>[\s\S]*?<h2>UV Künstliche Intelligenz<\/h2>/);
 const folder = new URL('../pages/ki8/', import.meta.url);
 const expectedFiles = [
-  'app.mjs', 'index.html', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18',
+  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
 assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="mission-list"/);
-assert.match(entry, /Öffentlicher Lernpfad · 18 Missionen/);
+assert.match(entry, /Öffentlicher Lernpfad · 19 Missionen/);
 assert.match(entry, /<button[^>]*data-theme-toggle[^>]*aria-pressed="false"[^>]*>[\s\S]*data-theme-icon/);
 assert.match(entry, /id="course-roadmap"/);
-assert.match(entry, /6 Module · 18 Missionen/);
+assert.match(entry, /6 Module · 19 Missionen/);
 for (const label of ['Grundlagen', 'Entscheidungsbäume', 'Muster erkennen', 'Chatbots', 'Kritisch &amp; verantwortlich']) assert.match(entry, new RegExp(`>${label}<`));
-for (const hour of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]) assert.match(entry, new RegExp(`href="\\./stunde-${hour}/"`));
+for (const hour of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]) assert.match(entry, new RegExp(`href="\\./stunde-${hour}/"`));
 assert.doesNotMatch(entry, /href="\.\/modul-\d+\.html#stunde-\d+"|id="modules"|id="beispielkarte"/);
 const catalogStyle = readFileSync(new URL('style.css', folder), 'utf8');
 const integrationStyle = readFileSync(new URL('mission/course-integration.css', folder), 'utf8');
@@ -86,8 +86,11 @@ assert.match(missionSeventeenRoute, /data-lesson-id="ki-17"/);
 assert.match(missionSeventeenRoute, /mission\.mjs/);
 const missionEighteenRoute = readFileSync(new URL('stunde-18/index.html', folder), 'utf8');
 assert.match(missionEighteenRoute, /data-lesson-id="ki-18"/);
+const missionNineteenRoute = readFileSync(new URL('stunde-19/index.html', folder), 'utf8');
+assert.match(missionNineteenRoute, /data-lesson-id="ki-19"/);
+assert.match(missionNineteenRoute, /mission\.mjs/);
 assert.match(missionEighteenRoute, /mission\.mjs/);
-const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, missionSevenRoute, missionEightRoute, missionNineRoute, missionTenRoute, missionElevenRoute, missionTwelveRoute, missionThirteenRoute, missionFourteenRoute, missionFifteenRoute, missionSixteenRoute, missionSeventeenRoute, missionEighteenRoute];
+const publicSources = [catalog, entry, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, missionSevenRoute, missionEightRoute, missionNineRoute, missionTenRoute, missionElevenRoute, missionTwelveRoute, missionThirteenRoute, missionFourteenRoute, missionFifteenRoute, missionSixteenRoute, missionSeventeenRoute, missionEighteenRoute, missionNineteenRoute];
 for (const source of publicSources) {
   assert.doesNotMatch(source, /(?:localStorage|sessionStorage|indexedDB|fetch\(|XMLHttpRequest|Lösung_02_TrainingEinesBaums|\.pdf|docs\/ki-wp8\/demo)/i);
 }
@@ -108,4 +111,4 @@ assert.equal(exerciseCards[cards.indexOf(matches[0])].hidden, false);
 assert.equal(exerciseCards[cards.findIndex(([, subject]) => subject === 'Spanisch')].hidden, true);
 buttons[0].click();
 assert.equal(exerciseCards.some(({hidden}) => hidden), false);
-console.log('PASS: public-only KI card, mission-only overview, 18 mission routes, local-only privacy rules and existing subject filter.');
+console.log('PASS: public-only KI card, mission-only overview, 19 mission routes, local-only privacy rules and existing subject filter.');

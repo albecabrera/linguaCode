@@ -7,12 +7,16 @@ import { createMissionRenderer, resolveMissionRoute } from '../pages/ki8/mission
 const html = fs.readFileSync(new URL('../pages/ki8/stunde-1/index.html', import.meta.url), 'utf8');
 const mission02Html = fs.readFileSync(new URL('../pages/ki8/stunde-2/index.html', import.meta.url), 'utf8');
 const mission03Html = fs.readFileSync(new URL('../pages/ki8/stunde-3/index.html', import.meta.url), 'utf8');
+const mission19Html = fs.readFileSync(new URL('../pages/ki8/stunde-19/index.html', import.meta.url), 'utf8');
 assert.match(html, /src="\.\.\/mission\/mission\.mjs"/);
 assert.match(html, /data-lesson-id="ki-01"/);
 assert.match(mission02Html, /src="\.\.\/mission\/mission\.mjs"/);
 assert.match(mission02Html, /data-lesson-id="ki-02"/);
 assert.match(mission03Html, /src="\.\.\/mission\/mission\.mjs"/);
 assert.match(mission03Html, /data-lesson-id="ki-03"/);
+assert.match(mission19Html, /src="\.\.\/mission\/mission\.mjs"/);
+assert.match(mission19Html, /data-lesson-id="ki-19"/);
+assert.deepEqual(resolveMissionRoute('/ki8/stunde-19/'), { path: '/ki8/stunde-19/', lessonId: 'ki-19', progressKey: 'ki-19' });
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-1/'), { path: '/ki8/stunde-1/', lessonId: 'ki-01', progressKey: 'ki-01' });
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-2/'), { path: '/ki8/stunde-2/', lessonId: 'ki-02', progressKey: 'ki-02' });
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-3/'), { path: '/ki8/stunde-3/', lessonId: 'ki-03', progressKey: 'ki-03' });
@@ -360,12 +364,13 @@ const mission16Memory = new Map([
 const mission16Storage = { getItem: (key) => mission16Memory.get(key) ?? null, setItem(key, value) { mission16Writes += 1; mission16Memory.set(key, value); }, removeItem: (key) => mission16Memory.delete(key) };
 createMissionRenderer({ root: mission16Root, lesson: getLesson('ki-16'), progressKey: 'ki-16', storage: mission16Storage });
 assert.equal(mission16Writes, 0, 'M16 sidebar reads must not write mission progress');
-assert.equal((mission16Root.innerHTML.match(/class="journey-link"/g) ?? []).length, 18, 'sidebar lists all 18 missions');
+assert.equal((mission16Root.innerHTML.match(/class="journey-link"/g) ?? []).length, 19, 'sidebar lists all 19 missions');
 assert.match(mission16Root.innerHTML, /href="\.\.\/stunde-1\/"[^>]*aria-label="Mission 01.*2 von 4 Phasen/);
 assert.match(mission16Root.innerHTML, /href="\.\.\/stunde-16\/"[^>]*aria-current="page"/);
 assert.match(mission16Root.innerHTML, /href="\.\.\/stunde-18\/"[^>]*aria-label="Mission 18.*5 von 5 Phasen/);
+assert.match(mission16Root.innerHTML, /href="\.\.\/stunde-19\/"[^>]*aria-label="Mission 19/);
 assert.match(mission16Root.innerHTML, /Mission 02.*Fortschritt nicht verfügbar/);
-assert.match(mission16Root.innerHTML, /1 von 17 lesbaren Missionen abgeschlossen/);
+assert.match(mission16Root.innerHTML, /1 von 18 lesbaren Missionen abgeschlossen/);
 assert.match(mission16Root.innerHTML, /Film: abgeschlossen/);
 assert.match(mission16Root.innerHTML, /KI-Labor: aktuell/);
 assert.match(mission16Root.innerHTML, /href="https:\/\/kultus\.hessen\.de\/video\/videoarchiv\/smartphones-und-datenschutz" target="_blank" rel="noopener noreferrer"/);
@@ -389,6 +394,15 @@ assert.equal((mission17Root.innerHTML.match(/data-phase-id="bias-example"/g) ?? 
 assert.equal((mission17Root.innerHTML.match(/data-advance="0"/g) ?? []).length, 1, 'M17 task+media phase must retain one advance control');
 assert.doesNotMatch(mission17Root.innerHTML, /<iframe/i, 'M17 media remains link-only');
 assert.match(mission17Root.innerHTML, /In der nächsten Mission prüfst du KI-Vorschläge, achtest auf Datenschutz und übernimmst Verantwortung für deine Entscheidung\./);
+
+const mission19Root = new FakeRoot();
+let mission19Writes = 0;
+const mission19Renderer = createMissionRenderer({ root: mission19Root, lesson: getLesson('ki-19'), progressKey: 'ki-19', storage: { getItem: () => null, setItem() { mission19Writes += 1; }, removeItem() {} } });
+assert.equal(mission19Writes, 0, 'M19 does not write progress on initial render');
+assert.match(mission19Root.innerHTML, /Mission 19 – KI-Projekt: Prüfen, gestalten und verantworten/);
+assert.match(mission19Root.innerHTML, /Daten und Test planen/);
+assert.match(mission19Root.innerHTML, /Projektidee formulieren/);
+assert.doesNotMatch(mission19Root.innerHTML, /<iframe/i, 'M19 remains link-only');
 
 const defaultHintRoot = new FakeRoot();
 createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });

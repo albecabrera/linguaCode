@@ -921,7 +921,42 @@ export const KI_MISSION_18 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16, 'ki-17': KI_MISSION_17, 'ki-18': KI_MISSION_18 });
+const KI_MISSION_19_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Was gehört zu einem verantwortungsvollen KI-Projekt?', choices: ['Nur eine überzeugende Demo.', 'Problem, Daten, Test, Grenzen und menschliche Verantwortung.', 'Eine möglichst große Menge persönlicher Daten.'], correctIndex: 1, explanation: 'Ein gutes Projekt beschreibt Zweck, Daten, Prüfung, Grenzen und Verantwortung.' },
+  { id: 'q2', prompt: 'Welche Datenregel passt zu unserem Projekt?', choices: ['Echte Namen und private Chats sammeln.', 'Nur notwendige, erfundene oder öffentliche Beispieldaten verwenden.', 'Daten ohne Prüfung aus beliebigen Quellen kopieren.'], correctIndex: 1, explanation: 'Für einen Lernprototyp reichen notwendige und erfundene Beispiele.' },
+  { id: 'q3', prompt: 'Wie prüfst du einen Prototyp?', choices: ['Nur ein bekanntes Beispiel zeigen.', 'Getrennte neue Testbeispiele nutzen und Fehler dokumentieren.', 'Das Testlabel ändern, wenn die Vorhersage nicht passt.'], correctIndex: 1, explanation: 'Neue, getrennte Beispiele machen Grenzen und Fehler sichtbar.' },
+  { id: 'q4', prompt: 'Was muss eine Projektpräsentation über Grenzen sagen?', choices: ['Dass das Modell immer richtig ist.', 'Bei welchen Beispielen es unsicher oder ungeeignet sein kann.', 'Dass Menschen keine Prüfung mehr brauchen.'], correctIndex: 1, explanation: 'Grenzen gehören ehrlich zur Erklärung eines Prototyps.' },
+  { id: 'q5', prompt: 'Wer entscheidet über den Einsatz des Prototyps?', choices: ['Das Modell allein.', 'Menschen prüfen den Zweck, die Risiken und entscheiden verantwortlich.', 'Die Person mit den meisten Testdaten.'], correctIndex: 1, explanation: 'Menschen bleiben für Zweck, Prüfung und Einsatz verantwortlich.' },
+]);
+
+export const KI_MISSION_19 = Object.freeze({
+  id: 'ki-19',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Abschlussprojekt', hour: 'Stunde 19', overviewHref: '../' },
+  title: 'Mission 19 – KI-Projekt: Prüfen, gestalten und verantworten',
+  description: 'Verbinde deine Erkenntnisse aus dem Kurs in einem kleinen, verantwortungsvollen KI-Projekt.',
+  duration: 45,
+  objectives: ['Du formulierst ein fiktives KI-Problem und einen überprüfbaren Zweck.', 'Du planst geeignete, datensparsame Beispiele und getrennte Tests.', 'Du erklärst Grenzen, Risiken und menschliche Verantwortung.'],
+  phases: [
+    { id: 'briefing', title: 'Projektauftrag verstehen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-project-plan' }] },
+    { id: 'design', title: 'Daten und Test planen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-data-test' }] },
+    { id: 'review', title: 'Risiken und Präsentation prüfen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-risk-check' }, { type: 'task', taskId: 'task-pitch' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_19_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_19_QUESTIONS },
+  ],
+  media: {},
+  contentBlocks: [{ type: 'intro', text: 'Entwirf einen kleinen Prototypen für ein fiktives Schulproblem. Beschreibe Zweck und Grenzen, nutze nur notwendige erfundene Beispiele, halte Testbeispiele getrennt und entscheide selbst, ob ein Einsatz verantwortbar wäre.' }, { type: 'reflection', id: 'project-reflection', prompt: 'Welche Erkenntnis aus dem Kurs schützt dein Projekt am stärksten?', examples: ['Getrennte Tests zeigen Fehler; Datenschutz, Fairness und menschliche Verantwortung bleiben wichtig.'] }],
+  tasks: [
+    { id: 'task-project-plan', type: 'open-response', title: 'Projektidee formulieren', prompt: 'Plane einen kleinen Prototypen für ein fiktives Schulproblem. Was soll er erkennen oder unterstützen, und was soll er ausdrücklich nicht entscheiden?', exampleAnswer: 'Mein Prototyp sortiert erfundene Lernkarten nach einem klaren Merkmal. Er unterstützt nur die Übung und entscheidet nicht über Personen, Noten oder Bildungswege.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-data-test', type: 'open-response', title: 'Daten und Test trennen', prompt: 'Welche erfundenen Trainingsbeispiele brauchst du, welche neuen Testbeispiele hältst du zurück und wie schützt du Privatsphäre?', exampleAnswer: 'Ich nutze vielfältige erfundene, gelabelte Trainingsbeispiele und halte neue erfundene Testbeispiele zurück. Echte Namen, Adressen und private Nachrichten verwende ich nicht.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-risk-check', type: 'open-response', title: 'Risiken und Grenzen prüfen', prompt: 'Nenne zwei mögliche Fehler oder Verzerrungen deines Prototyps und beschreibe, wie du sie beim Testen sichtbar machst.', exampleAnswer: 'Seltene Situationen oder einseitige Beispiele können zu Fehlern führen. Ich teste neue Varianten aus verschiedenen Gruppen, dokumentiere Fehlklassifikationen und ändere Testlabels nicht passend.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-pitch', type: 'open-response', title: 'Verantwortungsvoll präsentieren', prompt: 'Formuliere drei Sätze für eine Präsentation: Zweck, wichtigste Grenze und menschliche Verantwortung.', exampleAnswer: 'Der Prototyp unterstützt eine klar begrenzte Übung. Er kann bei neuen oder seltenen Beispielen irren und ist nicht für Entscheidungen über Menschen geeignet. Menschen prüfen die Ergebnisse und entscheiden über den Einsatz.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16, 'ki-17': KI_MISSION_17, 'ki-18': KI_MISSION_18, 'ki-19': KI_MISSION_19 });
 
 export function getLesson(id) {
   return LESSONS[id];

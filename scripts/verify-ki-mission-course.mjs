@@ -7,7 +7,7 @@ const html = fs.readFileSync(new URL('../pages/ki8/index.html', import.meta.url)
 assert.match(html, /href="\.\/stunde-1\/"/);
 assert.match(html, /id="course-progress"/);
 assert.match(html, /id="course-url"/);
-assert.match(html, /Öffentlicher Lernpfad · 18 Missionen/);
+assert.match(html, /Öffentlicher Lernpfad · 19 Missionen/);
 assert.match(html, /<a id="course-qr" class="course-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/"/);
 for (const mission of [1, 2, 3]) assert.match(html, new RegExp(`<a id="mission-0${mission}-qr" class="course-qr mission-qr" href="https://albecabrera\\.github\\.io/linguaCode/ki8/stunde-${mission}/"`));
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-4\/">/);
@@ -40,6 +40,11 @@ assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-17\/">/);
 assert.match(html, /<a id="mission-17-qr" class="course-qr mission-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/stunde-17\//);
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-18\/">/);
 assert.match(html, /<a id="mission-18-qr" class="course-qr mission-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/stunde-18\//);
+assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-19\/">/);
+assert.match(html, /<a id="mission-19-qr" class="course-qr mission-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/stunde-19\//);
+assert.deepEqual(resolveMissionRoute('/ki8/stunde-19/'), {path: '/ki8/stunde-19/', lessonId: 'ki-19', progressKey: 'ki-19'});
+const mission19Shell = fs.readFileSync(new URL('../pages/ki8/stunde-19/index.html', import.meta.url), 'utf8');
+assert.match(mission19Shell, /data-lesson-id="ki-19"/);
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-4/'), {path: '/ki8/stunde-4/', lessonId: 'ki-04', progressKey: 'ki-04'});
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-5/'), {path: '/ki8/stunde-5/', lessonId: 'ki-05', progressKey: 'ki-05'});
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-6/'), {path: '/ki8/stunde-6/', lessonId: 'ki-06', progressKey: 'ki-06'});
@@ -103,7 +108,7 @@ assert.doesNotMatch(html, /127\.0\.0\.1/);
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-3\/">/);
 assert.match(html, /<span>Mission 03 starten →<\/span>/);
 assert.match(html, /id="mission-list"/);
-assert.equal([...html.matchAll(/<article class="mission-panel">/g)].length, 18);
+assert.equal([...html.matchAll(/<article class="mission-panel[^"]*"/g)].length, 19);
 assert.match(html, /href="\.\/stunde-1\/"/);
 assert.match(html, /href="\.\/stunde-2\/"/);
 assert.match(html, /href="\.\/stunde-5\/"/);
@@ -184,4 +189,5 @@ for (const [index, url] of missionUrls.entries()) {
 if (originalStorage) Object.defineProperty(globalThis, 'localStorage', originalStorage); else delete globalThis.localStorage;
 if (originalNavigator) Object.defineProperty(globalThis, 'navigator', originalNavigator); else delete globalThis.navigator;
 
-console.log('PASS: mission-only overview, GitHub Pages link, QR payloads, progress fallback, 18 retained source hours, and threshold behavior.');
+assert.match(html, /Integrative Checkpoints/);
+console.log('PASS: mission-only overview, GitHub Pages link, QR payloads, progress fallback, 19 mission routes, and threshold behavior.');
