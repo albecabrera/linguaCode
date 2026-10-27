@@ -5,6 +5,7 @@ import {
   KI_MISSION_02,
   KI_MISSION_03,
   KI_MISSION_04,
+  KI_MISSION_05,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -83,7 +84,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -105,6 +106,26 @@ assert.match(KI_MISSION_04.tasks.find(({ id }) => id === 'task-error').exampleAn
 assert.deepEqual(KI_MISSION_04.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_04.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_04), true);
+assert.equal(getLesson('ki-05'), KI_MISSION_05);
+assert.equal(KI_MISSION_05.id, 'ki-05');
+assert.equal(KI_MISSION_05.title, 'Mission 05 – Vom Merkmal zur ersten Regel');
+assert.equal(KI_MISSION_05.duration, 45);
+assert.deepEqual(KI_MISSION_05.context, { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../modul-3.html#stunde-1' });
+assert.deepEqual(KI_MISSION_05.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_05.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_05.contentBlocks[0].text, /Merkmal.*30\s*%.*Ladepause.*weiterfahren.*7.*bereit/i);
+const batteryTask = KI_MISSION_05.tasks.find(({ id }) => id === 'task-battery');
+const scoreTask = KI_MISSION_05.tasks.find(({ id }) => id === 'task-score');
+assert.match(batteryTask.prompt, /≤\s*30\s*%/);
+assert.match(batteryTask.exampleAnswer, /30\s*%.*Ladepause.*31\s*%.*weiterfahren/i);
+assert.match(scoreTask.prompt, /≥\s*7/);
+assert.match(scoreTask.exampleAnswer, /6.*üben.*7.*bereit/i);
+assert.equal(KI_MISSION_05.media.infSchule.url, 'https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI');
+assert.equal(KI_MISSION_05.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_05.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_05.resourceNotes.material.license, 'not-stated');
+assert.equal(KI_MISSION_05.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_05), true);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [

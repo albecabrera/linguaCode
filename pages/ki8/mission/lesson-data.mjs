@@ -251,7 +251,53 @@ export const KI_MISSION_04 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04 });
+const KI_MISSION_05_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Was ist bei der fiktiven Lieferregel das Merkmal?', choices: ['Die Akkuladung in Prozent.', 'Das Label „Ladepause“.', 'Der Name des Roboters.'], correctIndex: 0, explanation: 'Die Akkuladung ist der beobachtete Wert und damit das Merkmal.' },
+  { id: 'q2', prompt: 'Welche Aussage ordnet die Labels richtig zu?', choices: ['„Ladepause“ und „weiterfahren“ sind Labels.', 'Die Zahl 30 ist immer das Label.', 'Der Robotername ist das Merkmal.'], correctIndex: 0, explanation: 'Labels sind die Kategorien, die einer Beobachtung zugeordnet werden.' },
+  { id: 'q3', prompt: 'Die Regel lautet: bis einschließlich 30 % → „Ladepause“, darüber → „weiterfahren“. Was gilt bei genau 30 %?', choices: ['Ladepause.', 'Weiterfahren.', 'Die Regel enthält für 30 % keine Entscheidung.'], correctIndex: 0, explanation: '„Bis einschließlich 30 %“ schließt den Grenzwert 30 % ein.' },
+  { id: 'q4', prompt: 'Eine Lernkarte mit Punktzahl 7 wird nach der Regel „ab 7 → bereit“ eingeordnet. Welches Label erhält sie?', choices: ['bereit', 'üben', 'kein Label'], correctIndex: 0, explanation: '„Ab 7“ bedeutet 7 oder mehr; deshalb erhält die Karte das Label „bereit“.' },
+  { id: 'q5', prompt: 'Was macht ein Schwellenwert in einer einfachen Regel?', choices: ['Er trennt Werte danach, welches Label sie erhalten.', 'Er beweist, dass jede Vorhersage immer stimmt.', 'Er löscht die beobachteten Merkmale.'], correctIndex: 0, explanation: 'Ein Schwellenwert legt fest, an welcher Grenze sich die zugeordnete Kategorie ändert.' },
+]);
+
+export const KI_MISSION_05 = Object.freeze({
+  id: 'ki-05',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../modul-3.html#stunde-1' },
+  title: 'Mission 05 – Vom Merkmal zur ersten Regel',
+  description: 'Verbinde ein beobachtetes Merkmal mit einem Label und untersuche, was genau an einem Schwellenwert gilt.',
+  duration: 45,
+  objectives: [
+    'Du unterscheidest das Merkmal von den Labels einer Regel.',
+    'Du wendest die Grenzen ≤30 % und ≥7 korrekt an.',
+  ],
+  phases: [
+    { id: 'thresholds', title: 'Schwellenwerte entdecken', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'feature-and-label', title: 'Merkmal und Labels unterscheiden', minutes: 10, blocks: [{ type: 'task', taskId: 'task-feature' }] },
+    { id: 'apply-rules', title: 'Grenzwerte anwenden', minutes: 19, blocks: [{ type: 'task', taskId: 'task-battery' }, { type: 'task', taskId: 'task-score' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_05_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_05_QUESTIONS },
+  ],
+  media: {
+    infSchule: { url: 'https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI', kind: 'official-learning-sequence', title: 'Entscheide wie eine KI', provider: 'inf-schule', observation: 'Die Lernstrecke behandelt überwachtes Lernen, Schwellenwerte und Entscheidungsbäume. Nutze die Abschnitte zu Merkmalen und Regeln.', checkboxLabel: 'Ich habe die Lernstrecke angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Für diese Stunde wurde kein spezifisches Video bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die inf-schule-Lernstrecke zu Merkmalen, Schwellenwerten und Entscheidungsbäumen ist verlinkt. Zieljahrgang und Lizenz sind auf der geprüften Seite nicht angegeben.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Ein Merkmal ist ein beobachteter Wert; ein Label ist die zugeordnete Kategorie. Bei einer fiktiven Lieferregel gilt bis einschließlich 30 % „Ladepause“ und darüber „weiterfahren“. Bei Lernkarten bedeutet eine Punktzahl ab 7 das Label „bereit“; darunter heißt es „üben“. Die Grenzwerte selbst gehören also jeweils zu „Ladepause“ und „bereit“.' },
+    { type: 'reflection', id: 'boundary-reflection', prompt: 'Warum sind die Wörter „bis einschließlich“ und „ab“ wichtig?', examples: ['Sie zeigen, ob der Grenzwert selbst noch zur Kategorie gehört.', 'Genau 30 % ist noch „Ladepause“; genau 7 ist schon „bereit“.'] },
+  ],
+  tasks: [
+    { id: 'task-feature', type: 'open-response', title: 'Merkmal oder Label?', prompt: 'Eine fiktive Lieferregel nutzt die Akkuladung in Prozent. Bis einschließlich 30 % lautet das Label „Ladepause“, darüber „weiterfahren“. Was ist das Merkmal und was sind die Labels?', exampleAnswer: 'Das Merkmal ist die Akkuladung in Prozent. „Ladepause“ und „weiterfahren“ sind die Labels.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-battery', type: 'open-response', title: 'Grenzwert bei der Akkuladung', prompt: 'Die Regel lautet: Akkuladung ≤ 30 % → „Ladepause“, darüber → „weiterfahren“. Welches Label erhält ein Roboter bei genau 30 % und welches bei 31 %?', exampleAnswer: 'Bei 30 % gilt „Ladepause“, weil ≤ den Grenzwert einschließt. Bei 31 % gilt „weiterfahren“, weil der Wert über 30 % liegt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-score', type: 'open-response', title: 'Grenzwert bei Lernkarten', prompt: 'Eine Karte erhält ab einer Punktzahl ≥ 7 das Label „bereit“, darunter „üben“. Welches Label erhalten die Punktzahlen 6 und 7?', exampleAnswer: 'Bei 6 heißt das Label „üben“. Bei 7 heißt es „bereit“, weil ≥ den Grenzwert einschließt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05 });
 
 export function getLesson(id) {
   return LESSONS[id];
