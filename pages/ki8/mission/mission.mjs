@@ -41,6 +41,47 @@ function isPlainObject(value) { return value !== null && typeof value === 'objec
 function isValidFruitState(value) { return isPlainObject(value) && (value.selectedExample === null || value.selectedExample === 'banana' || value.selectedExample === 'apple') && typeof value.shapeRuleEnabled === 'boolean' && typeof value.examplesApplied === 'boolean' && (value.reflectionAnswer === null || ['A', 'B', 'C'].includes(value.reflectionAnswer)) && typeof value.optionalText === 'string' && value.optionalText.length <= 500; }
 function isValidMissionState(value, phaseCount) { return isPlainObject(value) && Number.isInteger(value.phase) && value.phase >= 0 && value.phase < phaseCount && isPlainObject(value.answers) && Object.values(value.answers).every((answer) => typeof answer === 'string' || typeof answer === 'boolean' || (isPlainObject(answer) && Object.values(answer).every((part) => typeof part === 'string'))) && isValidFruitState(value.fruit) && Array.isArray(value.quizAnswers) && value.quizAnswers.every((answer) => answer === null || (Number.isInteger(answer) && answer >= 0 && answer <= 2)) && typeof value.quizSubmitted === 'boolean' && (value.completed === undefined || typeof value.completed === 'boolean'); }
 
+function readJourneyState(route, activeLesson, activeState, storage) {
+  const lesson = getLesson(route.lessonId);
+  if (!lesson) return { lesson: undefined, state: undefined, available: false };
+  if (route.lessonId === activeLesson.id) return { lesson, state: activeState, available: true };
+  const loaded = createProgressStore(storage, progressKeyForLesson(route.progressKey)).load();
+  if (loaded.status !== 'success') return { lesson, state: undefined, available: false };
+  const state = loaded.state ?? DEFAULT_STATE();
+  if (!isValidMissionState(state, lesson.phases.length)) return { lesson, state: undefined, available: false };
+  return { lesson, state: { ...state, completed: state.completed === true }, available: true };
+}
+
+function renderJourneySidebar(activeLesson, activeState, storage) {
+  if (!MISSION_ROUTES.some((route) => route.lessonId === activeLesson.id)) return '';
+  const snapshots = MISSION_ROUTES.map((route) => ({ route, snapshot: readJourneyState(route, activeLesson, activeState, storage) }));
+  const items = snapshots.map(({ route, snapshot }, routeIndex) => {
+    if (!snapshot.lesson) return '';
+    const { lesson, state, available } = snapshot;
+    const phaseCount = lesson.phases.length;
+    const completedCount = available ? (state.completed ? phaseCount : state.phase) : 0;
+    const missionNumber = String(routeIndex + 1).padStart(2, '0');
+    const current = route.lessonId === activeLesson.id;
+    const label = available ? `${completedCount} von ${phaseCount} Phasen abgeschlossen` : 'Fortschritt nicht verfügbar';
+    const phaseProgress = available ? `<progress max="${phaseCount}" value="${completedCount}" aria-label="${esc(`${lesson.title}: ${label}`)}">${completedCount}/${phaseCount}</progress>` : '<span class="journey-progress-unavailable">Fortschritt nicht verfügbar</span>';
+    const name = lesson.title.replace(/^Mission \d+\s*[–-]\s*/, '');
+    const phaseMarkers = lesson.phases.map((phase, phaseIndex) => {
+      const done = available && phaseIndex < completedCount;
+      const active = available && !state.completed && phaseIndex === state.phase;
+      const marker = !available ? '?' : done ? '✓' : active ? '•' : String(phaseIndex + 1);
+      const phaseLabel = !available ? `${phase.title}: Fortschritt nicht verfügbar` : `${phase.title}: ${done ? 'abgeschlossen' : active ? 'aktuell' : 'offen'}`;
+      return `<span class="journey-phase ${done ? 'is-complete' : active ? 'is-current' : available ? 'is-open' : 'is-unknown'}" role="img" aria-label="${esc(phaseLabel)}" title="${esc(phaseLabel)}">${marker}</span>`;
+    }).join('');
+    return `<li class="journey-item ${current ? 'is-current' : ''} ${available && state.completed ? 'is-complete' : ''}" data-journey-lesson="${esc(route.lessonId)}"><a class="journey-link" href="../${esc(route.path.split('/').filter(Boolean).at(-1))}/" ${current ? 'aria-current="page"' : ''} aria-label="${esc(`${lesson.title}: ${label}`)}"><span class="journey-index">${missionNumber}</span><span class="journey-copy"><strong>${esc(name)}</strong><span class="journey-progress-label">${esc(label)}</span>${phaseProgress}</span></a><div class="journey-phase-list" role="group" aria-label="${esc(`${lesson.title}: Phasenstatus`)}">${phaseMarkers}</div></li>`;
+  }).join('');
+  const availableMissions = snapshots.filter(({ snapshot }) => snapshot.available).length;
+  const completedMissions = snapshots.filter(({ snapshot }) => snapshot.available && snapshot.state.completed).length;
+  const unavailableMissions = snapshots.length - availableMissions;
+  const completedSummary = `${completedMissions} von ${availableMissions} lesbaren Missionen abgeschlossen`;
+  const unavailableSummary = unavailableMissions ? `<p class="journey-unavailable" role="status">Fortschritt für ${unavailableMissions} Missionen nicht verfügbar.</p>` : '';
+  return `<aside class="journey-sidebar" aria-label="Missionsfortschritt"><details open><summary class="journey-summary"><span class="eyebrow">Lernpfad</span><strong>Alle 18 Missionen</strong><span>${esc(completedSummary)}</span><progress max="${availableMissions}" value="${completedMissions}" aria-label="${esc(completedSummary)}">${completedMissions}/${availableMissions}</progress>${unavailableSummary}</summary><nav class="journey-nav" aria-label="Alle Missionen"><ol>${items}</ol></nav><p class="journey-privacy">Der Fortschritt wird nur lokal in diesem Browser gelesen.</p></details></aside>`;
+}
+
 export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progressKey = lesson?.id, storage = browserStorage(), themeController = createThemeController() } = {}) {
   if (!root || !lesson) throw new TypeError('Mission root and lesson are required.');
   const store = createProgressStore(storage, progressKeyForLesson(progressKey));
@@ -78,6 +119,8 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
     const contextLink = context.overviewHref ? `<a class="text-link" href="${esc(context.overviewHref)}">Zur Missionsübersicht</a>` : '';
     const progress = state.completed ? 100 : Math.round((state.phase / phaseCount) * 100);
     root.innerHTML = `<div class="mission-shell">
+      ${renderJourneySidebar(lesson, state, storage)}
+      <div class="mission-content" id="mission-content">
       <header class="mission-hero"><div class="hero-layout"><div><div class="hero-heading"><p class="eyebrow">${esc(lesson.module)}${contextLabel ? ` · ${esc(contextLabel)}` : ''}</p><button type="button" class="theme-toggle" data-theme-toggle aria-label="Dunkelmodus" aria-pressed="${themeController.getTheme() === 'dark'}">Dunkelmodus</button></div><h1>${esc(lesson.title)}</h1></div><svg class="ai-illustration" viewBox="0 0 180 140" aria-hidden="true" focusable="false"><rect x="35" y="30" width="110" height="80" rx="22" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="70" cy="66" r="8" fill="currentColor"/><circle cx="110" cy="66" r="8" fill="currentColor"/><path d="M65 88 Q90 105 115 88 M90 30 V14 M82 14 H98" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path class="ai-spark" d="M20 20 L24 30 L34 34 L24 38 L20 48 L16 38 L6 34 L16 30 Z" fill="var(--gold)"/></svg></div><p>${esc(lesson.description)}</p><p><a class="button-link" href="#phase-${esc(lesson.phases[0]?.id ?? '')}">Mission starten</a> ${contextLink}</p><p class="privacy-note"><strong>Nur auf diesem Gerät:</strong> Antworten bleiben lokal im Browser. Auf gemeinsam genutzten Geräten können andere Nutzerinnen und Nutzer dieselben Daten sehen; im Privatmodus können Daten fehlen. Beim Löschen der Browserdaten oder Gerätewechsel gehen sie verloren.</p></header>
       <div class="progress-summary"><div class="progress-label"><strong>Missionsfortschritt</strong><span>${progress}% · Phase ${state.phase + 1} von ${phaseCount}</span></div><progress max="100" value="${progress}">${progress}%</progress></div>
       <div class="storage-status" role="status" aria-live="polite">${esc(storageMessage)}</div>
@@ -85,6 +128,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
       <main>${lesson.phases.map((phase, index) => renderPhase(phase, index)).join('')}</main>
       <aside class="next-hint"><strong>Nächster Schritt:</strong> ${esc(lesson.nextHint ?? 'In der nächsten Stunde untersuchen wir genauer, wie Trainingsdaten und Merkmale Modelle beeinflussen.')}</aside>
       <footer class="mission-footer"><button type="button" class="secondary" data-reset>Mission zurücksetzen</button><p>Beim Zurücksetzen werden nur die lokalen Daten dieser Mission gelöscht.</p></footer>
+      </div>
     </div>`;
     bind();
   }

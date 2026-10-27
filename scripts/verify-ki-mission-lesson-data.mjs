@@ -531,12 +531,19 @@ const privacySafeQuestionTask = KI_MISSION_16.tasks.find(({ id }) => id === 'tas
 assert.match(privacySafeQuestionTask.prompt, /fiktiv.*persönliche.*ohne.*identifizierende Angaben/i);
 assert.match(privacySafeQuestionTask.exampleAnswer, /Namen.*Schule.*allgemein.*anonymisiert/i);
 assert.equal(KI_MISSION_16.progress.localOnly, true);
-assert.deepEqual(KI_MISSION_16.media, {});
-assert.equal(KI_MISSION_16.resourceNotes.video.status, 'unconfirmed');
-assert.match(KI_MISSION_16.resourceNotes.video.text, /Datenschutz-Grundverordnung.*lang=de.*gesprochene Audiosprache.*nicht verifiziert.*kein Video zugewiesen/i);
-assert.equal(KI_MISSION_16.resourceNotes.material.status, 'unconfirmed');
-assert.equal(KI_MISSION_16.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_16.media.video.url, 'https://kultus.hessen.de/video/videoarchiv/smartphones-und-datenschutz');
+assert.equal(KI_MISSION_16.media.video.title, 'Smartphones und Datenschutz');
+assert.equal(KI_MISSION_16.media.video.duration, '4 Minuten 17 Sekunden');
+assert.equal(KI_MISSION_16.media.video.language, 'not-verified');
+assert.equal(KI_MISSION_16.media.video.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_16.media.video.license, 'not-stated');
+assert.deepEqual(KI_MISSION_16.phases[0].blocks, [{ type: 'media', mediaId: 'video' }, { type: 'task', taskId: 'task-data-minimization' }]);
+assert.equal(KI_MISSION_16.resourceNotes.video.status, 'user-selected-limited-fit');
+assert.match(KI_MISSION_16.resourceNotes.video.text, /Datensparsamkeit.*Klassenstufe.*gesprochene Audiosprache.*nicht.*verifiziert/i);
+assert.equal(KI_MISSION_16.resourceNotes.material.status, 'related-resource-not-linked');
+assert.equal(KI_MISSION_16.resourceNotes.material.targetGrade, 'ab Klassenstufe 8');
 assert.equal(KI_MISSION_16.resourceNotes.material.license, 'not-stated');
+assert.match(KI_MISSION_16.resourceNotes.material.text, /App Camps.*digitalen Spuren.*Datenschutz/i);
 assert.equal(KI_MISSION_16.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_16), true);
 

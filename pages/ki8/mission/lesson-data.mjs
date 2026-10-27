@@ -799,15 +799,17 @@ export const KI_MISSION_16 = Object.freeze({
     'Du formulierst Fragen mit erfundenen oder anonymisierten Beispielen und lässt identifizierende Angaben weg.',
   ],
   phases: [
-    { id: 'notice', title: 'Persönliche Angaben erkennen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-data-minimization' }] },
+    { id: 'notice', title: 'Persönliche Angaben erkennen', minutes: 10, blocks: [{ type: 'media', mediaId: 'video' }, { type: 'task', taskId: 'task-data-minimization' }] },
     { id: 'reduce', title: 'Notwendige Daten auswählen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-necessary-data' }] },
     { id: 'practice', title: 'Eine sichere Frage formulieren', minutes: 19, blocks: [{ type: 'task', taskId: 'task-safe-ai-question' }] },
     { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_16_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_16_QUESTIONS },
   ],
-  media: {},
+  media: {
+    video: { url: 'https://kultus.hessen.de/video/videoarchiv/smartphones-und-datenschutz', kind: 'educational-video', title: 'Smartphones und Datenschutz', provider: 'Hessen Kultus · Initiative „Datenschutz geht zur Schule“', linkLabel: 'Video ansehen: Smartphones und Datenschutz (4:17 Min.) ↗', duration: '4 Minuten 17 Sekunden', language: 'not-verified', targetGrade: 'not-stated', license: 'not-stated', observation: 'Die Quelle beschreibt Datenverarbeitung beim Smartphone und Datensparsamkeit. Die Klassenstufe und die gesprochene Audiosprache sind nicht verifiziert; das Video behandelt Datenschutz allgemein, nicht speziell KI-Eingaben.' },
+  },
   resourceNotes: {
-    video: { status: 'unconfirmed', text: 'Möglicher Kandidat ist das EU-Learning-Corner-Video „Datenschutz-Grundverordnung“ (für 12–15-Jährige), eingebettet mit der Spracheinstellung lang=de. Die deutsche Seitensprache bestätigt jedoch nicht die gesprochene Audiosprache; der Council-Player stellt eine einzelne MP4-Datei ohne Textspur bereit. Deutsches Audio wurde nicht verifiziert, daher ist kein Video zugewiesen. Der Inhalt behandelt Datenschutz allgemein und nicht gezielt Datenminimierung; die Seite untersagt das Bearbeiten oder Wiederverwenden von Videoteilen wegen Drittmaterial.' },
-    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Kein direkt passendes externes Material für diese Datenschutzübung wurde bestätigt. Altersangemessenheit und Lizenz sind nicht verifiziert; die Stunde verwendet deshalb erfundene Beispiele.' },
+    video: { status: 'user-selected-limited-fit', text: 'Auf Wunsch der Nutzerin/des Nutzers als link-only Begleiter ergänzt: Hessen Kultus beschreibt das 4:17-minütige Video als Beispiel dafür, welche Daten ein Smartphone verarbeitet und wie man Datensparsamkeit praktiziert. Die Quelle nennt keine Klassenstufe; die gesprochene Audiosprache wurde nicht direkt verifiziert. Der Clip behandelt Datenschutz allgemein, nicht speziell das Eingeben von Daten in KI-Werkzeuge. Lizenz- und Wiederverwendungsrechte sind nicht angegeben; nur zur Originalquelle verlinken.' },
+    material: { status: 'related-resource-not-linked', targetGrade: 'ab Klassenstufe 8', license: 'not-stated', text: 'App Camps „Rund um Daten“ ist ab Klassenstufe 8 empfohlen und bietet Unterrichtsmaterial zu digitalen Spuren, Datennutzung und Datenschutz. Es ist ergänzendes Material, keine bestätigte spezifische Videoquelle für M16; Inhalte wurden nicht kopiert.' },
   },
   contentBlocks: [
     { type: 'intro', text: 'Gib einem KI-Werkzeug nur Informationen, die für die Aufgabe wirklich nötig sind. Namen, Adressen und private Chats sind häufig überflüssig. Übe mit erfundenen oder anonymisierten Beispielen und frage allgemein, ohne identifizierende Angaben preiszugeben.' },
