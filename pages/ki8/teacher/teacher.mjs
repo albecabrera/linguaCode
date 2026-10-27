@@ -132,6 +132,31 @@ export function buildExportData(progress) {
   };
 }
 
+export function buildPartialExportData(progress) {
+  return {...buildExportData(progress), scope: 'filtered'};
+}
+
+export function filterTeacherProgress(progress, {module = '', checkpoint = ''} = {}) {
+  const moduleIds = new Set(COURSE_CATALOG.filter((card) => !module || card.module === module).map(({id}) => id));
+  const checkpointIds = checkpoint ? new Set(CHECKPOINTS.find(({id}) => id === checkpoint)?.missionIds ?? []) : null;
+  return progress.filter(({mission}) => moduleIds.has(mission) && (!checkpointIds || checkpointIds.has(mission)));
+}
+
+export function resetMissionProgress(storage, mission) {
+  if (!MISSION_KEYS.includes(mission)) return {status: 'rejected', reason: 'unknown-mission'};
+  return createProgressStore(storage, mission).reset();
+}
+
+export function resetEvaluation(storage) {
+  if (!storage?.removeItem) return {status: 'unavailable', reason: 'storage-error'};
+  try { storage.removeItem(TEACHER_EVALUATION_KEY); return {status: 'success'}; } catch { return {status: 'unavailable', reason: 'storage-error'}; }
+}
+
+export function resetAllLearnerProgress(storage) {
+  const results = MISSION_KEYS.map((mission) => resetMissionProgress(storage, mission));
+  return results.every(({status}) => status === 'success') ? {status: 'success', count: results.length} : {status: 'unavailable', reason: 'storage-error'};
+}
+
 export function toCsv(progress) {
   return [
     columns.map(([, label]) => label).join(','),
@@ -183,7 +208,17 @@ export function createTeacherView({ documentLike = globalThis.document, storage 
   const csvButton = documentLike?.querySelector('#export-csv');
   const printButton = documentLike?.querySelector('#print-view');
   const evaluationButton = documentLike?.querySelector('#export-evaluation');
+  const partialButton = documentLike?.querySelector('#export-partial');
+  const partialEvaluationButton = documentLike?.querySelector('#export-partial-evaluation');
+  const moduleFilter = documentLike?.querySelector('#module-filter');
+  const checkpointFilter = documentLike?.querySelector('#checkpoint-filter');
   const evaluationForm = documentLike?.querySelector('#evaluation-form');
+  const resetResult = documentLike?.querySelector('#reset-result');
+  const resetMissionSelect = documentLike?.querySelector('#reset-mission');
+  const resetMissionButton = documentLike?.querySelector('#reset-mission-button');
+  const resetEvaluationButton = documentLike?.querySelector('#reset-evaluation');
+  const resetAllButton = documentLike?.querySelector('#reset-all-progress');
+  if (resetMissionSelect) resetMissionSelect.innerHTML = MISSION_KEYS.map((mission) => `<option value="${mission}">${mission}</option>`).join('');
   evaluationForm?.addEventListener('change', (event = {}) => {
     const current = readTeacherEvaluation(storage);
     const module = event.target?.dataset?.module ?? event.target?.dataset?.scoreModule;
@@ -194,11 +229,26 @@ export function createTeacherView({ documentLike = globalThis.document, storage 
     current[module] = entry;
     saveTeacherEvaluation(storage, current);
   });
+  let filters = {module: '', checkpoint: ''};
+  const filteredProgress = () => filterTeacherProgress(progress, filters);
+  const applyFilters = () => {
+    const visible = filteredProgress();
+    renderTable(documentLike, visible);
+    renderSummary(documentLike, buildTeacherSummary(visible));
+  };
+  moduleFilter?.addEventListener('change', () => { filters.module = moduleFilter.value; applyFilters(); });
+  checkpointFilter?.addEventListener('change', () => { filters.checkpoint = checkpointFilter.value; applyFilters(); });
   jsonButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildExportData(progress), null, 2), 'ki-teacher-progress.json', 'application/json'));
   csvButton?.addEventListener('click', () => download(windowLike, toCsv(progress), 'ki-teacher-progress.csv', 'text/csv;charset=utf-8'));
+  partialButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildPartialExportData(filteredProgress()), null, 2), 'ki-teacher-progress-teil.json', 'application/json'));
+  partialEvaluationButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildEvaluationExport(buildTeacherSummary(filteredProgress()), readTeacherEvaluation(storage)), null, 2), 'ki-teacher-evaluation-teil.json', 'application/json'));
   evaluationButton?.addEventListener('click', () => download(windowLike, JSON.stringify(buildEvaluationExport(summary, readTeacherEvaluation(storage)), null, 2), 'ki-teacher-evaluation.json', 'application/json'));
+  const confirmAction = (message, action, successMessage) => { if (!windowLike.confirm?.(message)) return; const result = action(); if (resetResult) resetResult.textContent = result.status === 'success' ? successMessage : 'Zurücksetzen nicht möglich.'; };
+  resetMissionButton?.addEventListener('click', () => confirmAction('Mission wirklich zurücksetzen?', () => resetMissionProgress(storage, resetMissionSelect?.value), 'Mission zurückgesetzt.'));
+  resetEvaluationButton?.addEventListener('click', () => confirmAction('Bewertungsrubrik wirklich zurücksetzen?', () => resetEvaluation(storage), 'Bewertung zurückgesetzt.'));
+  resetAllButton?.addEventListener('click', () => confirmAction('Alle Lernfortschritte wirklich zurücksetzen?', () => resetAllLearnerProgress(storage), 'Alle Lernfortschritte zurückgesetzt.'));
   printButton?.addEventListener('click', () => windowLike.print?.());
-  return { progress, summary, evaluation: readTeacherEvaluation(storage) };
+  return { progress, summary, evaluation: readTeacherEvaluation(storage), filter: () => filterTeacherProgress(progress, filters) };
 }
 
 if (typeof document !== 'undefined') createTeacherView();

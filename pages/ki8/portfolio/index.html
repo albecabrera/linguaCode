@@ -22,7 +22,8 @@
     </section>
     <section aria-labelledby="portfolio-title">
       <h2 id="portfolio-title">Fortschritt</h2>
-      <div class="export-controls" role="group" aria-label="Portfolio exportieren"><button type="button" data-export-json>JSON exportieren</button><button type="button" data-export-markdown>Markdown exportieren</button></div>
+      <div class="export-controls" role="group" aria-label="Portfolio exportieren"><button type="button" data-export-json>JSON exportieren</button><button type="button" data-export-markdown>Markdown exportieren</button><label class="import-control">Portfolio importieren<input type="file" accept="application/json,.json" data-import-portfolio></label></div>
+      <p data-import-result role="status" aria-live="polite"></p>
       <div data-portfolio-table></div>
     </section>
     <section aria-labelledby="checkpoint-title" class="checkpoint-panel">

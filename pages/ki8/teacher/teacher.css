@@ -4,7 +4,11 @@ body { margin: 0; }
 .eyebrow { color: #155b8b; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 h1 { margin-block: .25rem 1rem; }
 .privacy { padding: 1rem; border: 2px solid #155b8b; background: #e8f3fb; }
-.actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem 2rem; }
+.actions, .filters { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem 2rem; }
+.filters label, .reset-panel label { display: grid; gap: .25rem; font-weight: 700; }
+select { min-height: 2.5rem; padding: .4rem; font: inherit; }
+.reset-panel { margin-block: 2rem; padding: 1rem; border: 2px solid #155b8b; background: white; }
+.reset-panel button { margin: .35rem .35rem .35rem 0; }
 button { padding: .7rem 1rem; border: 1px solid #155b8b; border-radius: .35rem; color: white; background: #155b8b; font: inherit; cursor: pointer; }
 table { width: 100%; border-collapse: collapse; background: white; }
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem; margin-block: 1rem 2rem; }

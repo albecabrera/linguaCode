@@ -16,15 +16,30 @@
     <section aria-labelledby="actions-title">
       <h2 id="actions-title">Ansicht und Export</h2>
       <p>Die Aktionen starten erst nach deinem Klick und enthalten nur Missionsstatus, Phasen und Abschlussmarkierungen.</p>
+      <div class="filters" aria-label="Lehrfilter">
+        <label for="module-filter">Modulfilter<select id="module-filter"><option value="">Alle sechs Module</option><option>Grundlagen</option><option>Entscheidungsbäume</option><option>Muster erkennen</option><option>Chatbots</option><option>Kritisch &amp; verantwortlich</option><option>Abschlussprojekt</option></select></label>
+        <label for="checkpoint-filter">Checkpointfilter<select id="checkpoint-filter"><option value="">Alle drei Checkpoints</option><option value="checkpoint-1">Checkpoint 1</option><option value="checkpoint-2">Checkpoint 2</option><option value="checkpoint-3">Checkpoint 3</option></select></label>
+      </div>
       <div class="actions">
         <button id="export-json" type="button">JSON exportieren</button>
         <button id="export-csv" type="button">CSV exportieren</button>
+        <button id="export-partial" type="button">Teilfortschritt exportieren</button>
+        <button id="export-partial-evaluation" type="button">Teilbewertung exportieren</button>
         <button id="print-view" type="button">Druckansicht öffnen</button>
         <button id="export-evaluation" type="button">Bewertung exportieren</button>
       </div>
     </section>
     <section id="summary-table" aria-live="polite"></section>
     <section id="progress-table" aria-live="polite"><h2>Missionsdetails</h2></section>
+    <section aria-labelledby="reset-title" class="reset-panel">
+      <h2 id="reset-title">Lokales Zurücksetzen</h2>
+      <p>Jede Löschung braucht eine ausdrückliche Bestätigung. Die Lehrbewertung und der Lernfortschritt bleiben getrennt.</p>
+      <label for="reset-mission">Mission zurücksetzen<select id="reset-mission"><option value="">Mission auswählen</option></select></label>
+      <button id="reset-mission-button" type="button">Mission zurücksetzen</button>
+      <button id="reset-evaluation" type="button">Bewertungsrubrik zurücksetzen</button>
+      <button id="reset-all-progress" type="button">Alle Lernfortschritte zurücksetzen</button>
+      <p id="reset-result" role="status" aria-live="polite"></p>
+    </section>
     <section id="evaluation-mode" aria-labelledby="evaluation-title">
       <h2 id="evaluation-title">Lokale Bewertung</h2>
       <p>Bewerte nur auf Modulebene mit Kriterien und einem Score. Die Eingaben bleiben lokal auf diesem Gerät.</p>
