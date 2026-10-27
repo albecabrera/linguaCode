@@ -15,7 +15,7 @@ assert.match(matches[0][2], /data-share="ki8\//);
 assert.match(catalog, /<article\b[^>]*class="course-featured"[^>]*>[\s\S]*?<h2>UV Künstliche Intelligenz<\/h2>/);
 const folder = new URL('../pages/ki8/', import.meta.url);
 const expectedFiles = [
-  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'mission', 'presentation.mjs', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
+  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'mission', 'portfolio', 'presentation.mjs', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
@@ -87,6 +87,12 @@ assert.match(missionSeventeenRoute, /mission\.mjs/);
 const missionEighteenRoute = readFileSync(new URL('stunde-18/index.html', folder), 'utf8');
 assert.match(missionEighteenRoute, /data-lesson-id="ki-18"/);
 const missionNineteenRoute = readFileSync(new URL('stunde-19/index.html', folder), 'utf8');
+const portfolioRoute = readFileSync(new URL('portfolio/index.html', folder), 'utf8');
+const portfolioSource = readFileSync(new URL('portfolio/portfolio.mjs', folder), 'utf8');
+assert.match(portfolioRoute, /portfolio\.mjs/);
+assert.match(portfolioRoute, /JSON exportieren/);
+assert.match(portfolioRoute, /Markdown exportieren/);
+assert.doesNotMatch(portfolioSource, /fetch\(|XMLHttpRequest|sendBeacon/);
 assert.match(missionNineteenRoute, /data-lesson-id="ki-19"/);
 assert.match(missionNineteenRoute, /mission\.mjs/);
 assert.match(missionEighteenRoute, /mission\.mjs/);

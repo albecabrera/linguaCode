@@ -81,6 +81,7 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 .dashboard-grid h3 { margin-top: 0; }
 .dashboard-grid [data-dashboard-modules] p { display: flex; justify-content: space-between; gap: 1rem; margin: .5rem 0; }
 .mission-details { margin: .75rem 0; padding: .8rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--bg); }
+.mission-sequence, .sequence-guidance { margin: .75rem 0; padding: .7rem; border-left: 4px solid var(--accent); background: var(--surface); }
 .mission-detail-status { margin: 0 0 .5rem; font-weight: 800; }
 .mission-detail-list { margin: 0; }
 .mission-detail-list > div { margin-top: .5rem; }

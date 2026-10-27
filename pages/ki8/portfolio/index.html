@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mein lokales Lernportfolio · LinguaCode</title>
+  <link rel="stylesheet" href="./portfolio.css">
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt springen</a>
+  <header><a href="../">Lingua<span>Code</span></a><span>Informatik · WP 8</span><div class="header-controls"><button type="button" class="theme-toggle" data-theme-toggle aria-label="Dunkelmodus aktivieren" title="Dunkelmodus aktivieren" aria-pressed="false"><span data-theme-icon aria-hidden="true">☾</span><span class="sr-only" data-theme-label>Dunkelmodus aktivieren</span></button><button type="button" class="presentation-toggle" data-presentation-toggle aria-label="Smartboard-Modus aktivieren" title="Smartboard-Modus aktivieren" aria-pressed="false">Smartboard-Modus aktivieren</button></div></header>
+  <main id="main">
+    <section class="hero">
+      <p class="eyebrow">Lokales Lernportfolio</p>
+      <h1>Mein Lernportfolio</h1>
+      <p>Hier siehst du ausschließlich deinen lokalen Fortschritt: Mission, Status, Phase, Abschluss und Checkpoints. Es werden keine Inhalte deiner Bearbeitung übernommen.</p>
+      <p class="notice"><strong>Nur auf diesem Gerät:</strong> Die Ansicht liest vorhandene Browserdaten und sendet nichts an einen Server.</p>
+    </section>
+    <section aria-labelledby="sequence-title" class="sequence-panel">
+      <h2 id="sequence-title">Nächster Schritt</h2>
+      <div data-sequence-guidance></div>
+    </section>
+    <section aria-labelledby="portfolio-title">
+      <h2 id="portfolio-title">Fortschritt</h2>
+      <div class="export-controls" role="group" aria-label="Portfolio exportieren"><button type="button" data-export-json>JSON exportieren</button><button type="button" data-export-markdown>Markdown exportieren</button></div>
+      <div data-portfolio-table></div>
+    </section>
+    <section aria-labelledby="checkpoint-title" class="checkpoint-panel">
+      <h2 id="checkpoint-title">Checkpoint-Status</h2>
+      <div data-checkpoint-status></div>
+    </section>
+    <p><a class="mission-cta" href="../">Zur KI-Übersicht</a></p>
+  </main>
+  <script type="module" src="./portfolio.mjs"></script>
+</body>
+</html>

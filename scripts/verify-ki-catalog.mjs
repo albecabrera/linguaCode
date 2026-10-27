@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createCatalogController, createDashboardModel, filterCatalog, missionDetailsForCard, readCatalogProgress, selectContinuation} from '../pages/ki8/catalog.mjs';
+import {createCatalogController, createDashboardModel, createSequenceGuidance, filterCatalog, missionDetailsForCard, readCatalogProgress, selectContinuation} from '../pages/ki8/catalog.mjs';
 import {createPresentationController} from '../pages/ki8/presentation.mjs';
 
 const entry = readFileSync(new URL('../pages/ki8/index.html', import.meta.url), 'utf8');
@@ -11,6 +11,8 @@ const presentation = readFileSync(new URL('../pages/ki8/presentation.mjs', impor
 assert.match(entry, /id="continue-course"/);
 assert.match(entry, /Kurs (fortsetzen|starten)/);
 assert.match(entry, /id="student-dashboard"/);
+assert.match(entry, /href="\.\/portfolio\/"/);
+assert.match(entry, /Dein Lernportfolio/);
 assert.match(entry, /data-dashboard-summary/);
 assert.match(entry, /data-dashboard-modules/);
 assert.match(entry, /id="catalog-filters"/);
@@ -58,6 +60,8 @@ const dashboard = createDashboardModel(cards, [{status: 'completed'}, {status: '
 assert.deepEqual(dashboard.summary, {missionsCompleted: 1, missionsTotal: 3, checkpointsCompleted: 1, checkpointsTotal: 2});
 assert.equal(dashboard.nextMission.id, 'ki-01');
 assert.equal(dashboard.modules[0].completed, 0);
+assert.equal(createSequenceGuidance(cards, [{number: 1, afterMission: 2}]).recommendedNext.id, 'ki-01');
+assert.match(dashboard.sequence.relation, /Mission 01/);
 
 class Storage {
   constructor(values = {}) { this.values = new Map(Object.entries(values)); }

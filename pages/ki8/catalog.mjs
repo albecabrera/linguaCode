@@ -34,11 +34,53 @@ export function missionDetailsForCard(card, progress = card) {
   const lesson = LESSONS[card.id];
   const status = progress?.status ?? 'not-started';
   return {
+    card,
     objectives: lesson?.objectives ?? [],
     duration: lesson?.duration ?? 0,
     phases: lesson?.phases?.map(({title, minutes}) => ({title, minutes})) ?? [],
     status,
     statusLabel: PROGRESS_LABELS[status] ?? PROGRESS_LABELS.unavailable,
+  };
+}
+
+function missionDetailsMarkup(details) {
+  const objectives = details.objectives.map((objective) => `<li>${objective}</li>`).join('');
+  const phases = details.phases.map(({title, minutes}) => `${title} (${minutes} Min.)`).join(' · ');
+  return `<p class="mission-detail-status" data-detail-status>${details.statusLabel}</p>${sequenceMarkup(COURSE_CATALOG, details.card)}<dl class="mission-detail-list"><div><dt>Ziele</dt><dd><ul>${objectives}</ul></dd></div><div><dt>Dauer</dt><dd>${details.duration} Minuten</dd></div><div><dt>Lernphasen</dt><dd>${phases}</dd></div></dl>`;
+}
+
+export function createMissionSequence(cards, card) {
+  const index = cards.findIndex(({id}) => id === card?.id);
+  const previous = index > 0 ? cards[index - 1] : null;
+  const next = index >= 0 ? cards[index + 1] ?? null : null;
+  return {previous, next, position: index + 1, total: cards.length};
+}
+
+export function sequenceMarkup(cards, card, checkpoints = []) {
+  const sequence = createMissionSequence(cards, card);
+  const checkpoint = checkpoints.find(({afterMission}) => afterMission === card?.mission);
+  const previousText = sequence.previous ? `Vorherige Mission: Mission ${String(sequence.previous.mission).padStart(2, '0')}.` : 'Das ist der Einstieg in die Missionsfolge.';
+  const nextText = sequence.next ? `Danach: Mission ${String(sequence.next.mission).padStart(2, '0')}.` : 'Das ist die letzte Mission.';
+  const checkpointText = checkpoint ? `Checkpoint ${checkpoint.number} folgt jetzt als Übergang.` : 'Der nächste Schritt folgt in der Missionsfolge.';
+  return `<p class="mission-sequence"><strong>Sequenz:</strong> ${previousText} ${nextText} ${checkpointText}</p>`;
+}
+
+export function missionDetailsForCardWithSequence(card, progress = card, cards = COURSE_CATALOG, checkpoints = []) {
+  return {details: missionDetailsForCard(card, progress), sequence: sequenceMarkup(cards, card, checkpoints)};
+}
+
+export function createSequenceGuidance(progress, checkpoints = []) {
+  const ordered = [...progress];
+  const recommendedNext = ordered.find(({status}) => status === 'in-progress' || status === 'not-started' || status === 'unavailable') ?? ordered[0] ?? null;
+  const nextCheckpoint = checkpoints.find(({afterMission}) => recommendedNext && afterMission >= recommendedNext.mission) ?? checkpoints.at(-1) ?? null;
+  const nextIndex = recommendedNext ? ordered.findIndex(({id}) => id === recommendedNext.id) : -1;
+  const previousMission = nextIndex > 0 ? ordered[nextIndex - 1] : null;
+  return {
+    recommendedNext,
+    previousMission,
+    nextCheckpoint,
+    relation: nextIndex <= 0 ? 'Der Kurs beginnt mit Mission 01.' : `Mission ${String(previousMission.mission ?? nextIndex).padStart(2, '0')} liegt davor und ordnet den nächsten Schritt ein.`,
+    transition: nextCheckpoint ? `Nach Mission ${nextCheckpoint.afterMission} folgt Checkpoint ${nextCheckpoint.number}.` : 'Es ist kein weiterer Checkpoint hinterlegt.',
   };
 }
 
@@ -56,6 +98,7 @@ export function createDashboardModel(progress, checkpoints = []) {
   return {
     modules,
     nextMission: progress.find(({status}) => status === 'in-progress' || status === 'not-started' || status === 'unavailable') ?? progress[0] ?? null,
+    sequence: createSequenceGuidance(progress, checkpoints),
     summary: {
       missionsCompleted: progress.filter(({status}) => status === 'completed').length,
       missionsTotal: progress.length,
@@ -63,12 +106,6 @@ export function createDashboardModel(progress, checkpoints = []) {
       checkpointsTotal: checkpoints.length,
     },
   };
-}
-
-function missionDetailsMarkup(details) {
-  const objectives = details.objectives.map((objective) => `<li>${objective}</li>`).join('');
-  const phases = details.phases.map(({title, minutes}) => `${title} (${minutes} Min.)`).join(' · ');
-  return `<p class="mission-detail-status" data-detail-status>${details.statusLabel}</p><dl class="mission-detail-list"><div><dt>Ziele</dt><dd><ul>${objectives}</ul></dd></div><div><dt>Dauer</dt><dd>${details.duration} Minuten</dd></div><div><dt>Lernphasen</dt><dd>${phases}</dd></div></dl>`;
 }
 
 export function readCatalogProgress(storage, cards = COURSE_CATALOG) {
@@ -82,7 +119,7 @@ export function readCatalogProgress(storage, cards = COURSE_CATALOG) {
     if (!result || result.status !== 'success') {
       return {...card, status: 'unavailable', reason: result?.reason ?? 'storage-error'};
     }
-    return {...card, status: statusForState(result.state), reason: null};
+    return {...card, status: statusForState(result.state), phase: Number.isInteger(result.state?.phase) ? result.state.phase : null, reason: null};
   });
 }
 

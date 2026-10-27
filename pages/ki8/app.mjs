@@ -21,7 +21,7 @@ if (dashboardSummary) dashboardSummary.innerHTML = `<p><strong>Missionen:</stron
 const dashboardModules = document.querySelector('[data-dashboard-modules]');
 if (dashboardModules) dashboardModules.innerHTML = dashboard.modules.map(({name, completed, total}) => `<p><strong>${name}</strong><span>${completed} von ${total} Missionen</span></p>`).join('');
 const dashboardNext = document.querySelector('[data-dashboard-next]');
-if (dashboardNext && dashboard.nextMission) dashboardNext.innerHTML = `<a class="mission-cta" href="${dashboard.nextMission.href}">${dashboard.nextMission.status === 'in-progress' ? 'Kurs fortsetzen' : 'Mission starten'}: Mission ${dashboard.nextMission.mission} →</a>`;
+if (dashboardNext && dashboard.nextMission) dashboardNext.innerHTML = `<a class="mission-cta" href="${dashboard.nextMission.href}">${dashboard.nextMission.status === 'in-progress' ? 'Kurs fortsetzen' : 'Mission starten'}: Mission ${dashboard.nextMission.mission} →</a><p class="sequence-guidance"><strong>Empfohlener nächster Schritt:</strong> Mission ${String(dashboard.nextMission.mission).padStart(2, '0')}. ${dashboard.sequence.relation} ${dashboard.sequence.transition}</p>`;
 const continueLink = document.querySelector('#continue-course');
 if (continueLink && catalog.continuation) {
   continueLink.href = catalog.continuation.href;
