@@ -7,6 +7,7 @@ import {
   KI_MISSION_04,
   KI_MISSION_05,
   KI_MISSION_06,
+  KI_MISSION_07,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -85,7 +86,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -146,6 +147,28 @@ assert.equal(KI_MISSION_06.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_06.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_06.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_06), true);
+assert.equal(getLesson('ki-07'), KI_MISSION_07);
+assert.equal(KI_MISSION_07.id, 'ki-07');
+assert.equal(KI_MISSION_07.title, 'Mission 07 – Regeln an Testbeispielen prüfen');
+assert.equal(KI_MISSION_07.duration, 45);
+assert.deepEqual(KI_MISSION_07.context, { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 3', overviewHref: '../modul-3.html#stunde-3' });
+assert.deepEqual(KI_MISSION_07.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_07.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_07.contentBlocks[0].text, /18\s*°C.*Testbeispiel.*bekannt.*Label/i);
+const temperatureTask = KI_MISSION_07.tasks.find(({ id }) => id === 'task-temperature');
+assert.match(temperatureTask.prompt, /genau 18\s*°C.*17\s*°C/i);
+assert.match(temperatureTask.exampleAnswer, /18\s*°C.*Fenster offen.*17\s*°C.*Fenster zu/i);
+const labelTask = KI_MISSION_07.tasks.find(({ id }) => id === 'task-label');
+assert.match(labelTask.prompt, /bekannt.*Testlabel.*Vorhersage.*Label/i);
+assert.match(labelTask.exampleAnswer, /Vorhersage.*Label.*überein/i);
+assert.equal(KI_MISSION_07.media.infSchule.url, 'https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume');
+assert.equal(KI_MISSION_07.media.experienceAi.url, 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4');
+assert.equal(KI_MISSION_07.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_07.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_07.resourceNotes.material.license, 'not-stated');
+assert.equal(KI_MISSION_07.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_07), true);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07']);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [

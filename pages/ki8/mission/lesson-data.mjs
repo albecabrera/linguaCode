@@ -343,7 +343,50 @@ export const KI_MISSION_06 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06 });
+const KI_MISSION_07_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Welche Vorhersage macht der Baum bei 21 °C?', choices: ['Fenster offen.', 'Fenster zu.', 'Ohne Trainingswert gibt es keine Vorhersage.'], correctIndex: 0, explanation: '21 °C liegt über dem Schwellenwert von 18 °C. Der Baum sagt „Fenster offen“ voraus.' },
+  { id: 'q2', prompt: 'Welches Label sagt der Baum bei genau 18 °C voraus?', choices: ['Fenster offen.', 'Fenster zu.', 'Der Schwellenwert gilt nur oberhalb von 18 °C.'], correctIndex: 0, explanation: 'Die Regel lautet Temperatur ≥ 18 °C. Der Grenzwert selbst gehört also zur Gruppe „Fenster offen“.' },
+  { id: 'q3', prompt: 'Der Baum sagt „Fenster offen“, das bekannte Testlabel lautet „Fenster zu“. Was zeigt der Vergleich?', choices: ['Eine Fehlklassifikation: Vorhersage und bekanntes Label unterscheiden sich.', 'Der Test hat kein Label.', 'Die Testdaten müssen umbenannt werden.'], correctIndex: 0, explanation: 'Der vorhergesagte Wert stimmt nicht mit dem bekannten Testlabel überein. Das ist eine Fehlklassifikation.' },
+  { id: 'q4', prompt: 'Warum vergleichen wir eine Vorhersage mit einem bekannten Testlabel?', choices: ['Um zu prüfen, ob die Regel dieses Beispiel richtig einordnet.', 'Um das Testlabel passend zur Vorhersage zu ändern.', 'Um Testbeispiele nachträglich ins Training einzubauen.'], correctIndex: 0, explanation: 'Das bekannte Label zeigt, ob die Vorhersage für das Testbeispiel stimmt; es bleibt dabei unverändert.' },
+  { id: 'q5', prompt: 'Was darf nach einem Fehler beim Testen nicht passieren?', choices: ['Das bekannte Testlabel ändern, damit die Regel richtig erscheint.', 'Die Vorhersage mit dem Label vergleichen.', 'Die Grenze der Regel untersuchen.'], correctIndex: 0, explanation: 'Ein echtes Testlabel bleibt unverändert. So bleibt die Prüfung aussagekräftig.' },
+]);
+
+export const KI_MISSION_07 = Object.freeze({
+  id: 'ki-07',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 3', overviewHref: '../modul-3.html#stunde-3' },
+  title: 'Mission 07 – Regeln an Testbeispielen prüfen',
+  description: 'Wende eine Schwellenwertregel auf Temperaturbeispiele an und vergleiche ihre Vorhersage mit dem bekannten Testlabel.',
+  duration: 45,
+  objectives: ['Du wendest die Regel Temperatur ≥ 18 °C auf ein Beispiel an.', 'Du vergleichst eine Vorhersage mit dem bekannten Testlabel.', 'Du erkennst eine Fehlklassifikation, ohne das Testlabel zu verändern.'],
+  phases: [
+    { id: 'threshold', title: 'Die Temperaturregel lesen', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'decision-tree', title: 'Einem Entscheidungsbaum folgen', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }] },
+    { id: 'test-examples', title: 'Vorhersage und Label vergleichen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-temperature' }, { type: 'task', taskId: 'task-label' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_07_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_07_QUESTIONS },
+  ],
+  media: {
+    infSchule: { url: 'https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume', kind: 'official-learning-page', title: 'Überwachtes Lernen mit Entscheidungsbäumen', provider: 'inf-schule', observation: 'Die Seite erklärt Schwellenwerte, Testobjekte und den Vergleich von Vorhersagen mit Labels.', checkboxLabel: 'Ich habe die Seite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+    experienceAi: { url: 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4', kind: 'official-lesson', title: 'Lektion 4: Entscheidungsbäume', provider: 'Experience AI', observation: 'Die Lektion behandelt Entscheidungsbäume und wie sie Beispiele klassifizieren.', checkboxLabel: 'Ich habe die Lektion angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein geeignetes, spezifisches Video für diese Stunde wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die verlinkten Seiten behandeln Entscheidungsbäume, Schwellenwerte und Testbeispiele. Zieljahrgang und Lizenz sind auf den geprüften Seiten nicht angegeben.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Ein fiktiver Baum entscheidet nach der Regel Temperatur ≥ 18 °C: Bei Ja sagt er „Fenster offen“, sonst „Fenster zu“. Prüfe neue Testbeispiele, indem du die Vorhersage mit ihrem bekannten Label vergleichst. Ändere das Testlabel nicht: Der Vergleich soll zeigen, ob die Regel stimmt oder eine Fehlklassifikation macht.' },
+    { type: 'reflection', id: 'test-reflection', prompt: 'Was lernst du, wenn die Vorhersage nicht mit dem bekannten Testlabel übereinstimmt?', examples: ['Die Regel hat dieses Beispiel falsch eingeordnet. Das Testlabel bleibt unverändert; der Fehler zeigt eine Grenze der Regel.'] },
+  ],
+  tasks: [
+    { id: 'task-temperature', type: 'open-response', title: 'Schwellenwert anwenden', prompt: 'Die Regel lautet Temperatur ≥ 18 °C → „Fenster offen“, sonst „Fenster zu“. Was sagt sie bei genau 18 °C und bei 17 °C voraus?', exampleAnswer: 'Bei genau 18 °C gilt ≥ 18, also sagt der Baum „Fenster offen“. Bei 17 °C liegt der Wert unterhalb des Schwellenwerts, also sagt er „Fenster zu“.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-label', type: 'open-response', title: 'Vorhersage mit Label vergleichen', prompt: 'Der Baum sagt für 16 °C „Fenster offen“ voraus. Das bekannte Testlabel lautet „Fenster zu“. Stimmen Vorhersage und Label überein, und was darfst du mit dem Testlabel tun?', exampleAnswer: 'Nein. Vorhersage und bekanntes Label stimmen nicht überein; das ist eine Fehlklassifikation. Das Testlabel bleibt unverändert.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07 });
 
 export function getLesson(id) {
   return LESSONS[id];
