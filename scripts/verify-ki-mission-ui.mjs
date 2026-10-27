@@ -6,16 +6,22 @@ import { createMissionRenderer, resolveMissionRoute } from '../pages/ki8/mission
 
 const html = fs.readFileSync(new URL('../pages/ki8/stunde-1/index.html', import.meta.url), 'utf8');
 const mission02Html = fs.readFileSync(new URL('../pages/ki8/stunde-2/index.html', import.meta.url), 'utf8');
+const mission03Html = fs.readFileSync(new URL('../pages/ki8/stunde-3/index.html', import.meta.url), 'utf8');
 assert.match(html, /src="\.\.\/mission\/mission\.mjs"/);
 assert.match(html, /data-lesson-id="ki-01"/);
 assert.match(mission02Html, /src="\.\.\/mission\/mission\.mjs"/);
 assert.match(mission02Html, /data-lesson-id="ki-02"/);
+assert.match(mission03Html, /src="\.\.\/mission\/mission\.mjs"/);
+assert.match(mission03Html, /data-lesson-id="ki-03"/);
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-1/'), { path: '/ki8/stunde-1/', lessonId: 'ki-01', progressKey: 'ki-01' });
 assert.deepEqual(resolveMissionRoute('/ki8/stunde-2/'), { path: '/ki8/stunde-2/', lessonId: 'ki-02', progressKey: 'ki-02' });
+assert.deepEqual(resolveMissionRoute('/ki8/stunde-3/'), { path: '/ki8/stunde-3/', lessonId: 'ki-03', progressKey: 'ki-03' });
+assert.equal(resolveMissionRoute('/ki8/stunde-3/?lesson=ki-01'), undefined);
 assert.equal(resolveMissionRoute('/ki8/stunde-2/?lesson=ki-01'), undefined);
 assert.match(html, /id="mission-app"/);
 assert.doesNotMatch(html, /<iframe/i);
 const missionSource = fs.readFileSync(new URL('../pages/ki8/mission/mission.mjs', import.meta.url), 'utf8');
+assert.doesNotMatch(missionSource, /\bfetch\s*\(|XMLHttpRequest|sendBeacon/);
 const missionCss = fs.readFileSync(new URL('../pages/ki8/mission/mission.css', import.meta.url), 'utf8');
 assert.match(missionCss, /\.phase-nav li > span:first-child/);
 assert.match(missionCss, /\.phase-nav li > span\[aria-disabled="true"\]/);
@@ -91,6 +97,42 @@ class FakeRoot {
   }
   querySelectorAll(selector) { return this.elements(selector); }
   querySelector(selector) { return this.elements(selector)[0] || new FakeElement('div'); }
+}
+const mission03Root = new FakeRoot();
+const mission03Memory = new Map();
+const mission03Storage = { getItem: (key) => mission03Memory.get(key) ?? null, setItem: (key, value) => mission03Memory.set(key, value), removeItem: (key) => mission03Memory.delete(key) };
+const mission03Renderer = createMissionRenderer({ root: mission03Root, lesson: getLesson('ki-03'), progressKey: 'ki-03', storage: mission03Storage });
+assert.match(mission03Root.innerHTML, /Mission 03 – Merkmale, Labels und Schwellenwerte/);
+assert.match(mission03Root.innerHTML, /inf-schule/);
+assert.doesNotMatch(mission03Root.innerHTML, /Planet Schule|Hunde-App|Hunderassen/);
+const mission03MaterialDone = mission03Root.querySelector('[data-phase-done]');
+mission03MaterialDone.checked = true;
+mission03MaterialDone.dispatch('change');
+assert.ok(mission03Memory.has(`${PROGRESS_NAMESPACE}:ki-03`));
+mission03Root.querySelector('[data-advance]').dispatch('click');
+assert.equal(mission03Renderer.getState().phase, 1);
+assert.match(mission03Root.innerHTML, /Merkmale und Labels/);
+const mission03FeatureDone = mission03Root.querySelectorAll('[data-phase-done]').find(({ dataset }) => dataset.phaseId === 'features');
+mission03FeatureDone.checked = true;
+mission03FeatureDone.dispatch('change');
+mission03Root.querySelector('[data-advance="1"]').dispatch('click');
+assert.equal(mission03Renderer.getState().phase, 2);
+assert.match(mission03Root.innerHTML, /Wert 7/);
+for (const [label, savedBytes] of [['malformed', '{not valid JSON'], ['future', JSON.stringify({ version: 99, state: { phase: 0 } })]]) {
+  const m01Bytes = JSON.stringify({ version: 1, state: { phase: 1, mission: 'ki-01' } });
+  const m02Bytes = JSON.stringify({ version: 1, state: { phase: 2, mission: 'ki-02' } });
+  const protectedMemory = new Map([[`${PROGRESS_NAMESPACE}:ki-01`, m01Bytes], [`${PROGRESS_NAMESPACE}:ki-02`, m02Bytes], [`${PROGRESS_NAMESPACE}:ki-03`, savedBytes]]);
+  let protectedWrites = 0;
+  const protectedStorage = { getItem: (key) => protectedMemory.get(key) ?? null, setItem: (key, value) => { protectedWrites += 1; protectedMemory.set(key, value); }, removeItem: (key) => protectedMemory.delete(key) };
+  const protectedRoot = new FakeRoot();
+  createMissionRenderer({ root: protectedRoot, lesson: getLesson('ki-03'), progressKey: 'ki-03', storage: protectedStorage });
+  const protectedPhase = protectedRoot.querySelector('[data-phase-done]');
+  protectedPhase.checked = true;
+  protectedPhase.dispatch('change');
+  assert.equal(protectedWrites, 0, `${label} M03 data must not be rewritten`);
+  assert.equal(protectedMemory.get(`${PROGRESS_NAMESPACE}:ki-03`), savedBytes);
+  assert.equal(protectedMemory.get(`${PROGRESS_NAMESPACE}:ki-01`), m01Bytes);
+  assert.equal(protectedMemory.get(`${PROGRESS_NAMESPACE}:ki-02`), m02Bytes);
 }
 const eventMemory = new Map();
 const eventStorage = { getItem: (key) => eventMemory.get(key) ?? null, setItem: (key, value) => eventMemory.set(key, value), removeItem: (key) => eventMemory.delete(key) };

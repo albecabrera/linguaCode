@@ -35,6 +35,14 @@ Die nächste Stunde ist lokal unter `/ki8/stunde-2/` verfügbar und wird aus der
 
 Beide Quellen werden nur verlinkt. Arbeitsblätter werden nicht kopiert oder eingebettet. Ein spezifisches, passendes Video für diese Stunde wurde nicht bestätigt und ist deshalb nicht zugewiesen. Die HubbS-Ressource zu Trainingsdaten ist für eine berufliche KI-Zusatzqualifikation beschrieben; eine Eignung für WP 8 ist nicht belegt.
 
+### Mission 03: Merkmale, Labels und Schwellenwerte
+
+Die ergänzende Stunde ist lokal unter `/ki8/stunde-3/` verfügbar und über den CTA in Modul 2, Stunde 1 erreichbar. Die bisherigen Module-2-Inhalte, Aufgaben, der Abschnitt `#stunde-1` und die 18 Kursstundenanker bleiben erhalten.
+
+- [inf-schule: „Entscheide wie eine KI“](https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI) – optionale Lernstrecke mit Beispielen zu überwachtem Lernen, Schwellenwerten und Entscheidungsbäumen. Die geprüfte Seite empfiehlt als Voraussetzung die Lernstrecke „Lernende Systeme“.
+
+Die Quelle wird nur verlinkt. Auf der geprüften Seite sind Zieljahrgang und Lizenz nicht angegeben; die Eignung für WP 8 und eine Nachnutzungslizenz sind daher nicht verifiziert. Kein spezifisches, passendes Video für diese Stunde wurde bestätigt; keines ist zugewiesen. Externe Aufgaben, Texte und Medien werden nicht kopiert oder eingebettet.
+
 ## Aufgaben und Obst-Detektiv
 
 Die Aufgaben A und B sind offene Antworten. „Meine Antwort prüfen“ ist ein Selbst-Check, keine automatische Bewertung; anschließend kann die Beispielantwort angezeigt und die eigene Antwort überarbeitet werden.
@@ -70,7 +78,7 @@ Bewertungsbänder: **5/5** „Hervorragend! Du hast die Mission erfolgreich abge
 
 ## Lokaler Fortschritt und Datenschutzgrenzen
 
-Der Fortschritt wird ausschließlich lokal im Browser gespeichert. Die Speicherung ist namespaced und versioniert. Die Schlüssel lauten `linguacode:ki-wp8:mission-01:v1:ki-01` und `linguacode:ki-wp8:mission-01:v1:ki-02`; die Missionen überschreiben einander nicht. Antworten, Phasen, Obst-Labor und Quizstatus werden nicht übertragen und es gibt kein Schülerkonto, keine Datenbank und kein zentrales Feedback.
+Der Fortschritt wird ausschließlich lokal im Browser gespeichert. Die Speicherung ist namespaced und versioniert. Die Schlüssel lauten `linguacode:ki-wp8:mission-01:v1:ki-01`, `linguacode:ki-wp8:mission-01:v1:ki-02` und `linguacode:ki-wp8:mission-01:v1:ki-03`; die Missionen überschreiben einander nicht. Antworten, Phasen, Obst-Labor und Quizstatus werden nicht übertragen und es gibt kein Schülerkonto, keine Datenbank und kein zentrales Feedback.
 
 Wichtige Grenzen:
 
@@ -83,11 +91,12 @@ Wichtige Grenzen:
 
 Für direkte Aufrufe auf GitHub Pages sind vorgesehen:
 
-- `/ki8/` – Kursübersicht
+- `/ki8/` – Kursübersicht mit klickbarem Kurs-QR zur Übersicht und einem separaten klickbaren Mission-03-QR
 - `/ki8/stunde-1/` – Mission 01
 - `/ki8/stunde-2/` – Mission 02
+- `/ki8/stunde-3/` – Mission 03
 
-Der CTA für Mission 02 steht innerhalb von Modul 1, Stunde 2; der bisherige Abschnitt samt Aufgaben bleibt erhalten. Die Kursübersicht enthält weiterhin einen QR-Code zum Kurs, einen kopierbaren Kurslink, sechs Modulübersichten und die lokale Fortschrittsanzeige. Die bestehenden 18 Stundenlinks sowie andere Fächer bleiben erhalten. QR-Scan und echte GitHub-Pages-Auslieferung sind nicht als Deployment verifiziert.
+Der CTA für Mission 02 steht innerhalb von Modul 1, Stunde 2; der bisherige Abschnitt samt Aufgaben bleibt erhalten. Der Kurs-QR auf `/ki8/` führt weiterhin zur Kursübersicht; der zusätzliche klickbare QR und Link für Mission 03 führen direkt zu `/ki8/stunde-3/`. Die Kursübersicht enthält weiterhin einen QR-Code zum Kurs, einen kopierbaren Kurslink, sechs Modulübersichten und die lokale Fortschrittsanzeige. Die bestehenden 18 Stundenlinks sowie andere Fächer bleiben erhalten. QR-Scan und echte GitHub-Pages-Auslieferung sind nicht als Deployment verifiziert.
 
 ## Wiederverwendbare Datenstruktur: aktueller Stand
 
@@ -102,7 +111,7 @@ Die Daten liegen aktuell in `pages/ki8/mission/lesson-data.mjs`; die Renderer- u
 
 ### Bestehende Wiederverwendung und nächste Stunde
 
-Die Registry enthält `ki-01` und `ki-02`. Eine Lesson-ID wird durch statische Pfadzuordnung mit einer eigenen Browser-Speicherschlüsselung verbunden; beide behalten getrennten Fortschritt. Mission 02 nutzt bestehende Blocktypen (Medienlink, offene Antwort und Quiz), keine Sonderkopie des Renderers.
+Die Registry enthält `ki-01`, `ki-02` und `ki-03`. Eine Lesson-ID wird durch statische Pfadzuordnung mit einer eigenen Browser-Speicherschlüsselung verbunden; alle drei behalten getrennten Fortschritt. Mission 02 nutzt bestehende Blocktypen (Medienlink, offene Antwort und Quiz), keine Sonderkopie des Renderers. Mission 03 ergänzt Modul 2 Stunde 1 mit Merkmalen, Labels und der bestehenden Schwellenwertregel; der CTA lässt die bisherige Stunde und ihre Interaktionen bestehen.
 
 Für weitere Stunden:
 

@@ -162,7 +162,50 @@ export const KI_MISSION_02 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02 });
+const KI_MISSION_03_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Eine Klangkiste misst die Lautstärke. Was ist das Merkmal und was sind die Labels?', choices: ['Merkmal: Lautstärke; Labels: „leise“ und „laut“.', 'Merkmal: „leise“; Label: die Lautstärke.', 'Merkmal und Label bedeuten immer dasselbe.'], correctIndex: 0, explanation: 'Das Merkmal ist der beobachtete Wert. Ein Label ist die zugeordnete Kategorie.' },
+  { id: 'q2', prompt: 'Mit dem Schwellenwert 6 gilt: Wert ≤ 6 → „leise“, Wert > 6 → „laut“. Welches Label erhält Wert 7?', choices: ['leise', 'laut', 'Das lässt sich mit einem Schwellenwert nicht entscheiden.'], correctIndex: 1, explanation: '7 ist größer als 6, deshalb lautet das Label „laut“.' },
+  { id: 'q3', prompt: 'Mit derselben Regel: Welches Label erhält genau den Wert 6?', choices: ['leise', 'laut', 'Es gibt kein Label für den Grenzwert.'], correctIndex: 0, explanation: 'Die Regel sagt „Wert ≤ 6“; deshalb gehört auch 6 noch zu „leise“.' },
+  { id: 'q4', prompt: 'Welche Aussage beschreibt ein Label?', choices: ['Die gemessene Lautstärke als Zahl.', 'Die Kategorie, die einer Beobachtung zugeordnet wird.', 'Ein Beweis, dass die Entscheidung immer stimmt.'], correctIndex: 1, explanation: '„Leise“ und „laut“ sind Kategorien, also Labels. Ein Label garantiert keine fehlerfreie Entscheidung.' },
+  { id: 'q5', prompt: 'Was bewirkt ein Schwellenwert in der Klangkiste?', choices: ['Er entfernt die gemessenen Werte.', 'Er trennt die Werte in die Labels „leise“ und „laut“.', 'Er sorgt dafür, dass jedes Testbeispiel richtig ist.'], correctIndex: 1, explanation: 'Der Schwellenwert legt fest, an welcher Grenze sich das zugeordnete Label ändert.' },
+]);
+
+export const KI_MISSION_03 = Object.freeze({
+  id: 'ki-03',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 1', overviewHref: '../modul-2.html#stunde-1' },
+  title: 'Mission 03 – Merkmale, Labels und Schwellenwerte',
+  description: 'Unterscheide beobachtete Merkmale von Labels und wende eine klare Schwellenwert-Regel auf neue Werte an.',
+  duration: 45,
+  objectives: ['Du unterscheidest Merkmale und Labels und wendest einen Schwellenwert auf ein neues Beispiel an.'],
+  phases: [
+    { id: 'material', title: 'Lernstrecke: Entscheide wie eine KI', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'features', title: 'Merkmale und Labels', minutes: 10, blocks: [{ type: 'task', taskId: 'task-feature' }] },
+    { id: 'threshold', title: 'Schwellenwert anwenden', minutes: 19, blocks: [{ type: 'task', taskId: 'task-threshold' }, { type: 'task', taskId: 'task-boundary' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_03_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_03_QUESTIONS },
+  ],
+  media: {
+    infSchule: { url: 'https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI', kind: 'official-learning-sequence', title: 'Entscheide wie eine KI', provider: 'inf-schule', observation: 'Die Lernstrecke nutzt Lebensmittelbeispiele und behandelt überwachtes Lernen, Schwellenwerte und Entscheidungsbäume. Sie empfiehlt vorher die Lernstrecke „Lernende Systeme“.', checkboxLabel: 'Ich habe die Lernstrecke angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Für diese Stunde wurde kein spezifisches Video bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die ergänzende inf-schule-Lernstrecke ist verlinkt; Zieljahrgang und Lizenz sind auf der geprüften Seite nicht genannt.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Ein Merkmal ist ein beobachteter Wert. Ein Label ist die Kategorie, die ihm zugeordnet wird. Ein Schwellenwert teilt Werte nach einer Regel in Labels ein.' },
+    { type: 'reflection', id: 'threshold-reflection', prompt: 'Warum muss die Regel genau sagen, was am Schwellenwert selbst passiert?', examples: ['Damit klar ist, zu welchem Label der Grenzwert gehört.', 'Hier gehört 6 wegen „≤ 6“ noch zum Label „leise“.'] },
+  ],
+  tasks: [
+    { id: 'task-feature', type: 'open-response', title: 'Merkmal oder Label?', prompt: 'Eine fiktive Klangkiste nutzt die Lautstärke eines Klatschens als Merkmal. Das Label „leise“ steht für Werte bis einschließlich 6, „laut“ für Werte über 6. Was ist hier das Merkmal und was sind die Labels?', exampleAnswer: 'Das Merkmal ist die gemessene Lautstärke. „Leise“ und „laut“ sind die Labels, also die Kategorien.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-threshold', type: 'open-response', title: 'Neues Beispiel testen', prompt: 'Mit dem Schwellenwert 6 gilt: Wert ≤ 6 → „leise“, Wert > 6 → „laut“. Welches Label erhält das neue Testbeispiel mit Wert 7? Begründe deine Entscheidung.', exampleAnswer: 'Das Label lautet „laut“, weil 7 größer als der Schwellenwert 6 ist.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-boundary', type: 'open-response', title: 'Grenzwert prüfen', prompt: 'Welches Label erhält der genaue Grenzwert 6? Erkläre, welches Zeichen in der Regel dafür entscheidend ist.', exampleAnswer: 'Der Wert 6 erhält das Label „leise“, weil die Regel „Wert ≤ 6“ den Grenzwert einschließt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03 });
 
 export function getLesson(id) {
   return LESSONS[id];

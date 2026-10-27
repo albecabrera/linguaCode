@@ -7,7 +7,9 @@ const html = fs.readFileSync(new URL('../pages/ki8/index.html', import.meta.url)
 assert.match(html, /href="\.\/stunde-1\/"/);
 assert.match(html, /id="course-progress"/);
 assert.match(html, /id="course-url"/);
-assert.match(html, /id="course-qr"/);
+assert.match(html, /<a id="course-qr" class="course-qr" href="\.\/"/);
+assert.match(html, /<a id="mission-03-qr" class="course-qr" href="\.\/stunde-3\/"/);
+assert.match(html, /href="\.\/stunde-3\/">Mission 03 starten/);
 assert.match(html, /\.\.\/assets\/qrcode-generator\.min\.js/);
 assert.equal(modules.reduce((total, module) => total + module.hours, 0), 18);
 const app = fs.readFileSync(new URL('../pages/ki8/app.mjs', import.meta.url), 'utf8');
@@ -35,7 +37,7 @@ class FakeElement {
   select() { this.selected = true; }
 }
 class FakeDocument {
-  constructor() { this.nodes = new Map(['#course-url', '#course-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
+  constructor() { this.nodes = new Map(['#course-url', '#course-qr', '#mission-03-qr', '#course-progress', '#copy-course-url', '#copy-course-status'].map((id) => [id, new FakeElement()])); }
   querySelector(selector) { return this.nodes.get(selector) ?? null; }
   node(selector) { return this.nodes.get(selector); }
 }
@@ -44,10 +46,16 @@ const originalNavigator = Object.getOwnPropertyDescriptor(globalThis, 'navigator
 Object.defineProperty(globalThis, 'localStorage', {configurable: true, get: () => savedStorage});
 Object.defineProperty(globalThis, 'navigator', {configurable: true, value: {clipboard: {writeText: async () => { throw new Error('denied'); }}}});
 const dom = new FakeDocument();
-let qrPayload = null;
-const initialized = initCourseIntegration({documentLike: dom, locationLike: {href: 'https://example.test/linguaCode/ki8/'}, qrFactory: () => ({addData(value) { qrPayload = value; }, make() {}, createSvgTag() { return '<svg></svg>'; }})});
+const qrPayloads = [];
+const qrAlts = [];
+const initialized = initCourseIntegration({documentLike: dom, locationLike: {href: 'https://example.test/linguaCode/ki8/'}, qrFactory: () => ({addData(value) { qrPayloads.push(value); }, make() {}, createSvgTag(options) { qrAlts.push(options.alt); return '<svg></svg>'; }})});
 assert.equal(initialized.url, 'https://example.test/linguaCode/ki8/');
-assert.equal(qrPayload, initialized.url);
+assert.deepEqual(qrPayloads, [initialized.url, 'https://example.test/linguaCode/ki8/stunde-3/']);
+assert.deepEqual(qrAlts, ['QR-Code für die öffentliche Kursseite', 'QR-Code für Mission 03']);
+assert.equal(dom.node('#course-qr').href, initialized.url);
+assert.equal(dom.node('#mission-03-qr').href, 'https://example.test/linguaCode/ki8/stunde-3/');
+assert.match(dom.node('#course-qr').innerHTML, /<svg/);
+assert.match(dom.node('#mission-03-qr').innerHTML, /<svg/);
 assert.match(dom.node('#course-progress').textContent, /abgeschlossen/);
 await dom.node('#copy-course-url').events.click();
 assert.equal(dom.node('#course-url').selected, true);
@@ -57,6 +65,9 @@ Object.defineProperty(globalThis, 'localStorage', {configurable: true, get: () =
 const unavailableDom = new FakeDocument();
 initCourseIntegration({documentLike: unavailableDom, locationLike: {href: 'https://example.test/linguaCode/ki8/'}, qrFactory: null});
 assert.match(unavailableDom.node('#course-progress').textContent, /nicht verfügbar/);
+assert.equal(unavailableDom.node('#course-qr').href, 'https://example.test/linguaCode/ki8/');
+assert.equal(unavailableDom.node('#mission-03-qr').href, 'https://example.test/linguaCode/ki8/stunde-3/');
+assert.match(unavailableDom.node('#mission-03-qr').innerHTML, /QR-Code konnte/);
 if (originalStorage) Object.defineProperty(globalThis, 'localStorage', originalStorage); else delete globalThis.localStorage;
 if (originalNavigator) Object.defineProperty(globalThis, 'navigator', originalNavigator); else delete globalThis.navigator;
 

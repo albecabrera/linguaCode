@@ -24,13 +24,13 @@ export function getCourseProgress(store) {
   };
 }
 
-export function renderQrSvg(url, qrFactory = globalThis.qrcode) {
+export function renderQrSvg(url, qrFactory = globalThis.qrcode, alt = 'QR-Code für die öffentliche Kursseite') {
   if (typeof qrFactory !== 'function') return '';
   try {
     const code = qrFactory(0, 'M');
     code.addData(url, 'Byte');
     code.make();
-    return code.createSvgTag({cellSize: 4, margin: 4, alt: 'QR-Code für die öffentliche Kursseite'});
+    return code.createSvgTag({cellSize: 4, margin: 4, alt});
   } catch {
     return '';
   }
@@ -55,14 +55,24 @@ export function initCourseIntegration({documentLike = document, locationLike = g
   const url = derivePublicCourseUrl(locationLike);
   const urlInput = documentLike.querySelector('#course-url');
   const qr = documentLike.querySelector('#course-qr');
+  const mission03Qr = documentLike.querySelector('#mission-03-qr');
+  const mission03Url = new URL('stunde-3/', url).href;
   const progressOutput = documentLike.querySelector('#course-progress');
   if (urlInput) {
     urlInput.value = url;
     urlInput.setAttribute('aria-label', 'Öffentliche URL des Kurses');
   }
   if (qr) {
+    qr.setAttribute('href', url);
+    qr.setAttribute('aria-label', 'Kursübersicht öffnen (QR-Code)');
     const svg = renderQrSvg(url, qrFactory);
-    qr.innerHTML = svg || '<p>QR-Code konnte in diesem Browser nicht dargestellt werden. Nutze den kopierbaren Link.</p>';
+    qr.innerHTML = svg || '<p>QR-Code konnte in diesem Browser nicht dargestellt werden. Nutze den Kurslink.</p>';
+  }
+  if (mission03Qr) {
+    mission03Qr.setAttribute('href', mission03Url);
+    mission03Qr.setAttribute('aria-label', 'Mission 03 direkt öffnen (QR-Code)');
+    const svg = renderQrSvg(mission03Url, qrFactory, 'QR-Code für Mission 03');
+    mission03Qr.innerHTML = svg || '<p>QR-Code konnte in diesem Browser nicht dargestellt werden. Nutze den Missionslink.</p>';
   }
 
   let store;

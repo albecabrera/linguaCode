@@ -15,7 +15,7 @@ const expectedFiles = [
   'modul-4.html', 'modul-5.html', 'modul-6.html', 'module1-core.mjs', 'module1-ui.mjs',
   'module2-core.mjs', 'module2-ui.mjs', 'module3-core.mjs', 'module3-ui.mjs',
   'module4-core.mjs', 'module4-ui.mjs', 'module5-core.mjs', 'module5-ui.mjs',
-  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2',
+  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
@@ -31,6 +31,7 @@ const publicSources = [catalog, entry, app, missionTwoRoute, readFileSync(new UR
 for (let module = 1; module <= 6; module += 1) {
   const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
   if (module === 1) assert.match(html, /href="stunde-2\/"[^>]*>Mission 02 starten[^<]*<\/a>/);
+  if (module === 2) assert.match(html, /href="stunde-3\/"[^>]*>Mission 03 starten[^<]*<\/a>/);
   const hours = [2, 2, 4, 2, 3, 5][module - 1];
   for (let hour = 1; hour <= hours; hour += 1) {
     assert.match(html, new RegExp(`id="stunde-${hour}"`));

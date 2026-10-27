@@ -3,6 +3,7 @@ import {
   LESSONS,
   KI_MISSION_01,
   KI_MISSION_02,
+  KI_MISSION_03,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -64,7 +65,24 @@ assert.deepEqual(KI_MISSION_02.phases.slice(0, 2).map((phase) => phase.blocks), 
   [{ type: 'media', mediaId: 'klickpunktSchule' }],
 ]);
 assert.equal(validateLessonDefinition(KI_MISSION_02), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02']);
+assert.equal(getLesson('ki-03'), KI_MISSION_03);
+assert.equal(KI_MISSION_03.id, 'ki-03');
+assert.equal(KI_MISSION_03.title, 'Mission 03 – Merkmale, Labels und Schwellenwerte');
+assert.equal(KI_MISSION_03.duration, 45);
+assert.deepEqual(KI_MISSION_03.context, { subject: 'WP 8', module: 'Modul 2', hour: 'Stunde 1', overviewHref: '../modul-2.html#stunde-1' });
+assert.deepEqual(KI_MISSION_03.objectives, ['Du unterscheidest Merkmale und Labels und wendest einen Schwellenwert auf ein neues Beispiel an.']);
+assert.equal(KI_MISSION_03.media.infSchule.url, 'https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI');
+assert.equal(KI_MISSION_03.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_03.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_03.resourceNotes.material.license, 'not-stated');
+assert.deepEqual(KI_MISSION_03.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_03.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.deepEqual([...new Set(KI_MISSION_03.phases.flatMap(({ blocks }) => blocks.map(({ type }) => type)))].sort(), ['media', 'quiz', 'task']);
+assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').prompt, /Wert 7/);
+assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
+assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
+assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03']);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [
