@@ -657,7 +657,52 @@ export const KI_MISSION_13 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13 });
+const KI_MISSION_14_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Welche Fragen helfen dabei, eine starke Behauptung zu prüfen?', choices: ['Wer ist die Quelle, welche Belege und Messmethode gibt es, und womit wird fair verglichen?', 'Wie oft wird die Behauptung wiederholt?', 'Ob sie zu meiner ersten Meinung passt.'], correctIndex: 0, explanation: 'Eine Prüfung fragt nach Quelle, Belegen, Messmethode und einem fairen Vergleich.' },
+  { id: 'q2', prompt: 'Ein fiktiver Blog schreibt: „Unsere Lern-App macht dich in drei Tagen doppelt so klug.“ Was ist ein sinnvoller nächster Schritt?', choices: ['Die App sofort empfehlen, weil die Aussage genau klingt.', 'Nachprüfen, wer die Behauptung aufstellt und wie „doppelt so klug“ gemessen wurde.', 'Die Behauptung für wahr halten, weil ein Blog sie veröffentlicht hat.'], correctIndex: 1, explanation: 'Eine messbare Methode und verlässliche Belege sind nötig; ein genauer oder selbstbewusster Satz beweist nichts.' },
+  { id: 'q3', prompt: 'Was macht einen Vergleich aussagekräftiger?', choices: ['Zwei Gruppen unter vergleichbaren Bedingungen untersuchen und die Methode offenlegen.', 'Nur das beste Ergebnis zeigen.', 'Die Messung erst nach dem Ergebnis festlegen.'], correctIndex: 0, explanation: 'Ein fairer Vergleich nutzt nachvollziehbare, vergleichbare Bedingungen und eine erklärte Methode.' },
+  { id: 'q4', prompt: 'Was bedeutet kritisches Prüfen?', choices: ['Jede Behauptung automatisch ablehnen.', 'Fragen, welche Belege eine Behauptung stützen und was noch offen ist.', 'Die Behauptung glauben, wenn sie oft geteilt wurde.'], correctIndex: 1, explanation: 'Kritisches Denken prüft Belege und Grenzen; es heißt nicht, alles abzulehnen.' },
+  { id: 'q5', prompt: 'Eine Quelle nennt keine Messmethode. Was solltest du daraus schließen?', choices: ['Die Behauptung ist bewiesen.', 'Die fehlende Methode ist eine offene Frage; bitte um nachvollziehbare Informationen.', 'Die Zahl darf nach Gefühl geändert werden.'], correctIndex: 1, explanation: 'Ohne erkennbare Methode lässt sich die Behauptung nicht gut bewerten. Zahlen werden nicht nach Gefühl angepasst.' },
+]);
+
+export const KI_MISSION_14 = Object.freeze({
+  id: 'ki-14',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 1', overviewHref: '../modul-6.html#stunde-1' },
+  title: 'Mission 14 – Behauptungen kritisch prüfen',
+  description: 'Prüfe starke Behauptungen anhand ihrer Quelle, Belege, Messmethode und eines fairen Vergleichs.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission prüfst du Nachrichten auf fehlende Quellen, veraltete Angaben und veränderte Originalinformationen.',
+  objectives: [
+    'Du zerlegst eine Behauptung in Aussage, Quelle und Beleg.',
+    'Du fragst nach Messmethode und fairem Vergleich, ohne eine Aussage vorschnell zu glauben oder abzulehnen.',
+  ],
+  phases: [
+    { id: 'claim', title: 'Eine starke Behauptung erkennen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-claim-check' }] },
+    { id: 'source', title: 'Quelle und Belege prüfen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-evidence' }] },
+    { id: 'compare', title: 'Messmethode und Vergleich untersuchen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-apply' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_14_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_14_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zum Prüfen von Behauptungen anhand von Quelle, Belegen und Methode wurde bestätigt; keines ist zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Kein direkt passendes externes Material zur Quellen- und Methodenprüfung wurde bestätigt. Experience AI, „Large Language Models (LLMs) (11–14)“, ist nur teilweise passend zu Grenzen und Zuverlässigkeit von KI-Ausgaben; Alterszuordnung und Lizenz für diese Stunde sind nicht verifiziert.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Kritisches Prüfen bedeutet nicht, alles abzulehnen. Bei einer starken Behauptung fragst du: Wer ist die Quelle? Welche Belege gibt es? Welche Messmethode wurde verwendet? Gibt es einen fairen Vergleich? Ein selbstbewusster Satz ist noch kein Beweis.' },
+    { type: 'reflection', id: 'claim-reflection', prompt: 'Warum reichen eine genaue Zahl oder eine überzeugende Überschrift allein nicht als Beleg?', examples: ['Eine Zahl ist nur dann prüfbar, wenn klar ist, wer sie erhoben hat, was gemessen wurde, mit welcher Methode und womit fair verglichen wurde.'] },
+  ],
+  tasks: [
+    { id: 'task-claim-check', type: 'open-response', title: 'Eine starke Behauptung prüfen', prompt: 'Ein fiktiver Blog behauptet: „Unsere Lern-App macht dich in drei Tagen doppelt so klug.“ Welche Fragen stellst du, bevor du die Behauptung glaubst oder weiterleitest?', exampleAnswer: 'Wer veröffentlicht die Behauptung und welche Quelle wird genannt? Welche Belege gibt es? Welche Messmethode zeigt, ob „doppelt so klug“ zutrifft? Gab es einen fairen Vergleich mit einer passenden Gruppe und unter gleichen Bedingungen? Kritisches Prüfen heißt nicht, alles ablehnen zu müssen; ich prüfe, was die Informationen tatsächlich zeigen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-evidence', type: 'open-response', title: 'Beleg und offene Frage unterscheiden', prompt: 'Die fiktive App-Werbung zeigt nur eine Vorher-nachher-Zahl und nennt keine Quelle oder Messmethode. Was weißt du, und was musst du noch prüfen?', exampleAnswer: 'Ich weiß nur, welche Zahl die Werbung behauptet. Quelle, Messmethode und fairer Vergleich fehlen noch; ich frage nach diesen Informationen, statt die Zahl als bewiesen zu behandeln.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-apply', type: 'open-response', title: 'Einen fairen Vergleich planen', prompt: 'Plane eine faire Prüfung für die fiktive Behauptung. Beschreibe, was gemessen und zwischen welchen vergleichbaren Bedingungen geprüft werden müsste.', exampleAnswer: 'Zuerst lege ich fest, was „besser lernen“ messbar bedeutet. Dann vergleiche ich Gruppen unter gleichen Bedingungen, dokumentiere Quelle und Methode und nenne, was die Ergebnisse nicht beweisen. Es werden keine echten Schülerdaten benötigt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14 });
 
 export function getLesson(id) {
   return LESSONS[id];

@@ -203,6 +203,11 @@ let mission13Writes = 0;
 createMissionRenderer({ root: mission13Root, lesson: getLesson('ki-13'), progressKey: 'ki-13', storage: { getItem: () => null, setItem() { mission13Writes += 1; }, removeItem() {} } });
 assert.equal(mission13Writes, 0, 'M13 does not write progress on initial render');
 assert.match(mission13Root.innerHTML, /In der nächsten Mission prüfst du Behauptungen, indem du Autor, Belege und Methode kritisch untersuchst\./);
+const mission14Root = new FakeRoot();
+let mission14Writes = 0;
+createMissionRenderer({ root: mission14Root, lesson: getLesson('ki-14'), progressKey: 'ki-14', storage: { getItem: () => null, setItem() { mission14Writes += 1; }, removeItem() {} } });
+assert.equal(mission14Writes, 0, 'M14 does not write progress on initial render');
+assert.match(mission14Root.innerHTML, /In der nächsten Mission prüfst du Nachrichten auf fehlende Quellen, veraltete Angaben und veränderte Originalinformationen\./);
 
 const defaultHintRoot = new FakeRoot();
 createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });
