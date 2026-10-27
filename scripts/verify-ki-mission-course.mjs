@@ -8,6 +8,7 @@ const html = fs.readFileSync(new URL('../pages/ki8/index.html', import.meta.url)
 assert.match(html, /href="\.\/stunde-1\/"/);
 assert.match(html, /id="course-progress"/);
 assert.match(html, /id="course-url"/);
+assert.match(html, /Öffentlicher Lernpfad · 16 Missionen/);
 assert.match(html, /<a id="course-qr" class="course-qr" href="https:\/\/albecabrera\.github\.io\/linguaCode\/ki8\/"/);
 for (const mission of [1, 2, 3]) assert.match(html, new RegExp(`<a id="mission-0${mission}-qr" class="course-qr mission-qr" href="https://albecabrera\\.github\\.io/linguaCode/ki8/stunde-${mission}/"`));
 assert.match(html, /<a class="mission-panel-link" href="\.\/stunde-4\/">/);
