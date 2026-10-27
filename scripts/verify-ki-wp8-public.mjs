@@ -3,7 +3,7 @@ import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 
 const catalog = readFileSync(new URL('../pages/index.html', import.meta.url), 'utf8');
-const cards = [...catalog.matchAll(/<article data-subject="([^"]+)">([\s\S]*?)<\/article>/g)];
+const cards = [...catalog.matchAll(/<article\b[^>]*\bdata-subject="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)];
 const matches = cards.filter(([, , html]) => html.includes('<h2>UV Künstliche Intelligenz</h2>'));
 assert.equal(matches.length, 1);
 assert.equal(matches[0][1], 'Informatik');
@@ -12,6 +12,7 @@ assert.match(matches[0][2], /Achtzehn interaktive Missionen/);
 assert.doesNotMatch(matches[0][2], /Zwei interaktive Unterrichtsstunden|Entwurf/);
 assert.match(matches[0][2], /href="ki8\//);
 assert.match(matches[0][2], /data-share="ki8\//);
+assert.match(catalog, /<article\b[^>]*class="course-featured"[^>]*>[\s\S]*?<h2>UV Künstliche Intelligenz<\/h2>/);
 const folder = new URL('../pages/ki8/', import.meta.url);
 const expectedFiles = [
   'app.mjs', 'course.mjs', 'index.html', 'modul-1.html', 'modul-2.html', 'modul-3.html',
@@ -25,8 +26,16 @@ const entry = readFileSync(new URL('index.html', folder), 'utf8');
 assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="mission-list"/);
 assert.match(entry, /Öffentlicher Lernpfad · 18 Missionen/);
+assert.match(entry, /id="course-roadmap"/);
+assert.match(entry, /6 Module · 18 Missionen/);
+for (const label of ['Grundlagen', 'Entscheidungsbäume', 'Muster erkennen', 'Chatbots', 'Kritisch &amp; verantwortlich']) assert.match(entry, new RegExp(`>${label}<`));
 for (const hour of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]) assert.match(entry, new RegExp(`href="\\./stunde-${hour}/"`));
 assert.doesNotMatch(entry, /href="\.\/modul-\d+\.html#stunde-\d+"|id="modules"|id="beispielkarte"/);
+const catalogStyle = readFileSync(new URL('style.css', folder), 'utf8');
+const integrationStyle = readFileSync(new URL('mission/course-integration.css', folder), 'utf8');
+assert.match(catalogStyle, /main \{ max-width: none;/);
+assert.match(integrationStyle, /grid-template-columns: repeat\(auto-fit, minmax\(min\(100%, 18rem\), 1fr\)\)/);
+for (const tone of [/mission-panel:nth-child\(6n \+ 1\)/, /mission-panel:nth-child\(6n \+ 2\)/, /mission-panel:nth-child\(6n \+ 3\)/]) assert.match(integrationStyle, tone);
 const app = readFileSync(new URL('app.mjs', folder), 'utf8');
 assert.match(app, /initCourseIntegration/);
 assert.doesNotMatch(app, /modul-\$\{index \+ 1\}\.html#stunde-\$\{hour\}/);
