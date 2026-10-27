@@ -792,7 +792,52 @@ export const KI_MISSION_16 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16 });
+const KI_MISSION_17_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Ein fiktives Bildermodell hat fast nur Tiere bei Tageslicht im Training gesehen. Warum kann das ein Problem sein?', choices: ['Fehlende Beispiele können dazu führen, dass das Modell andere Gruppen oder Situationen schlechter erkennt.', 'Das Modell wird automatisch fair, sobald es viele Bilder hat.', 'Die nicht gezeigten Tiere sind deshalb weniger geeignet.'], correctIndex: 0, explanation: 'Einseitige Trainingsdaten können Lücken erzeugen. Eine Vorhersage sagt nichts über die Eignung von Menschen oder Tieren aus.' },
+  { id: 'q2', prompt: 'Ein fiktives Modell erreicht 95 % Gesamtgenauigkeit, erkennt aber eine selten vertretene Gruppe oft falsch. Was ist sinnvoll?', choices: ['Fehler und Datenabdeckung für verschiedene Gruppen prüfen, statt die Gesamtzahl als Fairnessbeweis zu nehmen.', 'Die Fehler der seltenen Gruppe verschweigen.', 'Die Gesamtgenauigkeit beweist, dass jedes Ergebnis fair ist.'], correctIndex: 0, explanation: 'Ein Gesamtwert kann Fehler einzelner Gruppen verdecken. Prüfe Verteilung und Ergebnisse differenziert.' },
+  { id: 'q3', prompt: 'Wie gehst du mit einem fiktiven Beispiel um, das von der bisherigen Auswahl abweicht?', choices: ['Es sofort löschen, weil es die Genauigkeit stört.', 'Es als Beweis behandeln, dass alle ähnlichen Fälle gleich sind.', 'Untersuchen, ob es eine Datenlücke oder eine wichtige neue Situation sichtbar macht.'], correctIndex: 2, explanation: 'Abweichungen können auf eine Lücke oder Grenze hinweisen. Prüfe sie, statt sie automatisch zu löschen oder zu verallgemeinern.' },
+  { id: 'q4', prompt: 'Was beweist eine einzelne Kennzahl wie die Gesamtgenauigkeit?', choices: ['Dass alle Gruppen gleich gut erkannt werden.', 'Für sich allein nicht, dass ein Modell fair ist.', 'Dass keine Trainingsdaten fehlen.'], correctIndex: 1, explanation: 'Eine Kennzahl allein zeigt nicht, wie Daten und Fehler zwischen Gruppen verteilt sind und beweist keine Fairness.' },
+  { id: 'q5', prompt: 'Was kann ein Team tun, wenn wichtige Gruppen oder Situationen im fiktiven Datensatz fehlen?', choices: ['Die Lücken dokumentieren und verantwortungsvoll passende Beispiele ergänzen und erneut prüfen.', 'Das Problem ignorieren, wenn der Gesamtwert hoch ist.', 'Die betroffenen Gruppen für die Fehler verantwortlich machen.'], correctIndex: 0, explanation: 'Dokumentiere Datenlücken, ergänze geeignete Beispiele verantwortungsvoll und prüfe die Ergebnisse erneut.' },
+]);
+
+export const KI_MISSION_17 = Object.freeze({
+  id: 'ki-17',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 4', overviewHref: '../modul-6.html#stunde-4' },
+  title: 'Mission 17 – Bias und Vorurteile untersuchen',
+  description: 'Suche in fiktiven Trainingsdaten nach fehlenden Gruppen und Situationen und prüfe, warum Gesamtgenauigkeit allein keine Fairness beweist.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission prüfst du KI-Vorschläge, achtest auf Datenschutz und übernimmst Verantwortung für deine Entscheidung.',
+  objectives: [
+    'Du erklärst, wie einseitige oder unvollständige Trainingsdaten verzerrte Modellvorhersagen begünstigen können.',
+    'Du suchst nach fehlenden Gruppen und Situationen und beurteilst Modellfehler differenziert, statt Fairness aus einer Kennzahl abzuleiten.',
+  ],
+  phases: [
+    { id: 'bias-example', title: 'Einseitige Beispiele erkennen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-bias-example' }] },
+    { id: 'missing-groups', title: 'Fehlende Gruppen und Situationen suchen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-missing-groups' }] },
+    { id: 'metric-limits', title: 'Kennzahlen kritisch einordnen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-metric-limits' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_17_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_17_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zur Suche nach Datenlücken und zur Prüfung von Bias wurde bestätigt; keines ist zugewiesen.' },
+    material: { status: 'candidate', targetGrade: '11-14', license: 'unverified', url: 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/3', text: 'Experience AI, „Lektion 3: Das Problem der Voreingenommenheit“, behandelt begrenzte Datensätze, Training/Test, Modellgenauigkeit und verzerrte Vorhersagen. Die Seite nennt die Altersgruppe 11–14; die Lizenz des Downloads ist nicht verifiziert. Nur auf die Originalseite verweisen; nichts kopieren oder hosten.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Wenn Trainingsdaten einseitig oder unvollständig sind, können Modellvorhersagen verzerrt sein. Prüfe, welche Gruppen und Situationen fehlen. Eine Gesamtgenauigkeit kann Fehler einzelner Gruppen verdecken und beweist allein keine Fairness. Eine Modellvorhersage ist kein Urteil über die Eignung eines Menschen.' },
+    { type: 'reflection', id: 'bias-reflection', prompt: 'Welche Gruppen oder Situationen könnten in einem Datensatz fehlen, und was sagt eine Gesamtgenauigkeit darüber nicht?', examples: ['Ich prüfe, welche Gruppen und Situationen vertreten sind, und suche nach Lücken. Ein Gesamtwert zeigt nicht automatisch, ob Fehler für alle Gruppen gleich verteilt sind oder das Modell fair ist.'] },
+  ],
+  tasks: [
+    { id: 'task-bias-example', type: 'open-response', title: 'Einseitige Trainingsdaten untersuchen', prompt: 'Ein fiktives Bildermodell hat fast nur Tiere bei Tageslicht gesehen. Was könnte es bei Nacht, anderem Hintergrund oder wenig vertretenen Tiergruppen übersehen?', exampleAnswer: 'Das Modell könnte bei anderen Lichtverhältnissen oder Gruppen mehr Fehler machen. Ich prüfe, welche Beispiele fehlen und wie sich die Vorhersagen unterscheiden, statt die Ergebnisse als allgemeingültig zu behandeln.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-missing-groups', type: 'open-response', title: 'Fehlende Gruppen und Situationen suchen', prompt: 'Ein fiktiver Datensatz zeigt fast nur Tiere bei Tageslicht und aus einer Perspektive. Welche Gruppen und Situationen könnten fehlen, und wie würdest du das prüfen?', exampleAnswer: 'Ich vergleiche, welche Gruppen und Situationen in der Verteilung vertreten sind, dokumentiere Lücken und prüfe die Auswirkungen. Aus einer Modellvorhersage schließe ich nicht auf die Eignung von Menschen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-metric-limits', type: 'open-response', title: 'Eine Kennzahl kritisch prüfen', prompt: 'Ein fiktives Modell hat 95 % Gesamtgenauigkeit, macht aber bei allen Beispielen aus einer selten vertretenen Gruppe Fehler. Reicht die Gesamtgenauigkeit als Fairnessnachweis?', exampleAnswer: 'Nein. Die Gesamtgenauigkeit kann Fehler einzelner Gruppen verdecken. Ich prüfe Datenabdeckung und Fehler je Gruppe; eine einzelne Kennzahl beweist keine Fairness.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16, 'ki-17': KI_MISSION_17 });
 
 export function getLesson(id) {
   return LESSONS[id];

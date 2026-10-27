@@ -218,6 +218,11 @@ let mission16Writes = 0;
 createMissionRenderer({ root: mission16Root, lesson: getLesson('ki-16'), progressKey: 'ki-16', storage: { getItem: () => null, setItem() { mission16Writes += 1; }, removeItem() {} } });
 assert.equal(mission16Writes, 0, 'M16 does not write progress on initial render');
 assert.match(mission16Root.innerHTML, /In der nächsten Mission untersuchst du, ob Trainingsdaten verschiedene Gruppen und Situationen abdecken und welche Verzerrungen entstehen können\./);
+const mission17Root = new FakeRoot();
+let mission17Writes = 0;
+createMissionRenderer({ root: mission17Root, lesson: getLesson('ki-17'), progressKey: 'ki-17', storage: { getItem: () => null, setItem() { mission17Writes += 1; }, removeItem() {} } });
+assert.equal(mission17Writes, 0, 'M17 does not write progress on initial render');
+assert.match(mission17Root.innerHTML, /In der nächsten Mission prüfst du KI-Vorschläge, achtest auf Datenschutz und übernimmst Verantwortung für deine Entscheidung\./);
 
 const defaultHintRoot = new FakeRoot();
 createMissionRenderer({ root: defaultHintRoot, lesson: getLesson('ki-08'), progressKey: 'ki-08', storage: { getItem: () => null, setItem() {}, removeItem() {} } });

@@ -17,6 +17,7 @@ import {
   KI_MISSION_14,
   KI_MISSION_15,
   KI_MISSION_16,
+  KI_MISSION_17,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -95,7 +96,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12', 'ki-13', 'ki-14', 'ki-15', 'ki-16']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12', 'ki-13', 'ki-14', 'ki-15', 'ki-16', 'ki-17']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -177,7 +178,7 @@ assert.equal(KI_MISSION_07.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_07.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_07.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_07), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12', 'ki-13', 'ki-14', 'ki-15', 'ki-16']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12', 'ki-13', 'ki-14', 'ki-15', 'ki-16', 'ki-17']);
 assert.equal(getLesson('ki-08'), KI_MISSION_08);
 assert.equal(KI_MISSION_08.id, 'ki-08');
 assert.equal(KI_MISSION_08.title, 'Mission 08 – Verbessern, ohne den Test zu verraten');
@@ -237,7 +238,7 @@ assert.equal(KI_MISSION_10.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_10.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_10.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_10), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12', 'ki-13', 'ki-14', 'ki-15', 'ki-16']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08', 'ki-09', 'ki-10', 'ki-11', 'ki-12', 'ki-13', 'ki-14', 'ki-15', 'ki-16', 'ki-17']);
 
 assert.equal(getLesson('ki-11'), KI_MISSION_11);
 assert.equal(KI_MISSION_11.id, 'ki-11');
@@ -390,6 +391,32 @@ assert.equal(KI_MISSION_16.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_16.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_16.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_16), true);
+
+assert.equal(getLesson('ki-17'), KI_MISSION_17);
+assert.equal(KI_MISSION_17.id, 'ki-17');
+assert.equal(KI_MISSION_17.title, 'Mission 17 – Bias und Vorurteile untersuchen');
+assert.equal(KI_MISSION_17.duration, 45);
+assert.deepEqual(KI_MISSION_17.context, { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 4', overviewHref: '../modul-6.html#stunde-4' });
+assert.deepEqual(KI_MISSION_17.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_17.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_17.contentBlocks[0].text, /Trainingsdaten.*einseitig.*unvollständig/i);
+assert.match(KI_MISSION_17.contentBlocks[0].text, /Gruppen und Situationen fehlen/i);
+assert.match(KI_MISSION_17.contentBlocks[0].text, /Gesamtgenauigkeit.*Fairness/i);
+const biasMissingGroupsTask = KI_MISSION_17.tasks.find(({ id }) => id === 'task-missing-groups');
+assert.match(biasMissingGroupsTask.prompt, /fiktiv.*Gruppen.*Situationen.*fehlen/i);
+assert.match(biasMissingGroupsTask.exampleAnswer, /Gruppen.*Verteilung.*Lücken.*nicht.*Eignung/i);
+const biasMetricLimitsTask = KI_MISSION_17.tasks.find(({ id }) => id === 'task-metric-limits');
+assert.match(biasMetricLimitsTask.prompt, /fiktiv.*Genauigkeit.*Gruppe/i);
+assert.match(biasMetricLimitsTask.exampleAnswer, /Gesamtgenauigkeit.*Gruppen.*einzelne Kennzahl.*Fairness/i);
+assert.equal(KI_MISSION_17.progress.localOnly, true);
+assert.deepEqual(KI_MISSION_17.media, {});
+assert.equal(KI_MISSION_17.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_17.resourceNotes.material.status, 'candidate');
+assert.equal(KI_MISSION_17.resourceNotes.material.targetGrade, '11-14');
+assert.equal(KI_MISSION_17.resourceNotes.material.license, 'unverified');
+assert.equal(KI_MISSION_17.resourceNotes.material.url, 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/3');
+assert.equal(KI_MISSION_17.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_17), true);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [
