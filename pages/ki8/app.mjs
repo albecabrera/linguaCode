@@ -2,12 +2,14 @@ import {createCatalogController} from './catalog.mjs';
 import {renderCheckpoints} from './checkpoints.mjs';
 import {initCourseIntegration} from './mission/course-integration.mjs';
 import {createThemeController} from './mission/theme.mjs';
+import {createPresentationController} from './presentation.mjs';
 
 function browserStorage() {
   try { return globalThis.localStorage; } catch { return null; }
 }
 
 createThemeController();
+createPresentationController({storage: browserStorage()}).bind();
 initCourseIntegration();
 const storage = browserStorage();
 const catalog = createCatalogController({storage});

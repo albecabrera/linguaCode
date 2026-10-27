@@ -63,7 +63,7 @@ assert.match(missionCss, /:root\[data-theme="dark"\]\{[^}]*--navy:#071425/);
 assert.match(missionCss, /background:var\(--input-bg\)/, 'mission inputs use theme-aware surfaces');
 assert.match(missionCss, /background:var\(--inset-bg\)/, 'mission examples use theme-aware surfaces');
 assert.match(missionCss, /\.mission-shell\{max-width:1760px/);
-assert.match(missionCss, /grid-template-columns:minmax\(280px,340px\)/);
+assert.match(missionCss, /grid-template-columns:minmax\(230px,280px\)/);
 assert.match(missionCss, /\.theme-toggle\{[^}]*width:46px/);
 
 console.log('PASS: system default, accessible theme toggle, local persistence, and explicit light/dark UI palettes.');

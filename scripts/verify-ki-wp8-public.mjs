@@ -7,15 +7,15 @@ const cards = [...catalog.matchAll(/<article\b[^>]*\bdata-subject="([^"]+)"[^>]*
 const matches = cards.filter(([, , html]) => html.includes('<h2>UV Künstliche Intelligenz</h2>'));
 assert.equal(matches.length, 1);
 assert.equal(matches[0][1], 'Informatik');
-assert.match(matches[0][2], /Informatik · WP 8 · 18 Missionen/);
-assert.match(matches[0][2], /Achtzehn interaktive Missionen/);
+assert.match(matches[0][2], /Informatik · WP 8 · 19 Missionen/);
+assert.match(matches[0][2], /Neunzehn interaktive Missionen/);
 assert.doesNotMatch(matches[0][2], /Zwei interaktive Unterrichtsstunden|Entwurf/);
 assert.match(matches[0][2], /href="ki8\//);
 assert.match(matches[0][2], /data-share="ki8\//);
 assert.match(catalog, /<article\b[^>]*class="course-featured"[^>]*>[\s\S]*?<h2>UV Künstliche Intelligenz<\/h2>/);
 const folder = new URL('../pages/ki8/', import.meta.url);
 const expectedFiles = [
-  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
+  'app.mjs', 'catalog.mjs', 'index.html', 'style.css', 'checkpoints.css', 'checkpoints.mjs', 'mission', 'presentation.mjs', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18', 'stunde-19', 'teacher',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');

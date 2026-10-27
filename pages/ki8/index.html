@@ -11,7 +11,7 @@
 </head>
 <body>
   <a class="skip" href="#main">Zum Inhalt springen</a>
-  <header><a href="../">Lingua<span>Code</span></a><span>Informatik · WP 8</span><button type="button" class="theme-toggle" data-theme-toggle aria-label="Dunkelmodus aktivieren" title="Dunkelmodus aktivieren" aria-pressed="false"><span data-theme-icon aria-hidden="true">☾</span><span class="sr-only" data-theme-label>Dunkelmodus aktivieren</span></button></header>
+  <header><a href="../">Lingua<span>Code</span></a><span>Informatik · WP 8</span><div class="header-controls"><button type="button" class="theme-toggle" data-theme-toggle aria-label="Dunkelmodus aktivieren" title="Dunkelmodus aktivieren" aria-pressed="false"><span data-theme-icon aria-hidden="true">☾</span><span class="sr-only" data-theme-label>Dunkelmodus aktivieren</span></button><button type="button" class="presentation-toggle" data-presentation-toggle aria-label="Smartboard-Modus aktivieren" title="Smartboard-Modus aktivieren" aria-pressed="false">Smartboard-Modus aktivieren</button></div></header>
   <main id="main">
     <section class="hero">
       <p class="eyebrow">Öffentlicher Lernpfad · 19 Missionen</p>
@@ -43,14 +43,14 @@
         </div>
         <a id="continue-course" class="mission-cta continue-course" href="./stunde-1/">Kurs starten →</a>
       </div>
-      <div id="catalog-filters" class="catalog-filters" aria-label="Katalogfilter">
+      <div id="catalog-filters" class="catalog-filters" aria-label="Katalogfilter" aria-controls="mission-list">
         <div class="filter-group" role="group" aria-label="Fortschritt">
           <button type="button" data-progress-filter="all" aria-pressed="true">Alle</button>
           <button type="button" data-progress-filter="in-progress" aria-pressed="false">In Bearbeitung</button>
           <button type="button" data-progress-filter="completed" aria-pressed="false">Abgeschlossen</button>
         </div>
-        <label>Modul
-          <select data-module-filter>
+        <label for="module-filter">Modul
+          <select id="module-filter" data-module-filter>
             <option value="">Alle Module</option>
             <option>Grundlagen</option>
             <option>Entscheidungsbäume</option>
@@ -60,8 +60,8 @@
             <option>Abschlussprojekt</option>
           </select>
         </label>
-        <label>Thema
-          <select data-topic-filter>
+        <label for="topic-filter">Thema
+          <select id="topic-filter" data-topic-filter>
             <option value="">Alle Themen</option>
             <option>KI-Grundlagen</option>
             <option>Training</option>
@@ -86,6 +86,7 @@
       <p id="catalog-empty" class="catalog-empty" role="status" hidden>Keine Mission passt zu diesen Filtern.</p>
       <div id="mission-list" class="mission-grid">
         <article class="mission-panel" data-catalog-card="ki-01" data-module="Grundlagen" data-topic="KI-Grundlagen">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-1/">
             <p class="eyebrow">Mission 01 · KI-Grundlagen</p>
             <h3>Was ist künstliche Intelligenz?</h3>
@@ -97,6 +98,7 @@
           <p id="course-progress" role="status" aria-live="polite">Lokaler Fortschritt wird geladen …</p>
         </article>
         <article class="mission-panel" data-catalog-card="ki-02" data-module="Grundlagen" data-topic="Training">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-2/">
             <p class="eyebrow">Mission 02 · Training</p>
             <h3>Regeln, Training und Grenzen</h3>
@@ -107,6 +109,7 @@
           <a id="mission-02-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-2/" aria-label="Mission 02 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-03" data-module="Grundlagen" data-topic="Daten">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-3/">
             <p class="eyebrow">Mission 03 · Daten</p>
             <h3>Merkmale, Labels und Schwellenwerte</h3>
@@ -117,6 +120,7 @@
           <a id="mission-03-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-3/" aria-label="Mission 03 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-04" data-module="Entscheidungsbäume" data-topic="Training">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-4/">
             <p class="eyebrow">Mission 04 · Training und Test</p>
             <h3>Trainieren, testen und Fehler untersuchen</h3>
@@ -127,6 +131,7 @@
           <a id="mission-04-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-4/" aria-label="Mission 04 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-05" data-module="Entscheidungsbäume" data-topic="Merkmale">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-5/">
             <p class="eyebrow">Mission 05 · Merkmale und Regeln</p>
             <h3>Vom Merkmal zur ersten Regel</h3>
@@ -137,6 +142,7 @@
           <a id="mission-05-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-5/" aria-label="Mission 05 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-06" data-module="Entscheidungsbäume" data-topic="Trainingsdaten">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-6/">
             <p class="eyebrow">Mission 06 · Trainingsdaten und Test</p>
             <h3>Trainingsdaten und Aufteilungen</h3>
@@ -147,6 +153,7 @@
           <a id="mission-06-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-6/" aria-label="Mission 06 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-07" data-module="Entscheidungsbäume" data-topic="Testen">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-7/">
             <p class="eyebrow">Mission 07 · Testbeispiele</p>
             <h3>Regeln an Testbeispielen prüfen</h3>
@@ -157,6 +164,7 @@
           <a id="mission-07-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-7/" aria-label="Mission 07 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-08" data-module="Entscheidungsbäume" data-topic="Regeln">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-8/">
             <p class="eyebrow">Mission 08 · Regeln verbessern</p>
             <h3>Verbessern, ohne den Test zu verraten</h3>
@@ -167,6 +175,7 @@
           <a id="mission-08-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-8/" aria-label="Mission 08 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-09" data-module="Muster erkennen" data-topic="Muster">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-9/">
             <p class="eyebrow">Mission 09 · Muster</p>
             <h3>Muster in Beispielen entdecken</h3>
@@ -177,6 +186,7 @@
           <a id="mission-09-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-9/" aria-label="Mission 09 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-10" data-module="Muster erkennen" data-topic="Ausreißer">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-10/">
             <p class="eyebrow">Mission 10 · Ausreißer</p>
             <h3>Muster prüfen und Ausreißer erkennen</h3>
@@ -187,6 +197,7 @@
           <a id="mission-10-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-10/" aria-label="Mission 10 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-11" data-module="Chatbots" data-topic="Intents">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-11/">
             <p class="eyebrow">Mission 11 · Chatbot-Intents</p>
             <h3>Intents erkennen: Regel oder gelernte KI?</h3>
@@ -197,6 +208,7 @@
           <a id="mission-11-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-11/" aria-label="Mission 11 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-12" data-module="Chatbots" data-topic="Training">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-12/">
             <p class="eyebrow">Mission 12 · Chatbot-Training</p>
             <h3>Beispiele, Lernen und Testen</h3>
@@ -207,6 +219,7 @@
           <a id="mission-12-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-12/" aria-label="Mission 12 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-13" data-module="Chatbots" data-topic="Fallbacks">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-13/">
             <p class="eyebrow">Mission 13 · Chatbot-Fallbacks</p>
             <h3>Unbekannte Eingaben sicher behandeln</h3>
@@ -217,6 +230,7 @@
           <a id="mission-13-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-13/" aria-label="Mission 13 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-14" data-module="Kritisch &amp; verantwortlich" data-topic="Prüfen">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-14/">
             <p class="eyebrow">Mission 14 · Kritisch prüfen</p>
             <h3>Behauptungen kritisch prüfen</h3>
@@ -227,6 +241,7 @@
           <a id="mission-14-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-14/" aria-label="Mission 14 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-15" data-module="Kritisch &amp; verantwortlich" data-topic="Fehlinformation">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-15/">
             <p class="eyebrow">Mission 15 · Fehlinformation</p>
             <h3>Fehlinformation erkennen</h3>
@@ -237,6 +252,7 @@
           <a id="mission-15-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-15/" aria-label="Mission 15 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-16" data-module="Kritisch &amp; verantwortlich" data-topic="Privatsphäre">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-16/">
             <p class="eyebrow">Mission 16 · Privatsphäre</p>
             <h3>Privatsphäre schützen</h3>
@@ -247,6 +263,7 @@
           <a id="mission-16-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-16/" aria-label="Mission 16 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-17" data-module="Kritisch &amp; verantwortlich" data-topic="Bias">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-17/">
             <p class="eyebrow">Mission 17 · Bias und Vorurteile</p>
             <h3>Bias in Trainingsdaten untersuchen</h3>
@@ -257,6 +274,7 @@
           <a id="mission-17-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-17/" aria-label="Mission 17 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-18" data-module="Kritisch &amp; verantwortlich" data-topic="Verantwortung">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-18/">
             <p class="eyebrow">Mission 18 · Verantwortungsvoll nutzen</p>
             <h3>Verantwortungsvoll mit KI umgehen</h3>
@@ -267,6 +285,7 @@
           <a id="mission-18-qr" class="course-qr mission-qr" href="https://albecabrera.github.io/linguaCode/ki8/stunde-18/" aria-label="Mission 18 direkt öffnen (QR-Code)"></a>
         </article>
         <article class="mission-panel" data-catalog-card="ki-19" data-module="Abschlussprojekt" data-topic="Projekt">
+          <p class="catalog-progress" data-progress-label aria-live="polite">Lokaler Fortschritt wird geladen …</p>
           <a class="mission-panel-link" href="./stunde-19/">
             <p class="eyebrow">Mission 19 · Abschlussprojekt</p>
             <h3>KI-Projekt: Prüfen, gestalten und verantworten</h3>

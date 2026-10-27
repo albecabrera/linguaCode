@@ -33,6 +33,19 @@ header a { color: var(--fg); text-decoration: none; }
 .theme-toggle { display: inline-grid; place-items: center; width: 46px; min-width: 46px; height: 46px; padding: 0; font-size: 1.35rem; line-height: 1; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 header a span, .eyebrow { color: var(--accent); }
+.header-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.presentation-toggle { background: var(--surface); color: var(--fg); }
+.presentation-toggle[aria-pressed="true"] { background: var(--accent); color: var(--bg); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent); }
+:root[data-presentation="true"] { font-size: 19px; }
+:root[data-presentation="true"] body { letter-spacing: .01em; }
+:root[data-presentation="true"] main { max-width: 1500px; margin: auto; }
+:root[data-presentation="true"] .mission-panel-link { padding: 1rem; }
+:root[data-presentation="true"] .roadmap-stages { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+:root[data-presentation="true"] .catalog-filters { gap: 1rem; }
+:root[data-presentation="true"] .catalog-filters button, :root[data-presentation="true"] .catalog-filters select { min-height: 52px; }
+:root[data-presentation="true"] .course-sharing { display: none; }
+@media (max-width: 680px) { .header-controls { width: 100%; } .presentation-toggle { flex: 1; } }
+
 main { max-width: none; margin: 0; padding: clamp(1rem, 3vw, 3rem); }
 h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
 .eyebrow { font-size: .8rem; letter-spacing: .09em; text-transform: uppercase; font-weight: 800; }
@@ -55,7 +68,8 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 .skip { position: absolute; top: -100px; background: var(--surface); padding: .5rem; }
 .skip:focus { top: 0; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+@media (forced-colors: active) { button, .mission-cta, .mission-panel-link, .roadmap-stages a { border: 2px solid ButtonText; forced-color-adjust: auto; } :focus-visible { outline: 3px solid Highlight; } }
 
 .hero { max-width: 1200px; }
 .course-roadmap { margin: 2rem 0; padding: clamp(1.25rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); }
@@ -72,6 +86,14 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 .catalog-filters label { display: grid; gap: .25rem; font-weight: 700; }
 .catalog-filters select { min-height: 44px; padding: .5rem .7rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); color: var(--fg); font: inherit; }
 .catalog-empty { padding: 1rem; border: 1px dashed var(--line); border-radius: .75rem; background: var(--surface); }
+.catalog-progress { display: inline-flex; align-items: center; min-height: 2rem; margin: 0 0 .7rem; padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--fg); font-size: .78rem; font-weight: 800; }
+.mission-panel[data-progress="not-started"] .catalog-progress { border-color: var(--line); }
+.mission-panel[data-progress="in-progress"] .catalog-progress { border-color: #b96d13; color: #855b00; }
+.mission-panel[data-progress="completed"] .catalog-progress { border-color: #187243; color: #187243; }
+.mission-panel[data-progress="unavailable"] .catalog-progress { border-color: #a51d2d; color: #a51d2d; }
+:root[data-theme="dark"] .mission-panel[data-progress="in-progress"] .catalog-progress { color: #ffd166; }
+:root[data-theme="dark"] .mission-panel[data-progress="completed"] .catalog-progress { color: #9df1bd; }
+:root[data-theme="dark"] .mission-panel[data-progress="unavailable"] .catalog-progress { color: #ff9b9b; }
 @media (max-width: 680px) { .catalog-heading { align-items: start; flex-direction: column; } .continue-course { width: 100%; justify-content: center; } }
 .roadmap-stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .75rem; padding: 0; margin: 1.25rem 0 0; list-style: none; }
 .roadmap-stages li { min-width: 0; }

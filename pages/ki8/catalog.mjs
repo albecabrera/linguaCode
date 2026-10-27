@@ -1,6 +1,12 @@
 import {createProgressStore} from './mission/progress.mjs';
 
 export const PROGRESS_FILTERS = Object.freeze(['all', 'in-progress', 'completed']);
+export const PROGRESS_LABELS = Object.freeze({
+  'not-started': 'Noch nicht begonnen',
+  'in-progress': 'In Bearbeitung',
+  completed: 'Abgeschlossen',
+  unavailable: 'Nicht verfügbar',
+});
 
 export const COURSE_CATALOG = Object.freeze([
   ['Grundlagen', 'KI-Grundlagen'], ['Grundlagen', 'Training'], ['Grundlagen', 'Daten'],
@@ -68,7 +74,14 @@ export function createCatalogController({documentLike = globalThis.document, sto
       const card = cardById.get(node.dataset.catalogCard);
       const current = progressById.get(card?.id);
       node.hidden = !current || !filterCatalog([current], state).length;
-      if (current) node.dataset.progress = current.status;
+      if (current) {
+        node.dataset.progress = current.status;
+        const label = node.querySelector?.('[data-progress-label]') ?? node.progressLabel;
+        if (label) {
+          label.textContent = PROGRESS_LABELS[current.status] ?? PROGRESS_LABELS['unavailable'];
+          label.dataset.progress = current.status;
+        }
+      }
     }
     const empty = documentLike?.querySelector?.('#catalog-empty');
     if (empty) empty.hidden = nodes.some((node) => !node.hidden);
@@ -84,5 +97,6 @@ export function createCatalogController({documentLike = globalThis.document, sto
   for (const select of documentLike?.querySelectorAll?.('[data-module-filter], [data-topic-filter]') ?? []) {
     select.addEventListener('change', () => apply({[select.dataset.moduleFilter !== undefined ? 'module' : 'topic']: select.value}));
   }
+  apply();
   return {apply, progress, continuation: selectContinuation(cards, progress)};
 }
