@@ -9,7 +9,7 @@ Scope: Add an installable KI course shell with same-origin offline caching while
 ## Tasks
 - T1 (S1,S2): Add KI web manifest, installable icon, and same-origin service worker with bounded cache strategy; route: `pages/ki8/manifest.webmanifest`, `pages/ki8/sw.js`, `pages/ki8/icon.svg`, public verifier; commit: `5fea449`.
 - T2 (S1,S2): Register the service worker from the KI catalog and expose local offline/readiness status without transmitting progress; route: `pages/ki8/index.html`, `pages/ki8/app.mjs`, styles/verifiers; commit: `5fea449`.
-- T3 (S1,S2): Run delivery/privacy/differential QA, commit, push, deploy, and verify live routes; route: verifier scripts/workflow; commit: pending.
+- T3 (S1,S2): Run delivery/privacy/differential QA, commit, push, deploy, and verify live routes; route: verifier scripts/workflow; commit: `d719342` (deployed from `main`).
 
 ## Log
 - L1: User request verbatim: "continua con las demas mejoras que propusistes"
@@ -18,3 +18,4 @@ Scope: Add an installable KI course shell with same-origin offline caching while
 - L4: T1/T2 implemented: installable manifest/icon, bounded same-origin KI shell cache with safe navigation fallback and version cleanup, catalog registration, and German local readiness status; no external resources or learner data are cached or transmitted.
 - L5: Focused PWA verifier added with RED observed before implementation and GREEN after implementation; public directory contract now includes the three PWA files.
 - L6: Review found the initial worker did not precache mission dependencies; expanded it to all 19 mission routes, shared mission modules, and the local QR asset, with network-first navigation and cached-route fallback. Full KI/WP8/PWA/privacy/differential QA passed. Implementation committed as `5fea449`; cumulative branch exceeds the approximate 400-line review target because prior authorized slices are included, and this boundary is recorded here.
+- L7: User-authorized push advanced `origin/main` to `d719342`; GitHub Pages workflow `40599288490` succeeded. Live checks passed for `/ki8/`, `/ki8/manifest.webmanifest`, `/ki8/sw.js`, `/ki8/icon.svg`, and `/ki8/stunde-19/`, including standalone manifest metadata, v2 worker marker, manifest link, and offline status.
