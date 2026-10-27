@@ -17,9 +17,10 @@ Die Beispiele bleiben fiktiv. Bei der Akkuregel bedeutet `≤30 %` „Ladepause�
 
 ## Externe Quellen und Grenzen
 
-- [inf-schule: Entscheide wie eine KI](https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI) behandelt überwachtes Lernen, Merkmale, Schwellenwerte und Entscheidungsbäume; die Lernstrecke ist eine passende Ergänzung zur Regelarbeit.
+- [inf-schule: Entscheide wie eine KI](https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI) behandelt überwachtes Lernen, Merkmale, Schwellenwerte und Entscheidungsbäume. Die Seite verlinkt außerdem eine druckbare Vorlage für Lebensmittel-Datenkarten, ein kostenfreies Kartenset für Schulen über ProDaBi und weitere Unterrichtsmaterialien.
+- [openHPI: 3.6 Entscheidungsbäume](https://open.hpi.de/learn/kieinstieg2020/items/yRX6ZcCDd7c7pC2ssvP00?locale=de) ist ein deutschsprachiger Clip von 8:18 Minuten. Merkmale und Labels werden an einem Entscheidungsbaum gezeigt; ab 5:57 folgt eine zusätzliche Altersgrenze. Gini-Koeffizient und Entropie im späteren Teil sind anspruchsvoller, deshalb kann die Lehrkraft den passenden Ausschnitt auswählen.
 
-Die Quelle wird ausschließlich verlinkt. Auf der geprüften Seite waren Zieljahrgang und Lizenz nicht angegeben; eine Altersfreigabe für WP 8 und Nachnutzungsrechte werden daher nicht behauptet. Kein spezifisches Video für diese Stunde wurde bestätigt; keines ist zugewiesen. Externe Texte, Abbildungen, Videos und Arbeitsblätter werden nicht kopiert oder eingebettet.
+Beide Quellen bleiben externe Links; es werden keine Texte, Abbildungen, Videos oder Arbeitsblätter kopiert/eingebettet. openHPI weist den Kurs für Klassen 8–13 und ohne technische Vorkenntnisse aus; weitere Kursinhalte sind nach kostenloser Einschreibung verfügbar. Die Lizenz des Einzelvideos ist nicht verifiziert. Die inf-schule-Seite nennt weder einen Zieljahrgang noch Lizenzen für die ergänzenden Materialien.
 
 ## Fortschritt und Route
 

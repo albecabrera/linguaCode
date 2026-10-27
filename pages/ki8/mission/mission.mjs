@@ -1,6 +1,7 @@
 import { getLesson, gradeQuiz, matchGapFill } from './lesson-data.mjs';
 import { createProgressStore, progressKeyForLesson } from './progress.mjs';
 import { deriveFruitLab, fruitLabReducer, initialFruitLab } from './fruit-lab.mjs';
+import {createThemeController} from './theme.mjs';
 
 export const MISSION_ROUTES = Object.freeze([
   Object.freeze({ path: '/ki8/stunde-1/', lessonId: 'ki-01', progressKey: 'ki-01' }),
@@ -40,7 +41,7 @@ function isPlainObject(value) { return value !== null && typeof value === 'objec
 function isValidFruitState(value) { return isPlainObject(value) && (value.selectedExample === null || value.selectedExample === 'banana' || value.selectedExample === 'apple') && typeof value.shapeRuleEnabled === 'boolean' && typeof value.examplesApplied === 'boolean' && (value.reflectionAnswer === null || ['A', 'B', 'C'].includes(value.reflectionAnswer)) && typeof value.optionalText === 'string' && value.optionalText.length <= 500; }
 function isValidMissionState(value, phaseCount) { return isPlainObject(value) && Number.isInteger(value.phase) && value.phase >= 0 && value.phase < phaseCount && isPlainObject(value.answers) && Object.values(value.answers).every((answer) => typeof answer === 'string' || typeof answer === 'boolean' || (isPlainObject(answer) && Object.values(answer).every((part) => typeof part === 'string'))) && isValidFruitState(value.fruit) && Array.isArray(value.quizAnswers) && value.quizAnswers.every((answer) => answer === null || (Number.isInteger(answer) && answer >= 0 && answer <= 2)) && typeof value.quizSubmitted === 'boolean' && (value.completed === undefined || typeof value.completed === 'boolean'); }
 
-export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progressKey = lesson?.id, storage = browserStorage() } = {}) {
+export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progressKey = lesson?.id, storage = browserStorage(), themeController = createThemeController() } = {}) {
   if (!root || !lesson) throw new TypeError('Mission root and lesson are required.');
   const store = createProgressStore(storage, progressKeyForLesson(progressKey));
   const phaseCount = lesson.phases.length;
@@ -77,7 +78,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
     const contextLink = context.overviewHref ? `<a class="text-link" href="${esc(context.overviewHref)}">Zur Missionsübersicht</a>` : '';
     const progress = state.completed ? 100 : Math.round((state.phase / phaseCount) * 100);
     root.innerHTML = `<div class="mission-shell">
-      <header class="mission-hero"><div class="hero-layout"><div><p class="eyebrow">${esc(lesson.module)}${contextLabel ? ` · ${esc(contextLabel)}` : ''}</p><h1>${esc(lesson.title)}</h1></div><svg class="ai-illustration" viewBox="0 0 180 140" aria-hidden="true" focusable="false"><rect x="35" y="30" width="110" height="80" rx="22" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="70" cy="66" r="8" fill="currentColor"/><circle cx="110" cy="66" r="8" fill="currentColor"/><path d="M65 88 Q90 105 115 88 M90 30 V14 M82 14 H98" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path class="ai-spark" d="M20 20 L24 30 L34 34 L24 38 L20 48 L16 38 L6 34 L16 30 Z" fill="var(--gold)"/></svg></div><p>${esc(lesson.description)}</p><p><a class="button-link" href="#phase-${esc(lesson.phases[0]?.id ?? '')}">Mission starten</a> ${contextLink}</p><p class="privacy-note"><strong>Nur auf diesem Gerät:</strong> Antworten bleiben lokal im Browser. Auf gemeinsam genutzten Geräten können andere Nutzerinnen und Nutzer dieselben Daten sehen; im Privatmodus können Daten fehlen. Beim Löschen der Browserdaten oder Gerätewechsel gehen sie verloren.</p></header>
+      <header class="mission-hero"><div class="hero-layout"><div><div class="hero-heading"><p class="eyebrow">${esc(lesson.module)}${contextLabel ? ` · ${esc(contextLabel)}` : ''}</p><button type="button" class="theme-toggle" data-theme-toggle aria-label="Dunkelmodus" aria-pressed="${themeController.getTheme() === 'dark'}">Dunkelmodus</button></div><h1>${esc(lesson.title)}</h1></div><svg class="ai-illustration" viewBox="0 0 180 140" aria-hidden="true" focusable="false"><rect x="35" y="30" width="110" height="80" rx="22" fill="none" stroke="currentColor" stroke-width="5"/><circle cx="70" cy="66" r="8" fill="currentColor"/><circle cx="110" cy="66" r="8" fill="currentColor"/><path d="M65 88 Q90 105 115 88 M90 30 V14 M82 14 H98" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path class="ai-spark" d="M20 20 L24 30 L34 34 L24 38 L20 48 L16 38 L6 34 L16 30 Z" fill="var(--gold)"/></svg></div><p>${esc(lesson.description)}</p><p><a class="button-link" href="#phase-${esc(lesson.phases[0]?.id ?? '')}">Mission starten</a> ${contextLink}</p><p class="privacy-note"><strong>Nur auf diesem Gerät:</strong> Antworten bleiben lokal im Browser. Auf gemeinsam genutzten Geräten können andere Nutzerinnen und Nutzer dieselben Daten sehen; im Privatmodus können Daten fehlen. Beim Löschen der Browserdaten oder Gerätewechsel gehen sie verloren.</p></header>
       <div class="progress-summary"><div class="progress-label"><strong>Missionsfortschritt</strong><span>${progress}% · Phase ${state.phase + 1} von ${phaseCount}</span></div><progress max="100" value="${progress}">${progress}%</progress></div>
       <div class="storage-status" role="status" aria-live="polite">${esc(storageMessage)}</div>
       <nav class="phase-nav" aria-label="Missionsphasen"><ol>${lesson.phases.map((phase, index) => { const accessible = index <= state.phase; return `<li class="${state.phase === index ? 'current' : ''} ${phaseComplete(index) ? 'complete' : ''} ${accessible ? '' : 'locked'}"><span aria-hidden="true">${phaseComplete(index) ? '✓' : index + 1}</span>${accessible ? `<a href="#phase-${esc(phase.id)}">${esc(phase.title)}</a>` : `<span aria-disabled="true">${esc(phase.title)}</span>`}<small>${phase.minutes} Min.</small></li>`; }).join('')}</ol></nav>
@@ -93,8 +94,22 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
     return `<section id="phase-${esc(phase.id)}" class="phase-card ${locked ? 'locked' : ''}" aria-labelledby="heading-${esc(phase.id)}"><div class="phase-heading"><span class="phase-number">${index + 1}</span><div><p class="eyebrow">Phase ${index + 1} · ${phase.minutes} Minuten</p><h2 id="heading-${esc(phase.id)}">${esc(phase.title)}</h2></div></div>${locked ? '<p class="locked-message">Diese Phase wird freigeschaltet, sobald du die vorherige Phase abschließt.</p>' : `${phase.blocks.map((block) => renderBlock(block, phase, index)).join('')}${phase.blocks.some((block) => block.type === 'task') ? `<div class="phase-complete"><p>${lesson.media?.worksheet ? `<a href="${esc(lesson.media.worksheet.url)}" target="_blank" rel="noopener noreferrer">Offizielles Schüler-Arbeitsblatt öffnen ↗</a>` : 'Arbeitsphase: Bearbeite die Aufgaben und bestätige anschließend.'}</p><label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? 'checked' : ''}> Ich habe diese Phase bearbeitet.</label><button type="button" data-advance="${index}" ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? '' : 'disabled'}>Nächste Phase freischalten</button></div>` : ''}`}</section>`;
   }
 
+  function renderMediaLink(media, fallbackLabel = 'Quelle öffnen ↗') {
+    if (!media?.url) return '';
+    return `<p><a class="button-link" href="${esc(media.url)}" target="_blank" rel="noopener noreferrer">${esc(media.linkLabel ?? fallbackLabel)}</a></p>`;
+  }
+
   function renderBlock(block, phase, index) {
-    if (block.type === 'media') { const media = lesson.media?.[block.mediaId]; const label = media?.checkboxLabel ?? 'Ich habe diese Phase bearbeitet'; const disclaimer = media?.selfReportDisclaimer ?? 'Nur eine Selbstmeldung.'; return `<div class="content-block"><h3>${esc(media?.title ?? lesson.title)}</h3>${media?.provider ? `<p><strong>${esc(media.provider)}</strong></p>` : ''}${media?.observation ? `<p>${esc(media.observation)}</p>` : ''}${media?.url ? `<p><a class="button-link" href="${esc(media.url)}" target="_blank" rel="noopener noreferrer">Quelle öffnen ↗</a></p>` : '<p>Diese Medienphase enthält keine externe Quelle.</p>'}<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${phase.id === 'film' ? 'data-film-done' : ''} ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? 'checked' : ''}> ${esc(label)} <small>(${esc(disclaimer)})</small></label><button type="button" data-advance="${index}" ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? '' : 'disabled'}>Nächste Phase freischalten</button></div>`; }
+    if (block.type === 'media') {
+      const media = lesson.media?.[block.mediaId];
+      const relatedMedia = (media?.relatedMediaIds ?? []).map((mediaId) => lesson.media?.[mediaId]).filter((item) => item?.url);
+      const mediaLinks = [media, ...relatedMedia].map((item, linkIndex) => renderMediaLink(item, linkIndex === 0 ? 'Quelle öffnen ↗' : `${item.title ?? 'Quelle öffnen'} ↗`)).join('');
+      const label = media?.checkboxLabel ?? 'Ich habe diese Phase bearbeitet';
+      const disclaimer = media?.selfReportDisclaimer ?? 'Nur eine Selbstmeldung.';
+      const phaseHasTasks = phase.blocks.some((item) => item.type === 'task');
+      const mediaCompletionControls = phaseHasTasks ? '' : `<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${phase.id === 'film' ? 'data-film-done' : ''} ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? 'checked' : ''}> ${esc(label)} <small>(${esc(disclaimer)})</small></label><button type="button" data-advance="${index}" ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? '' : 'disabled'}>Nächste Phase freischalten</button>`;
+      return `<div class="content-block"><h3>${esc(media?.title ?? lesson.title)}</h3>${media?.provider ? `<p><strong>${esc(media.provider)}</strong></p>` : ''}${media?.observation ? `<p>${esc(media.observation)}</p>` : ''}${mediaLinks || '<p>Diese Medienphase enthält keine externe Quelle.</p>'}${mediaCompletionControls}</div>`;
+    }
     if (block.type === 'task') return renderTask(lesson.tasks.find((task) => task.id === block.taskId));
     if (block.type === 'fruit-detector') return renderFruitLab(index);
     if (block.type === 'quiz') return renderQuiz(phase, index);
@@ -146,5 +161,8 @@ if (typeof document !== 'undefined') {
   const root = document.querySelector('#mission-app');
   const route = resolveMissionRoute();
   const lesson = route ? getLesson(route.lessonId) : undefined;
-  if (root && lesson) createMissionRenderer({ root, lesson, progressKey: route.progressKey });
+  if (root && lesson) {
+    const themeController = createThemeController();
+    createMissionRenderer({ root, lesson, progressKey: route.progressKey, themeController });
+  }
 }

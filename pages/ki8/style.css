@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   font: 16px/1.55 system-ui, sans-serif;
   --bg: #f5f8fb;
   --fg: #162837;
@@ -7,14 +7,22 @@
   --line: #c5d3df;
   --accent: #155b8b;
 }
-@media (prefers-color-scheme: dark) {
-  :root { --bg: #101d29; --fg: #f2f6fc; --surface: #1c2d3c; --line: #647b8b; --accent: #8dd5ff; }
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101d29;
+  --fg: #f2f6fc;
+  --surface: #1c2d3c;
+  --line: #647b8b;
+  --accent: #8dd5ff;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--fg); }
 header {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem max(1rem, calc((100vw - 1080px)/2));

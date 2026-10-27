@@ -18,9 +18,11 @@ Kernregel: Gelabelte Trainingsbeispiele helfen, Fragen und Schwellenwerte zu fin
 ## Externe Quellen und Grenzen
 
 - [inf-schule: Überwachtes Lernen mit Entscheidungsbäumen](https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume) erläutert Trainingsbeispiele, Schwellenwerte, Testobjekte und mögliche Fehler bei ungeeigneten Daten.
-- [Experience AI: Lektion 4 – Entscheidungsbäume](https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4) behandelt Entscheidungsbäume und zeigt, wie Trainingsdaten ein Modell beeinflussen.
+- [Experience AI: Lektion 4 – Entscheidungsbäume](https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4) behandelt Entscheidungsbäume und zeigt, wie Trainingsdaten ein Modell beeinflussen; die Reihe ist für 11–14 Jahre ausgewiesen.
+- [KIT: Jetzt geht's los mit dem Maschinellen Lernen!](https://publikationen.bibliothek.kit.edu/1000139088) ist ein deutschsprachiges Video von 6:28 Minuten. Der gezielte Ausschnitt **3:15–4:29** behandelt Datensplits, Trainingsdaten ab 3:32 und Testdaten ab 4:17. Der KIT-Eintrag nennt die Lizenz **CC BY-SA 4.0**, aber keine Zielgruppe. Spätere Teile zu Validierungsdaten und Fehlermetriken können für diese Stunde ausgelassen werden.
+- [Universität des Saarlandes: Lebensmittel-KI – Unterrichtsstunde für Klasse 8](https://informatikdidaktik.cs.uni-saarland.de/lebensmittel-ki/) beschreibt einen Klassifikator, der mit Trainingskarten erstellt und mit getrennten Testkarten geprüft wird. Der Entwurf verweist auf [ProDaBi-Lebensmittelkarten](https://www.prodabi.de/wp-content/uploads/Druckvorlage.pdf); das zugrunde liegende Material wurde für Klasse 6 entwickelt und der Saarland-Entwurf überträgt es auf Klasse 8.
 
-Die Quellen werden ausschließlich verlinkt. Auf den geprüften Seiten waren Zieljahrgang und Lizenz nicht angegeben; eine Altersfreigabe für WP 8 und Nachnutzungsrechte werden daher nicht behauptet. Kein geeignetes, spezifisches Video für diese Stunde wurde bestätigt; keines ist zugewiesen. Externe Texte, Abbildungen, Videos und Arbeitsblätter werden nicht kopiert oder eingebettet.
+Die Quellen bleiben externe Links; es werden keine Texte, Abbildungen, Videos oder Arbeitsblätter kopiert oder eingebettet. Für den KIT-Clip ist CC BY-SA 4.0 angegeben. Für den Saarland-Unterrichtsentwurf, die ProDaBi-Karten und die übrigen verlinkten Lernseiten ist keine Lizenz angegeben. Die Saarland-Seite weist den Entwurf Klasse 8 zu; die Altersangabe der weiteren Quellen ist oben genannt, soweit verfügbar.
 
 ## Fortschritt und Route
 
