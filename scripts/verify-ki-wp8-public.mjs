@@ -24,6 +24,7 @@ assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
 assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="mission-list"/);
+assert.match(entry, /Öffentlicher Lernpfad · 17 Missionen/);
 for (const hour of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]) assert.match(entry, new RegExp(`href="\\./stunde-${hour}/"`));
 assert.doesNotMatch(entry, /href="\.\/modul-\d+\.html#stunde-\d+"|id="modules"|id="beispielkarte"/);
 const app = readFileSync(new URL('app.mjs', folder), 'utf8');
