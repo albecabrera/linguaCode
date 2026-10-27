@@ -612,7 +612,52 @@ export const KI_MISSION_12 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12 });
+const KI_MISSION_13_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Was ist eine sichere Reaktion, wenn eine Nachricht zu keinem bekannten Intent passt?', choices: ['Ehrlich sagen, dass sie nicht verstanden wurde, und um eine andere Formulierung bitten.', 'Eine zufällige Antwort als sicher ausgeben.', 'Die Nachricht mit Namen und Klasse speichern.'], correctIndex: 0, explanation: 'Ein guter Fallback macht Unsicherheit sichtbar, bittet um eine neue Formulierung und speichert keine privaten Inhalte.' },
+  { id: 'q2', prompt: 'Ein fiktiver Schulbot versteht eine neue Nachricht nicht. Was sollte er nicht tun?', choices: ['Sagen, dass er die Nachricht nicht verstanden hat.', 'Eine Antwort erfinden und so tun, als sei sie sicher.', 'Um eine andere Formulierung bitten.'], correctIndex: 1, explanation: 'Bei unbekannten Eingaben darf der Bot keine sichere Antwort vortäuschen.' },
+  { id: 'q3', prompt: 'Der Bot ordnet eine erfundene Hilfenachricht dem falschen Intent zu. Was kann das Team als Nächstes tun?', choices: ['Die Regel oder Trainingsbeispiele prüfen und mit neuen, getrennten Beispielen testen.', 'Den Fehler verbergen und den Testfall löschen.', 'Unbekannte Eingaben automatisch dem nächsten Intent zuordnen.'], correctIndex: 0, explanation: 'Ein Fehler ist ein Prüfhinweis. Nach einer Anpassung helfen neue, unabhängige Beispiele beim erneuten Test.' },
+  { id: 'q4', prompt: 'Welche Nachricht eignet sich für den fiktiven Fallback-Test?', choices: ['Ein echter privater Chat aus der Klasse.', 'Eine erfundene Nachricht ohne Namen oder persönliche Angaben.', 'Eine Nachricht mit Adresse und Kontaktdaten.'], correctIndex: 1, explanation: 'Fiktive, anonyme Beispiele reichen aus; echte private Nachrichten sind nicht erforderlich.' },
+  { id: 'q5', prompt: 'Warum soll ein Chatbot bei einer unbekannten Eingabe um eine neue Formulierung bitten?', choices: ['Damit er seine Unsicherheit offen zeigt, statt eine Antwort zu erfinden.', 'Damit er unbekannte Texte dauerhaft aufbewahren kann.', 'Damit er immer irgendeinem Intent eine Antwort zuordnet.'], correctIndex: 0, explanation: 'Ein transparenter Fallback zeigt eine Grenze und hilft der Person, die Frage anders zu stellen.' },
+]);
+
+export const KI_MISSION_13 = Object.freeze({
+  id: 'ki-13',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 5', hour: 'Stunde 3', overviewHref: '../modul-5.html#stunde-3' },
+  title: 'Mission 13 – Unbekannte Eingaben sicher behandeln',
+  description: 'Entwirf einen ehrlichen Fallback für unbekannte Nachrichten und prüfe, wie ein Team nach einer Fehlzuordnung sicher weiterarbeitet.',
+  duration: 45,
+  nextHint: 'In der nächsten Mission prüfst du Behauptungen, indem du Autor, Belege und Methode kritisch untersuchst.',
+  objectives: [
+    'Du formulierst einen Fallback, der Unsicherheit offen zeigt und um eine neue Formulierung bittet.',
+    'Du beschreibst, wie ein Team eine Fehlzuordnung prüft und mit neuen, erfundenen Beispielen erneut testet.',
+  ],
+  phases: [
+    { id: 'observe', title: 'Unbekannte Nachricht erkennen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-fallback' }] },
+    { id: 'respond', title: 'Ehrlich und sicher antworten', minutes: 10, blocks: [{ type: 'task', taskId: 'task-wrong-intent' }] },
+    { id: 'review', title: 'Fehler prüfen und erneut testen', minutes: 19, blocks: [{ type: 'task', taskId: 'task-apply' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_13_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_13_QUESTIONS },
+  ],
+  media: {},
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein passendes Video zu unbekannten Chatbot-Intents und sicheren Fallbacks wurde bestätigt; keines ist zugewiesen.' },
+    material: { status: 'unconfirmed', targetGrade: 'not-stated', license: 'not-stated', text: 'Experience AI, „Large Language Models (LLMs) (11–14)“, ist nur eine teilweise passende Quelle zu Grenzen von Sprachmodellen. Eine direkte Aktivität zu unbekannten Schul-Chatbot-Intents und Fallback-Formulierungen ist nicht bestätigt. Lizenzstatus und konkrete Alterszuordnung für diese Stunde sind nicht verifiziert.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Wenn eine Nachricht zu keinem bekannten Intent passt, soll der Chatbot keine Antwort erfinden. Er sagt ehrlich: „Das habe ich noch nicht verstanden. Bitte formuliere es anders.“ So zeigt er seine Grenze, statt eine unsichere Vermutung als Tatsache auszugeben.' },
+    { type: 'reflection', id: 'fallback-reflection', prompt: 'Wie hilft ein ehrlicher Fallback der Person und dem Team?', examples: ['Die Person weiß, dass der Bot unsicher ist, und kann anders fragen. Das Team erkennt eine Grenze des aktuellen Intent-Modells und kann es mit neuen, erfundenen Beispielen prüfen.'] },
+  ],
+  tasks: [
+    { id: 'task-fallback', type: 'open-response', title: 'Einen sicheren Fallback formulieren', prompt: 'Ein fiktiver Bot kennt diese Nachricht nicht: „Kannst du mir bei der Aufgabe helfen?“ Formuliere eine ehrliche Antwort, die um eine neue Formulierung bittet und keine Antwort erfindet.', exampleAnswer: '„Das habe ich noch nicht verstanden. Bitte formuliere es anders.“ Der Bot rät nicht und speichert die Nachricht nicht.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-wrong-intent', type: 'open-response', title: 'Eine falsche Intent-Zuordnung untersuchen', prompt: 'Ein fiktiver Bot ordnet die erfundene Nachricht „Ich brauche Hilfe bei Aufgabe 2“ dem Intent Begrüßung zu. Wie kann das Team die Zuordnung prüfen und verbessern?', exampleAnswer: 'Ich prüfe zuerst die Intent-Regel und die gelabelten Trainingsbeispiele. Danach teste ich die überarbeitete Zuordnung mit neuen, erfundenen Beispielen, die vom Training getrennt bleiben.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-apply', type: 'open-response', title: 'Fiktiven Fallback-Test planen', prompt: 'Plane für einen fiktiven Schulbot einen unbekannten Nachrichtenfall und einen Fallback. Beschreibe, warum der Bot die Nachricht nicht speichern soll.', exampleAnswer: 'Wir verwenden keine echten Nachrichten; keine unbekannte Eingabe wird gespeichert. Der Bot sagt ehrlich, dass er die erfundene Nachricht nicht versteht, und bittet um eine andere Formulierung.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13 });
 
 export function getLesson(id) {
   return LESSONS[id];
