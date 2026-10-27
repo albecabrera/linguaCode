@@ -7,8 +7,8 @@ const cards = [...catalog.matchAll(/<article data-subject="([^"]+)">([\s\S]*?)<\
 const matches = cards.filter(([, , html]) => html.includes('<h2>UV Künstliche Intelligenz</h2>'));
 assert.equal(matches.length, 1);
 assert.equal(matches[0][1], 'Informatik');
-assert.match(matches[0][2], /Informatik · WP 8 · 17 Missionen/);
-assert.match(matches[0][2], /Siebzehn interaktive Missionen/);
+assert.match(matches[0][2], /Informatik · WP 8 · 18 Missionen/);
+assert.match(matches[0][2], /Achtzehn interaktive Missionen/);
 assert.doesNotMatch(matches[0][2], /Zwei interaktive Unterrichtsstunden|Entwurf/);
 assert.match(matches[0][2], /href="ki8\//);
 assert.match(matches[0][2], /data-share="ki8\//);
@@ -18,14 +18,14 @@ const expectedFiles = [
   'modul-4.html', 'modul-5.html', 'modul-6.html', 'module1-core.mjs', 'module1-ui.mjs',
   'module2-core.mjs', 'module2-ui.mjs', 'module3-core.mjs', 'module3-ui.mjs',
   'module4-core.mjs', 'module4-ui.mjs', 'module5-core.mjs', 'module5-ui.mjs',
-  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17',
+  'module6-core.mjs', 'module6-ui.mjs', 'style.css', 'mission', 'stunde-1', 'stunde-2', 'stunde-3', 'stunde-4', 'stunde-5', 'stunde-6', 'stunde-7', 'stunde-8', 'stunde-9', 'stunde-10', 'stunde-11', 'stunde-12', 'stunde-13', 'stunde-14', 'stunde-15', 'stunde-16', 'stunde-17', 'stunde-18',
 ];
 assert.deepEqual(readdirSync(folder).sort(), expectedFiles.sort());
 const entry = readFileSync(new URL('index.html', folder), 'utf8');
 assert.doesNotMatch(entry, /http-equiv="refresh"/);
 assert.match(entry, /id="mission-list"/);
-assert.match(entry, /Öffentlicher Lernpfad · 17 Missionen/);
-for (const hour of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]) assert.match(entry, new RegExp(`href="\\./stunde-${hour}/"`));
+assert.match(entry, /Öffentlicher Lernpfad · 18 Missionen/);
+for (const hour of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]) assert.match(entry, new RegExp(`href="\\./stunde-${hour}/"`));
 assert.doesNotMatch(entry, /href="\.\/modul-\d+\.html#stunde-\d+"|id="modules"|id="beispielkarte"/);
 const app = readFileSync(new URL('app.mjs', folder), 'utf8');
 assert.match(app, /initCourseIntegration/);
@@ -76,7 +76,10 @@ assert.match(missionSixteenRoute, /mission\.mjs/);
 const missionSeventeenRoute = readFileSync(new URL('stunde-17/index.html', folder), 'utf8');
 assert.match(missionSeventeenRoute, /data-lesson-id="ki-17"/);
 assert.match(missionSeventeenRoute, /mission\.mjs/);
-const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, missionSevenRoute, missionEightRoute, missionNineRoute, missionTenRoute, missionElevenRoute, missionTwelveRoute, missionThirteenRoute, missionFourteenRoute, missionFifteenRoute, missionSixteenRoute, missionSeventeenRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
+const missionEighteenRoute = readFileSync(new URL('stunde-18/index.html', folder), 'utf8');
+assert.match(missionEighteenRoute, /data-lesson-id="ki-18"/);
+assert.match(missionEighteenRoute, /mission\.mjs/);
+const publicSources = [catalog, entry, app, missionTwoRoute, missionFourRoute, missionFiveRoute, missionSixRoute, missionSevenRoute, missionEightRoute, missionNineRoute, missionTenRoute, missionElevenRoute, missionTwelveRoute, missionThirteenRoute, missionFourteenRoute, missionFifteenRoute, missionSixteenRoute, missionSeventeenRoute, missionEighteenRoute, readFileSync(new URL('course.mjs', folder), 'utf8')];
 for (let module = 1; module <= 6; module += 1) {
   const html = readFileSync(new URL(`modul-${module}.html`, folder), 'utf8');
   if (module === 1) assert.match(html, /href="stunde-2\/"[^>]*>Mission 02 starten[^<]*<\/a>/);

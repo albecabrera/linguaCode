@@ -837,7 +837,55 @@ export const KI_MISSION_17 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16, 'ki-17': KI_MISSION_17 });
+const KI_MISSION_18_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Eine fiktive KI-Antwort enthält eine wichtige Behauptung. Was tust du vor der Verwendung?', choices: ['Die Antwort klingt sicher, also übernehme ich sie sofort.', 'Ich prüfe die Behauptung mit verlässlichen, möglichst unabhängigen Quellen und kennzeichne Unsicherheiten.', 'Ich ändere nur einzelne Wörter, damit die Aussage richtig wirkt.'], correctIndex: 1, explanation: 'Prüfe wichtige Aussagen anhand verlässlicher Quellen und übernimm nichts ungeprüft.' },
+  { id: 'q2', prompt: 'Du hast für einen Entwurf KI-Hilfe genutzt. Wie gehst du transparent damit um?', choices: ['Ich beachte die Regeln der Klasse, mache erlaubte KI-Hilfe kenntlich und formuliere die geprüfte Arbeit in eigenen Worten.', 'Ich gebe den KI-Text als vollständig eigene Arbeit aus.', 'Ich verberge jede KI-Hilfe, auch wenn die Klassenregeln etwas anderes verlangen.'], correctIndex: 0, explanation: 'Transparenz richtet sich nach den Regeln der Klasse; prüfe Inhalte und übernimm Verantwortung für deine eigene Arbeit.' },
+  { id: 'q3', prompt: 'Ein fiktives KI-System empfiehlt einer fiktiven Person nach drei Antworten eine bestimmte Schulform. Was ist sinnvoll?', choices: ['Die Empfehlung allein entscheidet, weil das System viele Informationen verarbeitet.', 'Die Person muss alle persönlichen Angaben eingeben, damit die Empfehlung sicher wird.', 'Prüfe Grundlage und Grenzen, sprich mit vertrauten Erwachsenen und der Lehrkraft; die KI entscheidet nicht für die Person.'], correctIndex: 2, explanation: 'Eine KI-Empfehlung ist keine Entscheidung. Menschen prüfen, beraten und entscheiden selbst.' },
+  { id: 'q4', prompt: 'Ein KI-Chat fragt nach deinem Namen, deiner Adresse und privaten Nachrichten. Was solltest du tun?', choices: ['Alles eingeben, damit die Antwort persönlicher wird.', 'Keine persönlichen oder privaten Angaben teilen und stattdessen ein erfundenes Beispiel verwenden.', 'Nur die Adresse eingeben, wenn die KI freundlich klingt.'], correctIndex: 1, explanation: 'Teile keine unnötigen persönlichen Daten. Für Übungen reichen erfundene Beispiele.' },
+  { id: 'q5', prompt: 'Wer trägt die Verantwortung, wenn du einen KI-Vorschlag in deiner Arbeit verwendest?', choices: ['Du prüfst den Vorschlag, beachtest Regeln und entscheidest, ob und wie du ihn verwendest.', 'Ausschließlich das KI-System.', 'Niemand, weil KI-Ausgaben automatisch richtig sind.'], correctIndex: 0, explanation: 'Menschen bleiben für die Nutzung und Prüfung eines KI-Vorschlags verantwortlich.' },
+]);
+
+export const KI_MISSION_18 = Object.freeze({
+  id: 'ki-18',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 6', hour: 'Stunde 5', overviewHref: '../modul-6.html#stunde-5' },
+  title: 'Mission 18 – Verantwortungsvoll nutzen',
+  description: 'Prüfe fiktive KI-Vorschläge, beachte Klassenregeln und Datenschutz und triff wichtige Entscheidungen nicht allein aufgrund einer KI-Antwort.',
+  duration: 45,
+  objectives: [
+    'Du überprüfst wichtige KI-Aussagen anhand verlässlicher Quellen und behandelst Unsicherheiten offen.',
+    'Du nutzt KI transparent nach den Regeln deiner Klasse, schützt persönliche Daten und behältst die menschliche Verantwortung für Entscheidungen.',
+  ],
+  phases: [
+    { id: 'film', title: 'KI als Lernhilfe kritisch nutzen', minutes: 8, blocks: [{ type: 'media', mediaId: 'video' }] },
+    { id: 'verify', title: 'Aussagen prüfen statt blind übernehmen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-check-ai' }] },
+    { id: 'transparent', title: 'KI-Hilfe transparent machen', minutes: 10, blocks: [{ type: 'task', taskId: 'task-transparent' }] },
+    { id: 'responsibility', title: 'Datenschutz und menschliche Verantwortung', minutes: 11, blocks: [{ type: 'task', taskId: 'task-decision' }, { type: 'task', taskId: 'task-privacy' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_18_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_18_QUESTIONS },
+  ],
+  media: {
+    video: { url: 'https://www.planet-schule.de/schwerpunkt/leben-in-der-digitalen-welt/erklaers-mir-so-nutzt-du-ki-zum-lernen-film-100.html', kind: 'official-video', title: 'So nutzt du KI zum Lernen', provider: 'Planet Schule', observation: 'Achte darauf, wie KI beim Lernen helfen kann und warum du ihre Antworten kritisch hinterfragen solltest.', checkboxLabel: 'Ich habe die Filmseite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'candidate', targetGrade: 'ab Klasse 5', license: 'unverified', url: 'https://www.planet-schule.de/schwerpunkt/leben-in-der-digitalen-welt/erklaers-mir-so-nutzt-du-ki-zum-lernen-film-100.html', text: 'Planet Schule, „So nutzt du KI zum Lernen“: vier Tipps ab Klasse 5 und kritisches Hinterfragen von KI-Antworten. Lizenz nicht verifiziert; nur zur Originalseite verlinken, nicht einbetten, kopieren oder hosten.' },
+    material: { status: 'candidate-not-assigned', targetGrade: 'ab Klasse 7', license: 'unverified', url: 'https://www.klicksafe.de/paedagogen/medien-materialien/ki-and-me-wie-kuenstliche-intelligenz-unser-leben-praegt', text: 'klicksafe/FSM, „KI and me“: sechs Unterrichtsprojekte zu Jugend, Schule und KI-Ethik; als optionale Lehrkraft-Referenz, nicht für Schüler*innen-Aufgaben zugewiesen. Die PDF enthält keinen erkennbaren Lizenzhinweis; nur auf die Originalseite verlinken, nicht kopieren oder hosten.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'KI kann beim Lernen Ideen erklären und Entwürfe unterstützen, aber Antworten können falsch oder unvollständig sein. Prüfe wichtige Aussagen mit verlässlichen Quellen. Beachte die Regeln deiner Klasse, kennzeichne erlaubte KI-Hilfe transparent und schreibe geprüfte Ergebnisse in eigenen Worten. Gib keine persönlichen Daten oder privaten Nachrichten ein. Bei wichtigen Entscheidungen helfen Menschen; eine KI entscheidet nicht für dich.' },
+    { type: 'reflection', id: 'responsible-use-reflection', prompt: 'Was prüfst du vor der Verwendung eines KI-Vorschlags, wie schützt du persönliche Daten und wer bleibt für deine Entscheidung verantwortlich?', examples: ['Ich prüfe wichtige Aussagen mit verlässlichen Quellen, nutze erfundene Beispiele statt persönlicher Daten, beachte die Klassenregeln und entscheide selbst, ob ich den Vorschlag verwende.'] },
+  ],
+  tasks: [
+    { id: 'task-check-ai', type: 'open-response', title: 'Eine KI-Behauptung prüfen', prompt: 'Eine fiktive KI-Antwort für ein Referat lautet: „Alle Menschen lernen am besten nachts.“ Wie prüfst du diese Aussage, bevor du sie verwendest?', exampleAnswer: 'Ich suche verlässliche und möglichst unabhängige Belege, prüfe, ob die Aussage zu allgemein ist, und lasse sie weg oder kennzeichne Unsicherheit, wenn die Belege fehlen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-transparent', type: 'open-response', title: 'KI-Hilfe transparent nutzen', prompt: 'Du hast für einen Entwurf KI-Hilfe genutzt. Wie machst du die KI-Hilfe transparent und stellst sicher, dass die Arbeit deine eigene bleibt?', exampleAnswer: 'Ich beachte die Regeln der Klasse, mache erlaubte KI-Hilfe kenntlich, prüfe die Aussagen und formuliere die Ergebnisse in eigenen Worten, statt ungeprüft zu kopieren.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-decision', type: 'open-response', title: 'Eine Empfehlung nicht zur Entscheidung machen', prompt: 'Ein fiktives KI-System empfiehlt einer fiktiven Person nach drei Antworten eine bestimmte Schulform. Was solltest du prüfen, und wer kann bei der Entscheidung helfen?', exampleAnswer: 'Ich prüfe, auf welchen Angaben die Empfehlung beruht und welche Grenzen sie hat. Die Person kann mit vertrauten Erwachsenen und der Lehrkraft sprechen; die KI entscheidet nicht für sie.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-privacy', type: 'open-response', title: 'Persönliche Daten schützen', prompt: 'Ein fiktiver KI-Chat bittet um Namen, Adresse und private Nachrichten. Wie kannst du die Aufgabe sicher weiterbearbeiten?', exampleAnswer: 'Ich teile keine persönlichen Daten oder privaten Nachrichten. Ich formuliere die Situation mit erfundenen Angaben und gebe nur die Informationen an, die für die Aufgabe nötig sind.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08, 'ki-09': KI_MISSION_09, 'ki-10': KI_MISSION_10, 'ki-11': KI_MISSION_11, 'ki-12': KI_MISSION_12, 'ki-13': KI_MISSION_13, 'ki-14': KI_MISSION_14, 'ki-15': KI_MISSION_15, 'ki-16': KI_MISSION_16, 'ki-17': KI_MISSION_17, 'ki-18': KI_MISSION_18 });
 
 export function getLesson(id) {
   return LESSONS[id];
