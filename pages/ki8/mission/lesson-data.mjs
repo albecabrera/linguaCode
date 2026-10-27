@@ -386,7 +386,53 @@ export const KI_MISSION_07 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07 });
+const KI_MISSION_08_QUESTIONS = Object.freeze([
+  { id: 'q1', prompt: 'Welche Beispiele dürfen beim Überarbeiten einer Regel helfen?', choices: ['Die gelabelten Trainingsbeispiele.', 'Die Testlabels, bis alle Antworten stimmen.', 'Nur Beispiele, bei denen der Baum schon richtig liegt.'], correctIndex: 0, explanation: 'Regeln und Merkmale werden anhand der Trainingsdaten überprüft und überarbeitet.' },
+  { id: 'q2', prompt: 'Was muss mit bekannten Testlabels passieren?', choices: ['Sie bleiben unverändert.', 'Sie werden an die Vorhersage angepasst.', 'Sie werden beim Training als Merkmale verwendet.'], correctIndex: 0, explanation: 'Ein Testlabel darf nicht angepasst werden, damit die Prüfung unabhängig bleibt.' },
+  { id: 'q3', prompt: 'Warum darf man Testdaten nicht zum Aussuchen eines Schwellenwerts nutzen?', choices: ['Sonst sind sie nicht mehr unabhängig für den Test.', 'Weil Testdaten keine Labels haben.', 'Weil Schwellenwerte keine Zahlen enthalten.'], correctIndex: 0, explanation: 'Wer die Testdaten zur Regelwahl nutzt, passt die Regel an bekannte Prüffälle an.' },
+  { id: 'q4', prompt: 'Eine Regel macht bei neuen Fällen Fehler. Was ist ein sinnvoller nächster Schritt?', choices: ['Trainingsbeispiele und passende Merkmale prüfen.', 'Fehlerhafte Testlabels umschreiben.', 'Die Testfälle aus dem Ergebnis löschen.'], correctIndex: 0, explanation: 'Die Trainingsdaten können auf passende Beispiele und Merkmale untersucht werden; Testlabels bleiben unberührt.' },
+  { id: 'q5', prompt: 'Was macht einen späteren Test aussagekräftig?', choices: ['Getrennte Testbeispiele werden erst nach der Regelwahl verwendet.', 'Die Testbeispiele werden zuerst zum Training hinzugefügt.', 'Die Testlabels werden so geändert, dass alle Vorhersagen stimmen.'], correctIndex: 0, explanation: 'Ein unabhängiger Test prüft die fertige Regel an Beispielen, die nicht zur Auswahl oder Anpassung dienten.' },
+]);
+
+export const KI_MISSION_08 = Object.freeze({
+  id: 'ki-08',
+  module: 'Künstliche Intelligenz',
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 4', overviewHref: '../modul-3.html#stunde-4' },
+  title: 'Mission 08 – Verbessern, ohne den Test zu verraten',
+  description: 'Untersuche Trainingsbeispiele, Merkmale und Schwellenwerte, ohne bekannte Testlabels oder Testdaten zur Regelwahl zu verwenden.',
+  duration: 45,
+  objectives: [
+    'Du untersuchst Trainingsbeispiele und passende Merkmale, um eine Regel zu verbessern.',
+    'Du erklärst, warum Testdaten getrennt bleiben und Testlabels unverändert sein müssen.',
+  ],
+  phases: [
+    { id: 'improve', title: 'Fehler als Hinweis verstehen', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }] },
+    { id: 'training-data', title: 'Trainingsdaten und Regeln prüfen', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'practice', title: 'Verbessern, ohne Testdaten zu verraten', minutes: 19, blocks: [{ type: 'task', taskId: 'task-training-review' }, { type: 'task', taskId: 'task-test-integrity' }] },
+    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_08_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_08_QUESTIONS },
+  ],
+  media: {
+    experienceAi: { url: 'https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4', kind: 'official-lesson', title: 'Lektion 4: Entscheidungsbäume', provider: 'Experience AI', observation: 'Die Lektion erklärt, wie Entscheidungsbäume aus Trainingsdaten entstehen und warum Beispiele die Regel beeinflussen.', checkboxLabel: 'Ich habe die Lektion angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+    infSchule: { url: 'https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume', kind: 'official-learning-page', title: 'Überwachtes Lernen mit Entscheidungsbäumen', provider: 'inf-schule', observation: 'Die Seite behandelt Trainingsbeispiele, Schwellenwerte und die Prüfung von Entscheidungsregeln.', checkboxLabel: 'Ich habe die Seite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+  },
+  resourceNotes: {
+    video: { status: 'unconfirmed', text: 'Kein geeignetes, spezifisches Video für diese Stunde wurde bestätigt; es ist keines zugewiesen.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die verlinkten Seiten behandeln Entscheidungsbäume und Trainingsdaten. Zieljahrgang und Lizenz sind auf den geprüften Seiten nicht angegeben.' },
+  },
+  contentBlocks: [
+    { type: 'intro', text: 'Eine Regel darf verbessert werden, wenn Trainingsbeispiele, Merkmale oder Schwellenwerte dafür sprechen. Testbeispiele bleiben getrennt: Sie werden weder zum Training noch zur Auswahl der Regel verwendet. Bekannte Testlabels bleiben unverändert, damit der spätere Test unabhängig bleibt.' },
+    { type: 'reflection', id: 'test-integrity-reflection', prompt: 'Warum wäre es unfair, nach einem Testfehler das bekannte Testlabel oder die Regel passend zu ändern?', examples: ['Dann würde die Testprüfung ihre Unabhängigkeit verlieren. Verbesserungen müssen sich auf Trainingsdaten stützen; der Test bleibt unverändert.'] },
+  ],
+  tasks: [
+    { id: 'task-training-review', type: 'open-response', title: 'Trainingsbeispiele prüfen', prompt: 'Eine fiktive Sortierregel macht Fehler. Welche Trainingsbeispiele, Merkmale oder Schwellenwerte könntest du prüfen, bevor du eine Regel änderst?', exampleAnswer: 'Ich prüfe, ob die Trainingsbeispiele unterschiedliche Fälle enthalten und ob das Merkmal zur Aufgabe passt. Eine Änderung der Regel stütze ich auf Trainingsdaten und teste sie später unabhängig; die getrennten Testdaten bleiben unberührt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-test-integrity', type: 'open-response', title: 'Testlabel schützen', prompt: 'Bei einem Test stimmt die Vorhersage nicht mit dem bekannten Testlabel überein. Was darfst du nicht ändern, und worauf muss sich eine mögliche Verbesserung stützen?', exampleAnswer: 'Das bekannte Testlabel bleibt unverändert und Testdaten werden nicht zum Aussuchen der Regel verwendet. Eine mögliche Verbesserung stützt sich auf Trainingsbeispiele, Merkmale oder Schwellenwerte; danach prüft ein unabhängiger Test die Regel.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+  ],
+  solutions: [],
+  feedback: { quiz: QUIZ_BAND_LABELS },
+  progress: { version: 1, localOnly: true },
+});
+
+export const LESSONS = Object.freeze({ 'ki-01': KI_MISSION_01, 'ki-02': KI_MISSION_02, 'ki-03': KI_MISSION_03, 'ki-04': KI_MISSION_04, 'ki-05': KI_MISSION_05, 'ki-06': KI_MISSION_06, 'ki-07': KI_MISSION_07, 'ki-08': KI_MISSION_08 });
 
 export function getLesson(id) {
   return LESSONS[id];

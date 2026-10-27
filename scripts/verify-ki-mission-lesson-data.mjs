@@ -8,6 +8,7 @@ import {
   KI_MISSION_05,
   KI_MISSION_06,
   KI_MISSION_07,
+  KI_MISSION_08,
   gradeQuiz,
   getLesson,
   matchGapFill,
@@ -86,7 +87,7 @@ assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').promp
 assert.match(KI_MISSION_03.tasks.find(({ id }) => id === 'task-threshold').exampleAnswer, /laut/);
 assert.deepEqual(KI_MISSION_03.phases.at(-1).questions.map(({ correctIndex }) => correctIndex), [0, 1, 0, 1, 1]);
 assert.equal(KI_MISSION_03.phases.at(-1).questions.length, 5);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08']);
 assert.equal(getLesson('ki-04'), KI_MISSION_04);
 assert.equal(KI_MISSION_04.id, 'ki-04');
 assert.equal(KI_MISSION_04.title, 'Mission 04 – Trainieren, testen und Fehler untersuchen');
@@ -168,7 +169,28 @@ assert.equal(KI_MISSION_07.resourceNotes.material.targetGrade, 'not-stated');
 assert.equal(KI_MISSION_07.resourceNotes.material.license, 'not-stated');
 assert.equal(KI_MISSION_07.phases.at(-1).questions.length, 5);
 assert.equal(validateLessonDefinition(KI_MISSION_07), true);
-assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07']);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08']);
+assert.equal(getLesson('ki-08'), KI_MISSION_08);
+assert.equal(KI_MISSION_08.id, 'ki-08');
+assert.equal(KI_MISSION_08.title, 'Mission 08 – Verbessern, ohne den Test zu verraten');
+assert.equal(KI_MISSION_08.duration, 45);
+assert.deepEqual(KI_MISSION_08.context, { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 4', overviewHref: '../modul-3.html#stunde-4' });
+assert.deepEqual(KI_MISSION_08.phases.map(({ minutes }) => minutes), [10, 10, 19, 6]);
+assert.equal(KI_MISSION_08.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
+assert.match(KI_MISSION_08.contentBlocks[0].text, /Trainingsbeispiele.*Merkmale.*Schwellenwerte.*Testlabels.*unverändert/i);
+const improveTrainingTask = KI_MISSION_08.tasks.find(({ id }) => id === 'task-training-review');
+assert.match(improveTrainingTask.prompt, /Trainingsbeispiel.*Merkmal.*Schwellenwert/i);
+assert.match(improveTrainingTask.exampleAnswer, /Trainingsdaten.*Testdaten bleiben unberührt/i);
+const preserveTestTask = KI_MISSION_08.tasks.find(({ id }) => id === 'task-test-integrity');
+assert.match(preserveTestTask.prompt, /Testlabel.*nicht ändern/i);
+assert.match(preserveTestTask.exampleAnswer, /Testlabel.*unverändert/i);
+assert.equal(KI_MISSION_08.media.infSchule.url, 'https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume');
+assert.equal(KI_MISSION_08.resourceNotes.video.status, 'unconfirmed');
+assert.equal(KI_MISSION_08.resourceNotes.material.targetGrade, 'not-stated');
+assert.equal(KI_MISSION_08.resourceNotes.material.license, 'not-stated');
+assert.equal(KI_MISSION_08.phases.at(-1).questions.length, 5);
+assert.equal(validateLessonDefinition(KI_MISSION_08), true);
+assert.deepEqual(Object.keys(LESSONS), ['ki-01', 'ki-02', 'ki-03', 'ki-04', 'ki-05', 'ki-06', 'ki-07', 'ki-08']);
 
 const expected = [1, 0, 2, 1, 0];
 const exactQuiz = [
