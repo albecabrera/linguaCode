@@ -1,0 +1,22 @@
+# KI design and accessibility upgrade
+Branch: `feature/ki-mission-cleanup` in `.ki-mission-01`.
+Scope: Continue the accepted design-improvement proposal for progress states, compact navigation, Smartboard presentation, and accessibility.
+
+## Specs
+1. **S1** — User authorization verbatim: "si"
+
+## Tasks
+- T1 (S1): Add visual progress states to catalog cards and a compact/expandable responsive mission sidebar; route: `pages/ki8/index.html`, `pages/ki8/style.css`, `pages/ki8/mission/mission.css`, catalog/mission verifiers; commit: `3ba4c38`.
+- T2 (S1): Add a local-only Smartboard presentation mode with readable controls and no learner-data transmission; route: `pages/ki8/presentation.mjs`, presentation styles/catalog/mission integration/verifiers; commit: `3ba4c38`.
+- T3 (S1): Improve keyboard navigation, semantics, contrast, reduced motion, focus visibility, and screen-reader labels across the catalog, mission sidebar, and presentation mode; route: relevant CSS/runtime/verifiers; commit: `3ba4c38`.
+- T4 (S1): Run full local verification, structural accessibility checks, and record evidence; route: verifier scripts/task log; commit: pending.
+
+## Log
+- L1: User request verbatim: "continua con las demas mejoras que propusistes"
+- L2: Assistant proposal accepted by user: visual progress states, compact/expandable sidebar, richer Continue course information, Smartboard presentation mode, and accessibility improvements.
+- L3: User authorization verbatim: "si"
+- L4: T1 evidence: catalog cards now expose and locally derive visual states for not started, in progress, completed, and unavailable progress; mission navigation uses a native compact/expandable details control with desktop, tablet, and mobile layout rules. `node scripts/verify-ki-catalog.mjs` and `node scripts/verify-ki-mission-ui.mjs` both pass. No lesson content or transmission behavior was changed.
+- L5: T2 evidence: added shared local-only Smartboard presentation controller and accessible exit toggle for the catalog and mission renderer. It persists only `linguacode:ki-wp8:presentation:v1` as `on`/`off`, defaults safely off, reads no learner answers, and has no network/transmission path. Presentation CSS enlarges readable controls/content and removes nonessential catalog sharing, mission sidebar, illustration, and footer distractions. Focused RED checks failed before `pages/ki8/presentation.mjs` existed; GREEN checks now pass: `node scripts/verify-ki-catalog.mjs`, `node scripts/verify-ki-mission-ui.mjs`, and syntax checks. `git diff --check` passes. `node scripts/verify-ki-theme.mjs` remains blocked by the pre-existing T1 sidebar-width assertion (`minmax(280px,340px)` versus current `minmax(230px,280px)`). No learner progress contract, build, deploy, commit, or `.mission-qa/` content was changed.
+- L6: T3 evidence: catalog filters now have explicit label/control associations and a mission-list relationship; mission progress and current phase expose live/status and step semantics, phase targets are keyboard-focusable, and catalog/mission styles include visible focus, reduced-motion, and forced-colors safeguards. RED assertions failed before these structural changes; GREEN passes: `node scripts/verify-ki-catalog.mjs`, `node scripts/verify-ki-mission-ui.mjs`, `node scripts/verify-ki-theme.mjs`, `node scripts/verify-ki-mission-progress.mjs`, `node scripts/verify-ki-wp8-public-release.mjs`, syntax checks, and `git diff --check`. `node scripts/verify-ki-wp8-public.mjs` remains incompatible with the already-delivered T2 `pages/ki8/presentation.mjs` because its expected `/ki8/` entry listing omits that allowed runtime file; no public/privacy behavior or local-only storage contract was changed.
+- L7: Public contract reconciliation updated the top-level KI card from 18 to 19 missions and added `presentation.mjs` to the expected `/ki8/` directory listing. `node scripts/verify-ki-wp8-public.mjs` and `node scripts/verify-ki-wp8-public-release.mjs` now pass, along with `git diff --check`.
+- L8: Full KI/WP8 verification passed: all mission, catalog, checkpoint, teacher, theme, public, release, syntax, and diff checks passed. Differential checks confirmed M01-M18 lesson definitions and route resolution match `origin/main`. Native review assessment was unassessable because the pre-existing untracked `.mission-qa/` requires explicit declaration; it remained untouched. Implementation slice committed as `3ba4c38`.
