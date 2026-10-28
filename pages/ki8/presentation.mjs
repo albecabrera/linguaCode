@@ -8,6 +8,23 @@ function writePreference(storage, enabled) {
   try { storage?.setItem(PRESENTATION_STORAGE_KEY, enabled ? 'on' : 'off'); } catch { /* local preference is optional */ }
 }
 
+function enterFullscreen(documentLike) {
+  const requestFullscreen = documentLike?.documentElement?.requestFullscreen;
+  if (typeof requestFullscreen !== 'function') return;
+  try {
+    const result = requestFullscreen.call(documentLike.documentElement);
+    result?.catch?.(() => {});
+  } catch { /* fullscreen is optional and browser-controlled */ }
+}
+
+function exitFullscreen(documentLike) {
+  if (!documentLike?.fullscreenElement || typeof documentLike.exitFullscreen !== 'function') return;
+  try {
+    const result = documentLike.exitFullscreen.call(documentLike);
+    result?.catch?.(() => {});
+  } catch { /* fullscreen is optional and browser-controlled */ }
+}
+
 export function createPresentationController({documentLike = globalThis.document, storage} = {}) {
   let enabled = readPreference(storage);
 
@@ -41,7 +58,11 @@ export function createPresentationController({documentLike = globalThis.document
     bind() {
       sync();
       const toggle = documentLike?.querySelector('[data-presentation-toggle]');
-      if (toggle) toggle.addEventListener('click', () => setEnabled(!enabled));
+      if (toggle) toggle.addEventListener('click', () => {
+        const nextEnabled = setEnabled(!enabled);
+        if (nextEnabled) enterFullscreen(documentLike);
+        else exitFullscreen(documentLike);
+      });
       return this;
     },
     sync,

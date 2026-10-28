@@ -83,7 +83,14 @@ assert.equal(selectContinuation(cards, progress).href, './stunde-1/');
 assert.equal(selectContinuation(cards, [{...progress[0], status: 'completed'}, ...progress.slice(1)]).href, './stunde-3/');
 
 const presentationToggle = { attrs: {}, textContent: '', addEventListener(type, handler) { this.handler = handler; }, setAttribute(name, value) { this.attrs[name] = value; } };
-const presentationDocument = { documentElement: { dataset: {} }, querySelector(selector) { return selector === '[data-presentation-toggle]' ? presentationToggle : null; } };
+let fullscreenRequests = 0;
+let fullscreenExits = 0;
+const presentationDocument = {
+  documentElement: { dataset: {}, requestFullscreen() { fullscreenRequests += 1; presentationDocument.fullscreenElement = presentationDocument.documentElement; return Promise.resolve(); } },
+  fullscreenElement: null,
+  exitFullscreen() { fullscreenExits += 1; this.fullscreenElement = null; return Promise.resolve(); },
+  querySelector(selector) { return selector === '[data-presentation-toggle]' ? presentationToggle : null; },
+};
 const presentationMemory = new Map();
 const presentationStorage = { getItem: (key) => presentationMemory.get(key) ?? null, setItem: (key, value) => presentationMemory.set(key, value) };
 const presentationController = createPresentationController({documentLike: presentationDocument, storage: presentationStorage});
@@ -92,9 +99,11 @@ assert.equal(presentationDocument.documentElement.dataset.presentation, 'false')
 assert.equal(presentationToggle.attrs['aria-pressed'], 'false');
 presentationToggle.handler();
 assert.equal(presentationDocument.documentElement.dataset.presentation, 'true');
+assert.equal(fullscreenRequests, 1);
 assert.equal(presentationMemory.size, 1);
 assert.match(presentationToggle.textContent, /beenden/i);
 presentationToggle.handler();
+assert.equal(fullscreenExits, 1);
 assert.equal(presentationMemory.size, 1);
 assert.equal(presentationDocument.documentElement.dataset.presentation, 'false');
 
