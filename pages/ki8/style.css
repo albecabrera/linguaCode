@@ -6,6 +6,12 @@
   --surface: #fff;
   --line: #c5d3df;
   --accent: #155b8b;
+  --surface-raised: color-mix(in srgb, var(--surface) 88%, var(--accent));
+  --shadow-soft: 0 .6rem 1.5rem rgb(22 40 55 / .08);
+  --shadow-hover: 0 1rem 2rem rgb(22 40 55 / .14);
+  --motion-fast: 160ms;
+  --motion-medium: 280ms;
+  --ease-premium: cubic-bezier(.22, 1, .36, 1);
 }
 :root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"] {
@@ -125,3 +131,33 @@ section[id^=stunde-] { scroll-margin-top: 1rem; }
 .roadmap-stages strong { line-height: 1.2; }
 .roadmap-stages small { color: var(--fg); }
 @media (max-width: 780px) { .roadmap-stages { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); } }
+
+/* Restrained interaction layer: motion uses paint-only properties to avoid layout shift. */
+button, a, select, .mission-panel, .dashboard-summary p, .dashboard-grid > div, .course-roadmap, .student-dashboard, .catalog-filters, .lesson, .activity, .notice, .offline-status {
+  transition: transform var(--motion-medium) var(--ease-premium), box-shadow var(--motion-medium) var(--ease-premium), border-color var(--motion-fast) ease, background-color var(--motion-fast) ease, color var(--motion-fast) ease;
+}
+button:hover:not(:disabled), .mission-cta:hover, .hour-nav a:hover, .mission-panel-link:hover, .filter-group button:hover, .theme-toggle:hover, .presentation-toggle:hover, .dashboard-grid > div:hover, .dashboard-summary p:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+button:active:not(:disabled), .mission-cta:active, .hour-nav a:active, .mission-panel-link:active, .filter-group button:active {
+  transform: translateY(0) scale(.98);
+  transition-duration: var(--motion-fast);
+}
+button:focus-visible, a:focus-visible, select:focus-visible {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.course-roadmap, .student-dashboard { box-shadow: var(--shadow-soft); }
+.catalog-filters { box-shadow: inset 0 1px 0 rgb(255 255 255 / .45); }
+.mission-panel { animation: catalog-entry 520ms var(--ease-premium) both; }
+.mission-panel:nth-child(2n) { animation-delay: 60ms; }
+.mission-panel:nth-child(3n) { animation-delay: 120ms; }
+.catalog-progress { transition: border-color var(--motion-medium) ease, color var(--motion-medium) ease, background-color var(--motion-medium) ease; }
+.presentation-toggle[aria-pressed="true"] { transition-duration: var(--motion-medium); }
+@keyframes catalog-entry { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  .mission-panel, .mission-panel:nth-child(2n), .mission-panel:nth-child(3n) { animation: none; }
+}
+@media (forced-colors: active) {
+  button:hover:not(:disabled), .mission-cta:hover, .hour-nav a:hover, .mission-panel-link:hover, .filter-group button:hover { box-shadow: none; }
+}
