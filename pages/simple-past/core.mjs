@@ -46,3 +46,33 @@ export function retryMistakes(session) {
   const names = new Set(session.errors.map(error => error.base));
   return createSession(VERBS.filter(item => names.has(item.base)));
 }
+
+// One stage is a fixed slice of the supplied list. A mistake restarts the entire slice.
+export function createQuest(verbs = VERBS) {
+  if (!verbs.length) throw new Error('Quest needs at least one verb');
+  return {verbs: [...verbs], stageIndex: 0, round: createSession(verbs.slice(0, 10)), attempt: 1, streak: 0, rewardCount: 0, finished: false};
+}
+export function answerQuest(quest, answer) {
+  if (quest.finished || quest.round.index === quest.round.items.length) throw new Error('Round finished');
+  const result = submit(quest.round, answer);
+  if (!result.correct) quest.streak = 0;
+  else quest.streak++;
+  const milestone = result.correct && quest.streak % 10 === 0 ? ++quest.rewardCount : 0;
+  return {...result, milestone};
+}
+export function advanceQuest(quest) {
+  if (quest.finished || quest.round.index !== quest.round.items.length) throw new Error('Round not finished');
+  if (quest.round.errors.length) {
+    quest.attempt++;
+    quest.round = createSession(quest.verbs.slice(quest.stageIndex * 10, (quest.stageIndex + 1) * 10));
+    return {status: 'retry'};
+  }
+  if ((quest.stageIndex + 1) * 10 >= quest.verbs.length) {
+    quest.finished = true;
+    return {status: 'finished'};
+  }
+  quest.stageIndex++;
+  quest.attempt = 1;
+  quest.round = createSession(quest.verbs.slice(quest.stageIndex * 10, (quest.stageIndex + 1) * 10));
+  return {status: 'next-stage'};
+}

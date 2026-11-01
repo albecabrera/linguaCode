@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "chosen": "01-trail.html",
+  "handoffs": {
+    "01-trail.html": {
+      "status": "implemented",
+      "queued": false,
+      "sentAt": "2026-11-01T12:00:31.519Z",
+      "startedAt": "2026-11-01T12:00:34.275Z",
+      "implementedAt": "2026-11-01T12:10:09.629Z",
+      "feature": "odd/tasks/simple-past-quest.md",
+      "note": "Original block trail implemented with cave gear every first ten-correct milestone, dragon encounter on alternating milestone, accessible text and optional Web Audio. No app preview server running."
+    }
+  }
+}

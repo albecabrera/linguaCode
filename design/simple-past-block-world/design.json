@@ -1,0 +1,10 @@
+{
+  "title": "Simple Past block-world directions",
+  "brief": "A premium original block-world practice card for students: ten verbs per stage, retry mistakes until mastered, avatar movement and audible feedback.",
+  "feature": "odd/tasks/simple-past-quest.md",
+  "artboards": [
+    { "file": "01-trail.html", "title": "Block path", "tradeoff": "Visible avatar, cave gear and dragon milestone make progress tangible; requires a wider world scene", "width": 1440, "height": 900 },
+    { "file": "02-inventory.html", "title": "Inventory", "tradeoff": "Ten-slot mastery is explicit; less sense of movement", "width": 1440, "height": 900 },
+    { "file": "03-portal.html", "title": "Portal", "tradeoff": "Striking level transition; less granular per-answer progress", "width": 1440, "height": 900 }
+  ]
+}

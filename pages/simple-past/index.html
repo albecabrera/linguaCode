@@ -1,7 +1,30 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#172e38"><title>Simple Past · LinguaCode</title><link rel="stylesheet" href="style.css"></head>
-<body><header><a href="../" class="brand">Lingua<span>Code</span></a><span>Englisch · Simple Past</span></header>
-<main><section class="intro"><p class="eyebrow">Wörter · Seiten 292–293</p><h1>Simple Past.<br><em>Ein Verb nach dem anderen.</em></h1><p>Schreibe die Vergangenheitsform zum englischen Infinitiv. Fehler werden am Ende angezeigt und können gezielt wiederholt werden.</p></section>
-<section id="app" aria-live="polite"></section>
-<aside class="share"><div><h2>Auf dem Handy üben</h2><p>Kurzer Link für die Klasse – ohne Anmeldung. Antworten bleiben nur auf diesem Gerät und werden beim Schließen der Seite gelöscht.</p><a id="shortlink" href="../s/sp/">albecabrera.github.io/linguaCode/s/sp/</a></div><img id="qr" alt="QR-Code zum Simple-Past-Trainer"></aside>
-</main><script src="../assets/qrcode-generator.min.js"></script><script type="module" src="app.mjs"></script></body></html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#172e38"><title>Simple Past · LinguaCode</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><a href="../" class="brand">Lingua<span>Code</span></a><span class="topbar-label">BLOCK-WELT · SIMPLE PAST</span><button type="button" id="sound-toggle" aria-pressed="true" aria-label="Ton ausschalten">♪ Ton an</button></header>
+  <main>
+    <section class="intro"><p class="eyebrow">Wörter · Seiten 292–293</p><h1>Baue dir deinen<br><em>Weg durch die Zeit.</em></h1><p>Zehn Verben pro Etappe. Jede richtige Form bringt deine Figur weiter. Bei einem Fehler wiederholst du die ganze Etappe, bis alle Formen richtig sind. Zehn richtige Antworten in Folge öffnen eine Höhle mit Ausrüstung oder starten einen Drachenkampf.</p></section>
+    <section class="game" aria-label="Simple-Past-Übung">
+      <div class="game-top"><span id="stage-label">ETAPPE 01 / 09</span><span id="round-label">RUNDE 01</span><span id="streak-label">SERIE 0 / 10</span><span id="reward-label">◆ 0 Belohnungen</span></div>
+      <div id="world" class="world" role="img" aria-label="Blockwelt: Figur am Start des Wegs">
+        <div class="world-sun" aria-hidden="true"></div><div class="world-cloud world-cloud-one" aria-hidden="true"></div><div class="world-cloud world-cloud-two" aria-hidden="true"></div>
+        <div class="world-hills" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="world-ground" aria-hidden="true"></div><div class="world-path" id="world-path" aria-hidden="true"></div>
+        <div id="cave" class="cave" aria-hidden="true"><span class="cave-glow">◆</span><span class="cave-gear">⚒</span></div>
+        <div id="dragon" class="dragon" aria-hidden="true" hidden><span class="dragon-wing"></span><span class="dragon-body"></span><span class="dragon-head"></span><span class="dragon-eye"></span><span class="dragon-tail"></span></div>
+        <div class="avatar" id="avatar" aria-hidden="true"><span class="avatar-head"></span><span class="avatar-body"></span><span class="avatar-feet"></span></div>
+        <div class="world-goal" aria-hidden="true">◆<span>ZIEL</span></div>
+        <div class="world-caption" id="world-caption">Schreib die erste Form, um loszugehen.</div>
+      </div>
+      <section id="app" aria-label="Verbaufgabe"></section>
+    </section>
+    <aside class="share"><div><p class="eyebrow">Für deine Klasse</p><h2>Auf dem Handy weiterüben</h2><p>Keine Anmeldung. Antworten bleiben nur in diesem Tab und werden beim Schließen gelöscht.</p><a id="shortlink" href="../s/sp/">albecabrera.github.io/linguaCode/s/sp/</a></div><img id="qr" alt="QR-Code zum Simple-Past-Trainer"></aside>
+  </main>
+  <script src="../assets/qrcode-generator.min.js"></script><script type="module" src="app.mjs"></script>
+</body>
+</html>

@@ -4,7 +4,7 @@ import { pathToFileURL } from 'node:url';
 
 const base = new URL('../pages/simple-past/', import.meta.url);
 const expected = `be|become|begin|bet|bite|blow up|break|bring|build|burn|buy|catch|choose|come|cost|creep|cut|do|draw|drink|drive|eat|fall|feed|feel|fight|find|fly|forget|get|give|go|hang up|have|hear|hide|hold up|hold|hurt|keep|know|lead|learn|leave|let|lie|light|lose|make|mean|meet|pay|put|read|ride|ring up|run|say|see|sell|send|set off|shoot off|show|sing|sit|sleep|smell|speak|spend|spoil|stand|steal|swim|take|tell|think|throw|understand|wake up|wear|win|write`.split('|');
-const { VERBS, normalize, createSession, submit, retryMistakes } = await import(pathToFileURL(new URL('core.mjs', base).pathname));
+const { VERBS, normalize, createSession, submit, retryMistakes, createQuest, answerQuest, advanceQuest } = await import(pathToFileURL(new URL('core.mjs', base).pathname));
 const infinitives = VERBS.map(v => v.base);
 assert.deepEqual(infinitives, expected, 'Only the verbs on photographed pages 292–293, in order');
 assert.equal(new Set(infinitives).size, infinitives.length);
@@ -31,6 +31,49 @@ assert.deepEqual(session.items.map(v => v.base), ['become']);
 assert.equal(submit(session, 'became').correct, true);
 assert.deepEqual(session.errors, []);
 assert.equal(retryMistakes(session).items.length, 0);
+const quest = createQuest();
+assert.deepEqual(quest.round.items.map(v => v.base), expected.slice(0, 10));
+assert.equal(quest.stageIndex, 0);
+assert.equal(answerQuest(quest, 'nope').correct, false);
+assert.equal(quest.streak, 0);
+for (const item of quest.round.items.slice(1)) answerQuest(quest, item.past[0]);
+assert.equal(quest.streak, 9);
+assert.equal(quest.rewardCount, 0);
+assert.equal(quest.round.index, 10);
+assert.equal(quest.round.errors.length, 1);
+assert.equal(advanceQuest(quest).status, 'retry');
+assert.equal(quest.stageIndex, 0);
+assert.equal(quest.attempt, 2);
+assert.deepEqual(quest.round.items.map(v => v.base), expected.slice(0, 10), 'Repeat all ten, not only mistakes');
+assert.equal(answerQuest(quest, quest.round.items[0].past[0]).milestone, 1, 'Ten consecutive correct unlock a reward');
+assert.equal(quest.rewardCount, 1);
+for (const item of quest.round.items.slice(1)) answerQuest(quest, item.past[0]);
+assert.equal(quest.streak, 19);
+assert.equal(advanceQuest(quest).status, 'next-stage');
+assert.equal(quest.stageIndex, 1);
+assert.deepEqual(quest.round.items.map(v => v.base), expected.slice(10, 20));
+assert.throws(() => advanceQuest(quest), /round/i, 'Cannot skip unfinished stage');
+for (let stage = 1; stage < 9; stage++) {
+  const remaining = quest.round.items;
+  assert.deepEqual(remaining.map(v => v.base), expected.slice(stage * 10, (stage + 1) * 10));
+  for (const item of remaining) {
+    const result = answerQuest(quest, item.past[0]);
+    if (stage === 1 && item === remaining[0]) assert.equal(result.milestone, 2, 'A second ten-correct streak unlocks the next reward');
+  }
+  assert.equal(advanceQuest(quest).status, stage === 8 ? 'finished' : 'next-stage');
+}
+assert.equal(quest.finished, true);
+assert.equal(quest.stageIndex, 8);
+assert.throws(() => answerQuest(quest, 'was'), /finished|round/i);
+const reset = createQuest(VERBS.slice(0, 10));
+for (const item of reset.round.items.slice(0, 9)) answerQuest(reset, item.past[0]);
+assert.equal(answerQuest(reset, 'wrong').milestone, 0);
+assert.equal(reset.streak, 0, 'A wrong answer breaks the consecutive streak');
+assert.equal(reset.rewardCount, 0);
+assert.equal(advanceQuest(reset).status, 'retry');
+for (const item of reset.round.items) answerQuest(reset, item.past[0]);
+assert.equal(reset.rewardCount, 1);
+assert.equal(advanceQuest(reset).status, 'finished');
 const html = readFileSync(new URL('index.html', base), 'utf8');
 const ui = readFileSync(new URL('app.mjs', base), 'utf8');
 const short = readFileSync(new URL('../s/sp/index.html', base), 'utf8');
