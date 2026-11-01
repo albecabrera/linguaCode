@@ -26,7 +26,7 @@ Lokale Prüfung ohne Build: `node scripts/verify-ki-wp8-public.mjs`, `node scrip
 
 ## Simple Past · Englisch
 
-Der Trainer unter `pages/simple-past/` verwendet ausschließlich die Verben der bereitgestellten Wörterliste (S. 292–293). Fehlerübersicht und Wiederholung bleiben im aktuellen Browser-Tab; es gibt keine Übertragung oder dauerhafte Speicherung. Der Kurzlink `https://albecabrera.github.io/linguaCode/s/sp/` und der QR-Code im Katalog und auf der Übungsseite zeigen auf den Trainer. Prüfung ohne Build: `node scripts/verify-simple-past.mjs`.
+Der Trainer unter `pages/simple-past/` verwendet ausschließlich die Verben der bereitgestellten Wörterliste (S. 292–293). Er bietet große Lernkarten und ein bildschirmfüllendes Spiel mit optionalen Tipps; beim Verb `be` zählt nur `was / were` als richtige Antwort. Fehlerübersicht und Wiederholung bleiben im aktuellen Browser-Tab; es gibt keine Übertragung oder dauerhafte Speicherung. Der Kurzlink `https://albecabrera.github.io/linguaCode/s/sp/` und der QR-Code im Katalog und auf der Übungsseite zeigen auf den Trainer. Prüfungen ohne Build: `node scripts/verify-simple-past.mjs`, `node scripts/verify-simple-past-study.mjs`, `node scripts/verify-simple-past-ui.mjs`.
 
 ## Öffentlicher PHP-Host und Kurzlinks
 

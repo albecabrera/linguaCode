@@ -1,7 +1,43 @@
 <!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#172e38"><title>Simple Past · LinguaCode</title><link rel="stylesheet" href="style.css"></head>
-<body><header><a href="../" class="brand">Lingua<span>Code</span></a><span>Englisch · Simple Past</span></header>
-<main><section class="intro"><p class="eyebrow">Wörter · Seiten 292–293</p><h1>Simple Past.<br><em>Ein Verb nach dem anderen.</em></h1><p>Schreibe die Vergangenheitsform zum englischen Infinitiv. Fehler werden am Ende angezeigt und können gezielt wiederholt werden.</p></section>
-<section id="app" aria-live="polite"></section>
-<aside class="share"><div><h2>Auf dem Handy üben</h2><p>Kurzer Link für die Klasse – ohne Anmeldung. Antworten bleiben nur auf diesem Gerät und werden beim Schließen der Seite gelöscht.</p><a id="shortlink" href="../s/sp/">albecabrera.github.io/linguaCode/s/sp/</a></div><img id="qr" alt="QR-Code zum Simple-Past-Trainer"></aside>
-</main><script src="../assets/qrcode-generator.min.js"></script><script type="module" src="app.mjs"></script></body></html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#172e38"><title>Simple Past · LinguaCode</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><a href="../" class="brand">Lingua<span>Code</span></a><span class="topbar-label">BLOCK-WELT · SIMPLE PAST</span><button type="button" id="sound-toggle" aria-pressed="true" aria-label="Ton ausschalten">♪ Ton an</button></header>
+  <main>
+    <section id="home-view" class="home-view" aria-labelledby="home-title">
+      <p class="eyebrow">Wörter · Seiten 292–293</p><h1 id="home-title">Erst merken.<br><em>Dann spielen.</em></h1>
+      <p class="intro-text">Wähle deinen Weg: Schau dir die Formen in Ruhe an oder übe sie in der Blockwelt. Du kannst jederzeit wechseln.</p>
+      <div class="home-grid"><div class="mode-choices">
+        <article class="mode-choice"><p class="eyebrow">01 · In Ruhe ansehen</p><h2>Verben lernen</h2><p>Infinitiv, Simple Past und deutsche Bedeutung – Karte für Karte in großer Schrift.</p><button type="button" id="open-study">Lernkarten öffnen →</button></article>
+        <article class="mode-choice"><p class="eyebrow">02 · In der Blockwelt</p><h2>Spiel starten</h2><p>Zehn Verben pro Etappe. Fehler wiederholen, Tipps holen und Belohnungen entdecken.</p><button type="button" id="open-game">Spielmodus öffnen →</button></article>
+      </div><div class="home-preview" aria-label="Vorschau der Lernkarte"><span class="card-label">LERNSCHRITT 01 / 83</span><strong>be</strong><strong class="past">was / were</strong><strong class="translation">sein</strong></div></div>
+      <aside class="share"><div><p class="eyebrow">Für deine Klasse</p><h2>Auf dem Handy weiterüben</h2><p>Keine Anmeldung. Antworten bleiben nur in diesem Tab und werden beim Schließen gelöscht.</p><a id="shortlink" href="../s/sp/">albecabrera.github.io/linguaCode/s/sp/</a></div><img id="qr" alt="QR-Code zum Simple-Past-Trainer"></aside>
+    </section>
+    <section id="study-view" class="study-view" aria-label="Lernkarten" hidden>
+      <nav class="view-nav" aria-label="Lernmodus-Navigation"><button type="button" id="study-home" class="nav-button">← Auswahl</button><span class="card-label" id="study-progress">LERNSCHRITT 01 / 83</span><button type="button" id="study-to-game" class="nav-button">Zum Spiel →</button></nav>
+      <div class="study-card"><p class="eyebrow">Infinitiv</p><h2 id="study-verb" tabindex="-1">be</h2><p class="eyebrow">Simple Past</p><p id="study-past" class="study-past">was / were</p><p class="eyebrow">Deutsch</p><p id="study-german" class="study-german">sein</p></div>
+      <div class="study-actions"><button type="button" id="study-prev">← Vorheriges Verb</button><button type="button" id="study-next">Nächstes Verb →</button></div>
+    </section>
+    <section id="game-view" class="game" aria-label="Simple-Past-Spiel" hidden>
+      <nav class="game-nav" aria-label="Spielmodus-Navigation"><button type="button" id="game-to-study" class="nav-button">← Verben ansehen</button><button type="button" id="game-home" class="nav-button">Auswahl</button></nav>
+      <div class="game-top"><span id="stage-label">ETAPPE 01 / 09</span><span id="round-label">RUNDE 01</span><span id="streak-label">SERIE 0 / 10</span><span id="reward-label">◆ 0 Belohnungen</span></div>
+      <div id="world" class="world" role="img" aria-label="Blockwelt: Figur am Start des Wegs">
+        <div class="world-sun" aria-hidden="true"></div><div class="world-cloud world-cloud-one" aria-hidden="true"></div><div class="world-cloud world-cloud-two" aria-hidden="true"></div>
+        <div class="world-hills" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="world-ground" aria-hidden="true"></div><div class="world-path" id="world-path" aria-hidden="true"></div>
+        <div id="cave" class="cave" aria-hidden="true"><span class="cave-glow">◆</span><span class="cave-gear">⚒</span></div>
+        <div id="dragon" class="dragon" aria-hidden="true" hidden><span class="dragon-wing"></span><span class="dragon-body"></span><span class="dragon-head"></span><span class="dragon-eye"></span><span class="dragon-tail"></span></div>
+        <div class="avatar" id="avatar" aria-hidden="true"><span class="avatar-head"></span><span class="avatar-body"></span><span class="avatar-feet"></span></div>
+        <div class="world-goal" aria-hidden="true">◆<span>ZIEL</span></div><div class="world-caption" id="world-caption">Schreib die erste Form, um loszugehen.</div>
+      </div>
+      <section id="app" aria-label="Verbaufgabe"></section>
+      <div class="game-tips"><button type="button" id="tip-button">Tipp anfordern ↓</button><p id="tip-feedback" role="status" aria-live="polite">Du kannst dir hier unten einen Hinweis holen.</p></div>
+    </section>
+  </main>
+  <script src="../assets/qrcode-generator.min.js"></script><script type="module" src="app.mjs"></script>
+</body>
+</html>
