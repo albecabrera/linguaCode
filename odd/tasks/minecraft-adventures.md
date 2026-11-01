@@ -1,0 +1,41 @@
+# Minecraft Adventures hub
+Objective: Turn the Minecraft catalog entry into a polished, accessible hub for three Code.org adventures ordered from easier to harder.
+Branch: `feature/minecraft-adventures` · Delivery strategy: `ask-on-risk` · Test runner: Node.js (`node scripts/verify-minecraft-adventures.mjs`)
+
+## Specs
+1. **S1 — Scope and exact sources:** User request, verbatim: “Erstelle innerhalb der Karteikarten mehrere MineCraft-Adventures, darunter das hier: https://studio.code.org/courses/hero/units/1?utm_source=chatgpt.com dann das hier auch: https://studio.code.org/de/courses/aquatic/units/1?utm_source=chatgpt.com
+und das hier auch: https://studio.code.org/courses/minecraft/units/1?utm_source=chatgpt.com Diese Adventure sollen nach Schwierigkeitsgrad in der Reihenfolge stehen. Die Interface, in der diese erscheinen, muss dementsprechend premium aussehen. Vor allem sollte eine MineCraft-Look haben, mit schönen Farben. Implementiere dies und mach ein commit + push + Veröffentlichung der Änderungen.” Check: each requested Code.org unit appears once and opens at the supplied URL. The user later says: “Natürlich ist die erste Adventure nicht unter diesen drei vorhanden. Dies muss du berücksichtigen.” The user clarified “Aquatic-Level 1 behalten”: retain the previously published Aquatic level-1 entry as the starter within Voyage Aquatic, not as a separate fourth course. Check: all three requested Code.org units appear once and open at their supplied URLs; the Aquatic level-1 destination remains available as a distinct launch action within that card.
+2. **S2 — Difficulty order:** “Diese Adventure sollen nach Schwierigkeitsgrad in der Reihenfolge stehen.” Present Minecraft Designer (Leicht–Mittel), Voyage Aquatic (Mittel), then Hero’s Journey (Mittel–Schwer), matching the user’s concepts: Ereignisse/Wiederholungen/Zufall; Schleifen/Bedingungen (`if`); Schleifen/Funktionen/Fehlersuche. This is the user’s didactic assessment, not an official Code.org ranking. Include Hero’s Journey direct start `https://studio.code.org/s/hero/lessons/1/levels/1?utm_source=chatgpt.com`.
+3. **S3 — Premium Minecraft-like interface:** “Die Interface, in der diese erscheinen, muss dementsprechend premium aussehen. Vor allem sollte eine MineCraft-Look haben, mit schönen Farben.” Check: responsive, accessible block-world visual direction implemented in the hub and visually opened on the design canvas; use project design tokens and no external images/fonts.
+4. **S4 — No-login access and existing share contract:** Previous request: “damit die Schülerinnen und Schüler ohne Anmeldung auf diese Seite gelangen.” Keep public access anonymous. Preserve existing `/s/n/` as the already-published direct Aquatic level link; point the new catalog card and its QR/share control to the new hub through a separate unused shortlink. Check: existing `/s/n/` remains unchanged, hub and all three Code.org destinations remain reachable without LinguaCode authentication, and each adventure has a shareable QR destination.
+
+## Tasks
+- T1 (S2–S3): Prepare three distinct accessible design directions, select a board for implementation, and open the design canvas; route: parent inline; status: done; commit: none (design artifact)
+- T2 (S1–S4): Implement the confirmed hub, ordered adventure cards, direct Code.org links, per-adventure QR sharing, catalog entry and new hub shortlink; add focused regression checks and update README; route: parent inline; status: in_progress (implementation and focused checks passed; commit pending); commit: pending.
+- T3 (S1–S4): Verify the main-based public-only release slice independently, push the feature branch, publish through `main`, and check the deployed hub and links; route: parent plus `gentle-ai-verify` for delivery risk item 5; status: pending; commit: pending.
+
+## Log
+- L1: “Erstelle innerhalb der Karteikarten mehrere MineCraft-Adventures, darunter das hier: https://studio.code.org/courses/hero/units/1?utm_source=chatgpt.com dann das hier auch: https://studio.code.org/de/courses/aquatic/units/1?utm_source=chatgpt.com
+und das hier auch: https://studio.code.org/courses/minecraft/units/1?utm_source=chatgpt.com Diese Adventure sollen nach Schwierigkeitsgrad in der Reihenfolge stehen. Die Interface, in der diese erscheinen, muss dementsprechend premium aussehen. Vor allem sollte eine MineCraft-Look haben, mit schönen Farben. Implementiere dies und mach ein commit + push + Veröffentlichung der Änderungen.”
+- L2: Official Code.org search evidence: Minecraft Designer’s 12-level unit introduces Minecraft creatures, loops/events and spawning/scoring before free play; Hero’s Journey’s 12-level unit uses the Agent to clear obstacles/collect items and practices loops and functions; Voyage Aquatic builds on loops and introduces conditionals. Sources: https://studio.code.org/courses/minecraft/units/1, https://studio.code.org/courses/hero/units/1, https://studio.code.org/courses/aquatic/units/1. Relative difficulty order is an instructional classification, not a Code.org-published rating.
+- L3: Repository baseline: public student catalog is `pages/index.html`; catalog QR uses `pages/assets/site.js` plus `pages/assets/qrcode-generator.min.js`. Existing `/s/n/` was publicly deployed as a redirect to the Aquatic level URL, so preserve it. `origin/main` is `37a9ebf`; implementation worktree is `.minecraft-adventure-hub`.
+- L4: User correction, verbatim: “implementiere dies: Von den drei Minecraft-Adventures würde ich Hero’s Journey als das anspruchsvollste einstufen, besonders für deine Klassen 8–10.
+
+| Adventure          | Schwierigkeit (meine Einschätzung) | Programmierkonzepte                |
+| ------------------ | ---------------------------------- | ---------------------------------- |
+| Minecraft Designer | Leicht–Mittel                      | Ereignisse, Wiederholungen, Zufall |
+| Voyage Aquatic     | Mittel                             | Schleifen, Bedingungen (`if`)      |
+| Hero’s Journey     | Mittel–Schwer                      | Schleifen, Funktionen, Fehlersuche |
+
+Diese Reihenfolge ist meine didaktische Einschätzung, keine offizielle Schwierigkeitsrangliste von Code.org.&#x20;&#x20;
+
+[image](https://www.google.com/s2/favicons?domain=https://edusupport.minecraft.net\&sz=32)
+
+Minecraft Education+1
+
+Meine Empfehlung: Nimm Hero’s Journey, wenn deine Schüler schon erste Programmiererfahrungen haben. Besonders interessant ist der zusätzliche Diamond Path mit schwierigeren Herausforderungen.
+
+[Minecraft Hero’s Journey direkt starten](https://studio.code.org/s/hero/lessons/1/levels/1?utm_source=chatgpt.com), damit du weiß, welche Adventure schwieriger ist. Natürlich ist die erste Adventure nicht unter diesen drei vorhanden. Dies muss du berücksichtigen.”
+- L5: User selected “Aquatic-Level 1 behalten”: preserve the original direct Level 1 URL as an entry action within Voyage Aquatic, not as a fourth separate adventure.
+- L6: Created three artboards under `design/minecraft-adventure-hub/`: `01-expedition-trail.html`, `02-world-select.html`, and `03-block-map.html`. Chose `01-expedition-trail.html` for the clearest progressive difficulty path; the other boards remain alternatives. Opened the canvas at http://127.0.0.1:52406/6dXtNqHwqboQtSzs-1wrBz8ZjUX19hPW/d/minecraft-adventure-hub/.
+- L7: TDD evidence: the new verifier first failed against the old single-link catalog card (RED); after implementation, the focused hub test passed. The legacy verifier needed its selector broadened to accommodate `course-featured` and its no-login assertion made case-insensitive, then passed. Final checks passed: `node scripts/verify-minecraft-adventures.mjs`, `node scripts/verify-minecraft-card.mjs`, `node scripts/verify-ki-catalog.mjs`, `node scripts/verify-ki-wp8-public.mjs`, and `git diff --check` (the captured quote’s trailing space is represented as `&#x20;`). Local HTTP 200 confirmed hub HTML, CSS, app JS, and `/s/w/`; Chrome opened the local hub at `http://127.0.0.1:8766/minecraft-adventures/`. No build run.

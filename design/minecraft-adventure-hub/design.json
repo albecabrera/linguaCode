@@ -1,0 +1,10 @@
+{
+  "title": "Minecraft Adventures hub",
+  "brief": "A premium, accessible Minecraft-like choice interface for three Code.org adventures, ordered by the user's didactic difficulty assessment.",
+  "feature": "odd/tasks/minecraft-adventures.md",
+  "artboards": [
+    { "file": "01-expedition-trail.html", "title": "Expedition trail", "tradeoff": "Clear guided progression; less exploratory freedom", "width": 1440, "height": 1000 },
+    { "file": "02-world-select.html", "title": "World select", "tradeoff": "Strong visual choice and concept scan; taller cards on mobile", "width": 1440, "height": 1000 },
+    { "file": "03-block-map.html", "title": "Block map", "tradeoff": "Most game-like; map illustration adds visual density", "width": 1440, "height": 1000 }
+  ]
+}

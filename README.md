@@ -70,11 +70,13 @@ Das Java-Lab für Informatik EF/Q1/Q2 ist unter `/java` integriert. Architektur 
 
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.
 
-## Informatik · Blockprogrammierung mit Minecraft · Klasse 7–10
+## Informatik · Minecraft Adventures · Klasse 7–10
 
-- Öffentliche Karte im Schülerkatalog; direkter, anmeldungsfreier Einstieg in die Code.org-Lektion. Kurzlink `/s/n/`; der Katalog erzeugt dazu einen QR-Code.
-- Quelle: [Code.org · Minecraft Aquatic, Lektion 1](https://studio.code.org/de/courses/aquatic/units/1/lessons/1/levels/1). LinguaCode hostet die externe Lektion nicht.
-- Prüfung ohne Build: `node scripts/verify-minecraft-card.mjs`.
+- Öffentliche Abenteuer-Auswahl unter `/minecraft-adventures/`, verlinkt aus dem Schülerkatalog. Kurzlink `/s/w/` und QR-Code führen zur Auswahl; jede Adventure bietet zusätzlich einen QR-Code für die direkte Code.org-Unit.
+- Reihenfolge nach der didaktischen Einschätzung des Nutzers: Minecraft Designer (Leicht–Mittel; Ereignisse, Wiederholungen, Zufall), Voyage Aquatic (Mittel; Schleifen, Bedingungen), Hero’s Journey (Mittel–Schwer; Schleifen, Funktionen, Fehlersuche). Keine offizielle Code.org-Rangliste.
+- Aquatic Level 1 bleibt als direkter Einstieg innerhalb von Voyage Aquatic erhalten. Hero’s Journey bietet zusätzlich einen direkten Level-1-Start und den Hinweis auf den Diamond Path.
+- Es ist keine LinguaCode-Anmeldung erforderlich; die Adventure-Inhalte werden extern von Code.org bereitgestellt.
+- Prüfung ohne Build: `node scripts/verify-minecraft-adventures.mjs`, `node scripts/verify-ki-catalog.mjs`, `node scripts/verify-ki-wp8-public.mjs`.
 
 ## Java-Interaktiv · Informatik Oberstufe
 
