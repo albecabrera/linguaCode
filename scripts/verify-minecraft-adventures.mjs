@@ -39,6 +39,14 @@ assert.match(oldShortlink, /https:\/\/studio\.code\.org\/de\/courses\/aquatic\/u
 const style = read('../pages/minecraft-adventures/style.css');
 assert.match(style, /prefers-reduced-motion/);
 assert.match(style, /:focus-visible/);
+assert.match(page, /href="\.\.\/assets\/site\.css"/, 'hub loads the shared LinguaCode stylesheet');
+const sharedStyle = read('../pages/assets/site.css');
+const sharedTokens = new Set([...sharedStyle.matchAll(/--([\w-]+)\s*:/g)].map(([, name]) => name));
+const localDeclarations = [...style.matchAll(/--([\w-]+)\s*:/g)];
+assert.equal(localDeclarations.length, 0, 'hub does not define duplicate color tokens');
+for (const [, token] of style.matchAll(/var\(--([\w-]+)\)/g)) {
+  assert.ok(sharedTokens.has(token), `CSS token --${token} is defined in pages/assets/site.css`);
+}
 
 const events = new Map();
 const shareButtons = expected.map(([key, title, url]) => ({
