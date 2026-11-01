@@ -18,6 +18,8 @@ export function requestTip(view, item) {
   const form = item.past[0];
   return view.hintLevel === 1
     ? `Beginnt mit ${form[0]}.`
-    : `Die Form hat ${form.replace(/[^a-z]/gi, '').length} Buchstaben.`;
+    : item.base === 'be'
+      ? 'Zwei Formen: 3 und 4 Buchstaben, mit / dazwischen.'
+      : `Die Form hat ${form.replace(/[^a-z]/gi, '').length} Buchstaben.`;
 }
 export function resetTip(view) { view.hintLevel = 0; }

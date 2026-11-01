@@ -36,7 +36,9 @@ export function createSession(items = VERBS) { return {items: [...items], index:
 export function submit(session, answer) {
   const item = session.items[session.index];
   if (!item) return {status: 'finished'};
-  const correct = item.past.some(form => normalize(form) === normalize(answer));
+  const correct = item.base === 'be'
+    ? normalize(answer) === 'was / were'
+    : item.past.some(form => normalize(form) === normalize(answer));
   if (correct) session.correct++;
   else session.errors.push({base: item.base, answer: answer.trim() || '—', expected: item.past.join(' / ')});
   session.index++;
