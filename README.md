@@ -68,6 +68,12 @@ Lokale Vorschau des Katalogs ohne private Quelldateien: `python3 -m http.server 
 
 Prüfung ohne Build: `node scripts/verify-ki-wp8-module1.mjs`, `node scripts/verify-ki-wp8-module1-ui.mjs`, `node scripts/verify-ki-wp8-catalog.mjs`, `node scripts/verify-ki-wp8-catalog-http.mjs`.
 
+## Informatik · Blockprogrammierung mit Minecraft · Klasse 7–10
+
+- Öffentliche Karte im Schülerkatalog; direkter, anmeldungsfreier Einstieg in die Code.org-Lektion. Kurzlink `/s/n/`; der Katalog erzeugt dazu einen QR-Code.
+- Quelle: [Code.org · Minecraft Aquatic, Lektion 1](https://studio.code.org/de/courses/aquatic/units/1/lessons/1/levels/1). LinguaCode hostet die externe Lektion nicht.
+- Prüfung ohne Build: `node scripts/verify-minecraft-card.mjs`.
+
 ## Tastatur-Profi · Informatik Klasse 6
 
 - Schülertrainer: `/tastatur/` auf dem PHP-Testserver, `pages/tastatur/` auf GitHub Pages; öffentlicher Pages-Kurzlink: `s/b/`.
