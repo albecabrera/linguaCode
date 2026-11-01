@@ -71,6 +71,7 @@ Prüfung ohne Build: `node scripts/verify-ki-wp8-module1.mjs`, `node scripts/ver
 ## Tastatur-Profi · Informatik Klasse 6
 
 - Schülertrainer: `/tastatur/` auf dem PHP-Testserver, `pages/tastatur/` auf GitHub Pages; öffentlicher Pages-Kurzlink: `s/b/`.
+- Simple-Past-Trainer: `pages/simple-past/`, Kurzlink `s/sp/` (`https://albecabrera.github.io/linguaCode/s/sp/`). Ausschließlich Verben aus der bereitgestellten Wörterliste (S. 292–293); Fehlerübersicht und gezielte Wiederholung nur im aktuellen Browser-Tab, ohne Übertragung oder dauerhafte Speicherung. Der QR-Code auf der Übungsseite und im Katalog zeigt auf den Kurzlink.
 - Sechs Lernstufen, Korrekturübungen, Hilfe, Challenge und freies Schreiben. Die deutsche Windows-T1-Tastatur zeigt 105 Tasten inklusive Nummernblock und ISO-Enter.
 - Lehrerübungen: `/teacher/tastatur`, geschützt durch den vorhandenen Lehrerzugang und CSRF. Auch lokal ist hierfür ein gesetzter `LINGUACODE_TEACHER_PASSWORD_HASH` erforderlich; ohne ihn antwortet die Route mit 503, selbst wenn andere lokale Lehrseiten ohne Anmeldung erreichbar sind. Eigene Wörter/Sätze anlegen, bearbeiten, löschen und direkt starten. Die additive Tabelle `keyboard_exercises` nutzt dieselbe SQLite-Datenbank; bestehende Engines bleiben unverändert.
 - Eigene Übungen sind nur auf dem PHP-Host im Lehrerzugang verfügbar (z. B. Smartboard), nicht auf GitHub Pages. Schülertexte und Ergebnisse werden weder gespeichert noch übertragen.
