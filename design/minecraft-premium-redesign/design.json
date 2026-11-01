@@ -1,0 +1,27 @@
+{
+  "title": "Minecraft premium redesign",
+  "brief": "Premium Minecraft-inspired adventure hub for students",
+  "artboards": [
+    {
+      "file": "01-expedition.html",
+      "title": "Expedition atlas",
+      "tradeoff": "Atmospheric landscape and clear vertical progression",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "02-worlds.html",
+      "title": "World selector",
+      "tradeoff": "Side-by-side worlds; compact but denser",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "03-trail.html",
+      "title": "Block trail",
+      "tradeoff": "Strong numbered route; less landscape space",
+      "width": 1440,
+      "height": 900
+    }
+  ]
+}

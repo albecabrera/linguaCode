@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "chosen": "01-expedition.html",
+  "handoffs": {
+    "01-expedition.html": {
+      "status": "in_progress",
+      "queued": false,
+      "sentAt": "2026-11-01T22:57:00.910Z",
+      "startedAt": "2026-11-01T22:57:05.961Z",
+      "implementedAt": null,
+      "note": "Implementing the expedition atlas direction in the existing hub."
+    }
+  }
+}

@@ -5,26 +5,27 @@ body{margin:0;min-width:320px;background:var(--paper);color:var(--ink)}
 .brand span{color:var(--mint)}
 .topbar p{margin:0;font-size:.9rem;font-weight:750}
 main{max-width:1080px;margin:auto;padding:2.25rem 1.2rem 3rem}
-.intro{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:2.5rem}
+.intro{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:2.5rem;padding:clamp(1.5rem,4vw,3rem);background:var(--ink);color:var(--paper);border:4px solid var(--ink);box-shadow:10px 10px 0 var(--mint)}
+.intro .eyebrow{color:var(--mint)}
 .eyebrow{margin:0 0 .55rem;color:var(--ink);font-size:.76rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
 .intro h1{margin:0;font-size:clamp(3.25rem,7vw,5.5rem);line-height:.9;letter-spacing:-.065em}
-.intro-copy>p:last-child{max-width:58ch;color:var(--ink);opacity:.8;font-size:1.05rem}
-.landscape{position:relative;min-height:220px;overflow:hidden;border:6px solid var(--ink);background:linear-gradient(var(--mint) 0 56%,var(--accent) 56% 73%,var(--ink) 73%);box-shadow:0 10px 35px var(--line)}
+.intro-copy>p:last-child{max-width:58ch;color:var(--paper);font-size:1.05rem;line-height:1.65}
+.landscape{position:relative;min-height:290px;overflow:hidden;border:6px solid var(--paper);background:linear-gradient(var(--mint) 0 56%,var(--accent) 56% 73%,var(--ink) 73%);box-shadow:10px 10px 0 var(--accent)}
 .sun{position:absolute;right:14%;top:15%;width:35px;height:35px;background:var(--accent);box-shadow:14px 0 var(--accent),0 14px var(--accent),14px 14px var(--accent)}
 .cloud{position:absolute;left:14%;top:25%;width:48px;height:15px;background:var(--paper);box-shadow:15px -12px var(--paper),30px 0 var(--paper)}
 .ridge{position:absolute;bottom:27%;left:7%;right:8%;height:39px;background:var(--mint);box-shadow:0 16px var(--ink)}
 .tree{position:absolute;bottom:43%;left:25%;width:18px;height:48px;background:var(--ink);box-shadow:-13px -12px var(--mint),0 -23px var(--mint),13px -12px var(--mint)}
 .path-marker{position:absolute;right:15%;bottom:43%;width:22px;height:40px;background:var(--ink)}
 .path-marker:after{content:"";position:absolute;left:20px;top:0;border-top:12px solid var(--accent);border-right:22px solid transparent}
-.path-section{margin-top:2.5rem}
+.path-section{margin-top:3.5rem}
 .path-heading{display:flex;justify-content:space-between;align-items:end;gap:2rem;margin-bottom:1rem}
 .path-heading h2{font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.04em;margin:0}
 .path-heading>p{max-width:35ch;color:var(--ink);opacity:.8;font-size:.9rem}
-.adventures{list-style:none;padding:0;margin:0;display:grid;gap:1rem}
+.adventures{list-style:none;padding:0;margin:0;display:grid;gap:1.4rem}
 .adventures>li{position:relative}
-.adventures>li:not(:last-child):after{content:"";position:absolute;left:2.65rem;bottom:-1.05rem;height:1.1rem;border-left:4px dashed var(--accent)}
-.adventure{display:grid;grid-template-columns:3.5rem minmax(0,1fr) 12.5rem;gap:1rem;align-items:center;padding:1.25rem 1.35rem;background:var(--paper);border:2px solid var(--line);border-radius:1.1rem;box-shadow:0 8px 0 var(--line)}
-.rank{width:3.15rem;height:3.15rem;display:grid;place-items:center;border:4px solid var(--ink);box-shadow:4px 4px var(--accent);background:var(--mint);color:var(--ink);font-weight:950;font-size:1.1rem}
+.adventures>li:not(:last-child):after{content:"";position:absolute;left:2.65rem;bottom:-1.45rem;height:1.5rem;border-left:4px dashed var(--accent)}
+.adventure{display:grid;grid-template-columns:3.5rem minmax(0,1fr) 12.5rem;gap:1.3rem;align-items:center;padding:1.7rem;background:var(--paper);border:3px solid var(--ink);border-radius:0;box-shadow:8px 8px 0 var(--mint)}
+.rank{width:3.15rem;height:5rem;display:grid;place-items:center;border:4px solid var(--ink);box-shadow:4px 4px var(--accent);background:var(--mint);color:var(--ink);font-weight:950;font-size:1.1rem}
 .rank-mid{background:var(--accent)}
 .rank-hard{background:var(--ink);color:var(--paper)}
 .level-label{margin:0;color:var(--ink);font-size:.74rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
