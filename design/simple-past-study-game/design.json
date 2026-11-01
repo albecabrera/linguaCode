@@ -1,0 +1,10 @@
+{
+  "title": "Simple Past study and game modes",
+  "brief": "Two-mode home for 83 photographed verbs: large study cards and a full-viewport block-world game with hints below.",
+  "feature": "odd/tasks/simple-past-study-game.md",
+  "artboards": [
+    { "file": "01-split-portal.html", "title": "Split portal", "tradeoff": "Immediate side-by-side choice and large study preview; game requires a separate full-viewport transition", "width": 1440, "height": 900 },
+    { "file": "02-stacked-archive.html", "title": "Stacked archive", "tradeoff": "Clear equal-width choices, but study preview sits below the fold", "width": 1440, "height": 900 },
+    { "file": "03-world-gate.html", "title": "World gate", "tradeoff": "Most immersive entry, but busy backdrop competes with study text", "width": 1440, "height": 900 }
+  ]
+}

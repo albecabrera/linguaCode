@@ -1,13 +1,17 @@
 import {VERBS, createQuest, answerQuest, advanceQuest} from './core.mjs';
+import {createView, switchMode, moveStudy, requestTip, resetTip} from './study.mjs';
 
 const app = document.querySelector('#app');
 const world = document.querySelector('#world');
 const avatar = document.querySelector('#avatar');
 const path = document.querySelector('#world-path');
 const soundButton = document.querySelector('#sound-toggle');
+const tipButton = document.querySelector('#tip-button');
+const tipFeedback = document.querySelector('#tip-feedback');
 const escape = value => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[char]));
 const totalStages = Math.ceil(VERBS.length / 10);
-let quest = createQuest();
+const view = createView(createQuest());
+let quest = view.quest;
 let gearTier = 0;
 let dragonHits = 0;
 let dragonActive = false;
@@ -81,6 +85,7 @@ function rewardFor(milestone) {
 }
 function render() {
   updateWorld();
+  tipButton.disabled = quest.finished || quest.round.index === quest.round.items.length || view.hintLevel === 2;
   if (quest.finished) return renderFinish();
   if (quest.round.index === quest.round.items.length) return renderRoundEnd();
   const {round, stageIndex} = quest;
@@ -93,6 +98,9 @@ function render() {
     event.preventDefault();
     const result = answerQuest(quest, input.value);
     playSound(result.correct);
+    resetTip(view);
+    tipButton.disabled = true;
+    tipFeedback.textContent = 'Die Antwort ist sichtbar. Weiter geht es mit dem nächsten Verb.';
     form.hidden = true;
     const feedback = app.querySelector('#feedback');
     feedback.className = result.correct ? 'feedback correct' : 'feedback incorrect';
@@ -129,17 +137,45 @@ function renderRoundEnd() {
   const errors = round.errors;
   const last = (stageIndex + 1) * 10 >= VERBS.length;
   app.innerHTML = `<div class="card result"><p class="card-label">ETAPPE ${String(stageIndex + 1).padStart(2, '0')} · RUNDE ${attempt}</p><h2>${errors.length ? 'Noch eine Runde!' : last ? 'Alle Etappen geschafft!' : 'Etappe gemeistert!'}</h2><p>${errors.length ? `Du hast ${round.correct} von ${round.items.length} Verben richtig geschrieben. Die ganze Etappe kommt noch einmal – auch die richtigen Wörter.` : `Alle ${round.items.length} Verben dieser Etappe sind richtig. Dein Weg geht weiter!`}</p>${errors.length ? `<div class="table-wrap"><table><thead><tr><th>Verb</th><th>Deine Antwort</th><th>Richtig</th></tr></thead><tbody>${errors.map(error => `<tr><td>${escape(error.base)}</td><td>${escape(error.answer)}</td><td>${escape(error.expected)}</td></tr>`).join('')}</tbody></table></div>` : ''}<button type="button" id="continue">${errors.length ? 'Alle Verben erneut üben →' : last ? 'Belohnung ansehen →' : 'Nächste Etappe →'}</button></div>`;
-  app.querySelector('#continue').addEventListener('click', () => { advanceQuest(quest); render(); });
+  app.querySelector('#continue').addEventListener('click', () => { advanceQuest(quest); resetTip(view); tipFeedback.textContent = 'Du kannst dir hier unten einen Hinweis holen.'; render(); });
 }
 function renderFinish() {
   updateWorld('Alle Etappen geschafft!');
   app.innerHTML = `<div class="card result"><p class="card-label">QUEST ABGESCHLOSSEN</p><h2>Dein Weg ist gebaut. ◆</h2><p>Alle ${VERBS.length} Verben hast du Etappe für Etappe richtig geschrieben. Meilensteine: ${quest.rewardCount}. Besiegte Drachen: ${dragonsDefeated}.</p><button type="button" id="restart">Noch einmal starten →</button></div>`;
-  app.querySelector('#restart').addEventListener('click', () => { quest = createQuest(); gearTier = 0; dragonHits = 0; dragonActive = false; dragonsDefeated = 0; render(); });
+  app.querySelector('#restart').addEventListener('click', () => { quest = createQuest(); view.quest = quest; resetTip(view); gearTier = 0; dragonHits = 0; dragonActive = false; dragonsDefeated = 0; tipFeedback.textContent = 'Du kannst dir hier unten einen Hinweis holen.'; render(); });
 }
+function renderStudy() {
+  const item = VERBS[view.studyIndex];
+  document.querySelector('#study-progress').textContent = `LERNSCHRITT ${String(view.studyIndex + 1).padStart(2, '0')} / ${VERBS.length}`;
+  document.querySelector('#study-verb').textContent = item.base;
+  document.querySelector('#study-past').textContent = item.past.join(' / ');
+  document.querySelector('#study-german').textContent = item.german;
+  document.querySelector('#study-prev').disabled = view.studyIndex === 0;
+  document.querySelector('#study-next').disabled = view.studyIndex === VERBS.length - 1;
+}
+function showMode(mode) {
+  switchMode(view, mode);
+  document.body.dataset.mode = mode;
+  for (const name of ['home', 'study', 'game']) document.querySelector(`#${name}-view`).hidden = name !== mode;
+  if (mode === 'study') renderStudy();
+  if (mode === 'game') render();
+  window.scrollTo(0, 0);
+}
+for (const [id, mode] of [['open-study', 'study'], ['open-game', 'game'], ['study-home', 'home'], ['study-to-game', 'game'], ['game-to-study', 'study'], ['game-home', 'home']]) {
+  document.querySelector(`#${id}`).addEventListener('click', () => showMode(mode));
+}
+document.querySelector('#study-prev').addEventListener('click', () => { moveStudy(view, -1); renderStudy(); });
+document.querySelector('#study-next').addEventListener('click', () => { moveStudy(view, 1); renderStudy(); });
+tipButton.addEventListener('click', () => {
+  const item = quest.round.items[quest.round.index];
+  if (!item || quest.finished) return;
+  tipFeedback.textContent = requestTip(view, item);
+  tipButton.disabled = view.hintLevel === 2;
+});
 const shortUrl = new URL('../s/sp/', location.href).href;
 document.querySelector('#shortlink').href = shortUrl;
 document.querySelector('#shortlink').textContent = shortUrl;
 const code = qrcode(0, 'M');
 code.addData(shortUrl); code.make();
 document.querySelector('#qr').src = code.createDataURL(5, 0);
-render();
+showMode('home');

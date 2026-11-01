@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "chosen": "01-split-portal.html",
+  "handoffs": {
+    "01-split-portal.html": {
+      "status": "implemented",
+      "queued": false,
+      "sentAt": "2026-11-01T12:36:27.994Z",
+      "startedAt": "2026-11-01T12:36:31.597Z",
+      "implementedAt": "2026-11-01T12:41:03.949Z",
+      "feature": "odd/tasks/simple-past-study-game.md",
+      "note": "Two-mode home, oversized study cards, full-viewport game and non-scoring bottom hints implemented; local preview server serves current files.",
+      "previewUrl": "http://127.0.0.1:8765/simple-past/"
+    }
+  }
+}
