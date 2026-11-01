@@ -70,6 +70,12 @@ Das Java-Lab für Informatik EF/Q1/Q2 ist unter `/java` integriert. Architektur 
 
 Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist für eine spätere, pseudonyme Fortschrittsauswertung vorbereitet.
 
+## Informatik · Blockprogrammierung mit Minecraft · Klasse 7–10
+
+- Öffentliche Karte im Schülerkatalog; direkter, anmeldungsfreier Einstieg in die Code.org-Lektion. Kurzlink `/s/n/`; der Katalog erzeugt dazu einen QR-Code.
+- Quelle: [Code.org · Minecraft Aquatic, Lektion 1](https://studio.code.org/de/courses/aquatic/units/1/lessons/1/levels/1). LinguaCode hostet die externe Lektion nicht.
+- Prüfung ohne Build: `node scripts/verify-minecraft-card.mjs`.
+
 ## Java-Interaktiv · Informatik Oberstufe
 
 - Neues eigenständiges Modul: `/java-interaktiv/`, öffentlicher Pages-Kurzlink `s/j/`. Das bestehende Java-Lab bleibt unverändert.
