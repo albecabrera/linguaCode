@@ -1,9 +1,9 @@
 {
   "title": "Bruch-Quest",
-  "brief": "Premium, Minecraft-inspired interactive Grade 6 fraction flashcards sourced from supplied German teaching PDFs, with progressive difficulty, light/dark modes, rewards, and encouraging topic feedback.",
-  "feature": "odd/tasks/fraction-flashcards.md",
+  "brief": "Modernes, originales Blockwelt-Abenteuer für den deutschen Bruchunterricht der Klasse 6: richtige Antworten bewegen eine artikulierte Figur, sammeln Beute und lösen kurze Kampfsequenzen aus.",
+  "feature": "odd/tasks/fraction-world-redesign.md",
   "artboards": [
-    {"file":"01-quest-trail.html","title":"Quest trail","tradeoff":"Most clearly communicates the source-backed progression; the active flashcard receives less persistent space.","width":1440,"height":900},
+    {"file":"01-quest-trail.html","title":"Quest trail","tradeoff":"Immersive live world makes answer-driven movement tangible; the task panel stays beside the active stage on desktop and stacks on mobile.","width":1440,"height":900},
     {"file":"02-inventory-cards.html","title":"Inventory cards","tradeoff":"Makes individual learning cards and rewards tangible; less dramatic for hard challenges.","width":1440,"height":900},
     {"file":"03-boss-arena.html","title":"Boss arena","tradeoff":"High motivational energy for difficult operations; unsuitable as the default entry screen.","width":1440,"height":900}
   ]
