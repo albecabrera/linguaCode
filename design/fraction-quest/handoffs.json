@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "chosen": "01-quest-trail.html",
+  "handoffs": {
+    "01-quest-trail.html": {
+      "status": "in_progress",
+      "queued": false,
+      "sentAt": "2026-11-02T18:05:11.607Z",
+      "startedAt": "2026-11-02T18:05:12.799Z",
+      "implementedAt": null,
+      "feature": "odd/tasks/fraction-flashcards.md",
+      "note": "Implementing the selected quest trail as a student-facing fraction trainer."
+    }
+  }
+}

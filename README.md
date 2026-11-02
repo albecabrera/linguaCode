@@ -39,6 +39,11 @@ php -r 'echo password_hash("DEIN-SICHERES-PASSWORT", PASSWORD_DEFAULT), PHP_EOL;
 
 Hinterlege das Ergebnis vor einem öffentlichen Plesk-Deployment als Umgebungsvariable `LINGUACODE_TEACHER_PASSWORD_HASH`. Der integrierte lokale PHP-Entwicklungsserver lässt die bisherigen Lehrseiten bewusst ohne Anmeldung zu. **Ausnahme:** `/teacher/tastatur` und die dazugehörige Datenroute benötigen auch lokal einen Passwort-Hash und eine Anmeldung. Die allgemeine lokale Ausnahme gilt **nur** für `php -S`; auf jedem anderen Webserver bleibt der Lehrerbereich ohne Passwort-Hash gesperrt.
 
+## Bruch-Quest · Mathematik Klasse 6
+
+- Statische Schülerseite: `pages/brueche/` · Route `/brueche/` (Hell-/Dunkelmodus, vier Quellenstufen, lokale Sitzungsserie und Abschlussfeedback).
+- Prüfung ohne Build: `node scripts/verify-brueche.mjs`.
+
 ## Prüfung
 
 ```bash
