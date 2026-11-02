@@ -24,6 +24,12 @@ Die Karte steht im öffentlichen Katalog unter **Informatik**. Sie öffnet alle 
 
 Lokale Prüfung ohne Build: `node scripts/verify-ki-wp8-public.mjs`, `node scripts/verify-ki-wp8-public-release.mjs` und die zehn Modul-/UI-Prüfungen für die Module 2–6. Der öffentliche Kurslink ist `https://albecabrera.github.io/linguaCode/ki8/`; die stabile Route führt zur Kursübersicht, während `/ki8/modul-1.html` unverändert direkt erreichbar bleibt. Veröffentlichung erfolgt ausschließlich über den bestehenden Pages-Workflow bei einem Push auf `main`.
 
+## Bruch-Quest · Mathematik Klasse 6
+
+- Öffentliche Schülerübung `/brueche/`, verlinkt im Mathematik-Katalog. Vier Stufen von fairer Teilung und Brucharten über Vergleich/Erweitern/Kürzen zu gleichnamigen und ungleichnamigen Rechenaufgaben.
+- Die originale Blockwelt animiert Bewegung, Loot und Wächterkampf anhand richtiger Antworten. Hell-/Dunkelmodus, optionaler Ton und Fortschritt ausschließlich in der Browser-Sitzung; keine Anmeldung oder Übertragung.
+- Prüfung ohne Build: `node scripts/verify-brueche.mjs`, `node scripts/verify-brueche-world.mjs`, `node scripts/verify-brueche-ui.mjs`.
+
 ## Simple Past · Englisch
 
 Der Trainer unter `pages/simple-past/` verwendet ausschließlich die Verben der bereitgestellten Wörterliste (S. 292–293). Er bietet große Lernkarten und ein bildschirmfüllendes Spiel mit optionalen Tipps; beim Verb `be` zählt nur `was / were` als richtige Antwort. Fehlerübersicht und Wiederholung bleiben im aktuellen Browser-Tab; es gibt keine Übertragung oder dauerhafte Speicherung. Der Kurzlink `https://albecabrera.github.io/linguaCode/s/sp/` und der QR-Code im Katalog und auf der Übungsseite zeigen auf den Trainer. Prüfungen ohne Build: `node scripts/verify-simple-past.mjs`, `node scripts/verify-simple-past-study.mjs`, `node scripts/verify-simple-past-ui.mjs`.
