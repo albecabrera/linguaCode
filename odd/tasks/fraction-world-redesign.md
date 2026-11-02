@@ -10,7 +10,7 @@ Branch: feature/wp8-ki-lernpfad · Delivery: isolated review slices f0475b7 (run
 
 ## Tasks
 - T1 (S1–S4): Redesign selected Quest trail and implement the connected world, movement, loot, combat and audio with behavior tests; route: gentle-ai-worker (context backstop); status: done (automated checks passed, visual preview accepted by user); commit: f0475b7.
-- T2 (S1–S4): Assess diff, run applicable checks and browser preview, record verification and reviewable work-unit commits; route: parent; status: in_progress (visual preview accepted; implementation committed; push remains); commit: f0475b7; design/tracking in following docs slice.
+- T2 (S1–S4): Assess diff, run applicable checks and browser preview, record verification and reviewable work-unit commits; route: parent; status: done (visual preview accepted, checks passed, push confirmed); commits: f0475b7 (runtime/tests), b342c69 (design/tracking).
 
 ## Log
 - L1: “Haz ahora un rediseño de esta carta. tiene que verse como MineCraft y a medida que los alumnos van haciendo las tareas bien, la figura de MineCraft va avanzando en vivo y colectando cosas, peleando etc. tiene que tener tono tambien. Inspirate en la pagina oficial de MineCraft: https://www.minecraft.net/de-de o esta: https://apps.apple.com/de/app/minecraft/id479516143 tiene que quedar premium de verdad, como si los alumnos estuviesen dentro de un mundo de MineCraft.” Repeated request with terminal wrap markers confirms the same scope.
@@ -27,3 +27,5 @@ Branch: feature/wp8-ki-lernpfad · Delivery: isolated review slices f0475b7 (run
 - L9: Parent review after L8 found claimed stage/task columns absent, queued animations not cancelled and defeat CSS missing. Observed RED in queued RAF Next cancellation test; fixed cancel/restart, persistent defeat, immediate reduced-motion state and actual desktop columns. All three Node verifiers passed plus syntax and git diff --check; HTTP 200 and browser open at http://127.0.0.1:8767/brueche/. Selected board synced self-contained to implementation. No browser rendering/screenshots verified, no build or push. T1 complete under automated proof, T2 awaits visual review before delivery.
 
 - L10: User visual acceptance and delivery authorization: “esta bien asi. haz entonces un commit + push y guarda los cambios”. All three verifiers and git diff --check passed again. Delivery split into runtime+tests+README and design+tracking slices to keep unrelated accumulated branch history out of review; no PR/merge/deployment requested.
+
+- L11: Push succeeded to origin/feature/wp8-ki-lernpfad; local and remote both b342c69e06d05912cb545469728d33db3011920e. Unrelated untracked paths untouched. No build or deployment; visual acceptance is human, not screenshot automation.
