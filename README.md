@@ -41,8 +41,9 @@ Hinterlege das Ergebnis vor einem öffentlichen Plesk-Deployment als Umgebungsva
 
 ## Bruch-Quest · Mathematik Klasse 6
 
-- Statische Schülerseite: `pages/brueche/` · Route `/brueche/` (Hell-/Dunkelmodus, vier Quellenstufen, lokale Sitzungsserie und Abschlussfeedback).
-- Prüfung ohne Build: `node scripts/verify-brueche.mjs`.
+- Statische Schülerseite: `pages/brueche/` · Route `/brueche/` (Original-Blockwelt, sichtbarer Avatar mit Bewegung, Inventar, Wächterkampf, Hell-/Dunkelmodus, Ton-Schalter, vier Quellenstufen und lokale Sitzungsserie).
+- Die Welt bleibt während Fragen und Quest-Bericht sichtbar; jede richtige Karte bewegt die Figur genau einmal, greift sichtbar an oder sammelt sichtbar Loot. Falsche oder wiederholte Antworten geben keinen Fortschritt/Loot und erscheinen als deutsche Themen-Wiederholung im Bericht. Session-State wird streng validiert wiederhergestellt, Audio startet erst nach Nutzeraktion und ist optional.
+- Prüfungen ohne Build: `node scripts/verify-brueche.mjs`, `node scripts/verify-brueche-world.mjs` und `node scripts/verify-brueche-ui.mjs`.
 
 ## Prüfung
 
