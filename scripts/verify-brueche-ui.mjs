@@ -11,6 +11,8 @@ assert.match(html, /@keyframes\s+quest-attack/, 'attack uses a real keyframe seq
 assert.match(html, /@keyframes\s+loot-flight/, 'loot uses a real keyframe sequence');
 assert.match(html, /@keyframes\s+guardian-fall/, 'defeat uses a real keyframe sequence');
 assert.match(html, /prefersReducedMotion|matchMedia/, 'reduced-motion state is observed by presentation code');
+assert.match(html, /fractionPattern[\s\S]*fraction-numerator[\s\S]*fraction-denominator/, 'visible fractions use structured vertical markup');
+assert.doesNotMatch(html, /button\.textContent=option/, 'answer semantics are kept separate from visible fraction markup');
 
 class ClassList {
   constructor(values = []) { this.values = new Set(values); }
@@ -78,7 +80,7 @@ async function boot(storage = new Storage(), audio = true, reducedMotion = false
   return { ...fixture, storage, flushFrames, click: (element, index = 0) => element.dispatch('click', index) };
 }
 const visible = element => !element.classList.contains('hidden');
-const answerButton = (app, value) => app.document.querySelectorAll('.answer').find(button => button.textContent === value);
+const answerButton = (app, value) => app.document.querySelectorAll('.answer').find(button => button.getAttribute('aria-label') === value || button.textContent === value);
 const answer = (app, value) => { const button = answerButton(app, value); assert.ok(button, `answer button ${value} exists`); button.dispatch('click'); app.flushFrames(); };
 const next = app => app.elements.get('next').dispatch('click');
 const complete = async (mode = 'correct', storage = new Storage()) => { const app = await boot(storage); app.elements.get('start').dispatch('click'); for (let i = 0; i < TASKS.length; i++) { answer(app, mode === 'correct' ? TASKS[i].answer : TASKS[i].options.find(option => option !== TASKS[i].answer)); next(app); } return app; };
@@ -87,6 +89,8 @@ const started = await boot();
 started.elements.get('start').dispatch('click');
 assert.ok(visible(started.elements.get('home')), 'start keeps the visible world');
 assert.ok(visible(started.elements.get('game')), 'start opens gameplay');
+assert.equal(answerButton(started, '1/4').querySelectorAll('.fraction').length, 1, 'answer renders a fraction node');
+assert.equal(answerButton(started, '1/4').getAttribute('aria-label'), '1/4', 'answer keeps its internal value as an accessible label');
 answer(started, TASKS[0].answer);
 assert.equal(started.avatar.style.left, '13.5%', 'correct answer moves avatar');
 assert.equal(started.world.classList.contains('anim-travel'), true, 'correct answer retriggers travel presentation');
@@ -99,6 +103,7 @@ assert.ok([...resumed.document.querySelectorAll('.answer')].every(button => butt
 assert.ok(visible(resumed.elements.get('next')), 'answered session restores visible Next');
 next(resumed);
 assert.equal(resumed.elements.get('question-number').textContent, '2');
+assert.equal(resumed.elements.get('prompt').querySelector('.fraction').getAttribute('aria-label'), '3/5', 'prompt renders fractions vertically');
 assert.equal(resumed.elements.get('inventory').textContent, 'Noch leer');
 assert.ok(afterFirst, 'answer persists session');
 
