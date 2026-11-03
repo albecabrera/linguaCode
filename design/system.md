@@ -19,6 +19,12 @@ Sources inspected: `pages/assets/site.css`, `pages/simple-past/style.css`, `page
 | slate | #57696e | hint text | pages/simple-past/style.css |
 | white | #fff | cards | pages/simple-past/style.css |
 
+## Catalog glass tokens (synced)
+- Light surface `rgba(255,255,255,.72)`, border `rgba(87,105,110,.25)`, muted text `#57696e`, panel `#f5f4ed`; source: `pages/assets/site.css`.
+- Dark surface `rgba(23,46,56,.85)`, border `rgba(169,217,200,.3)`, muted text `#dce3e0`, panel `#172e38`; source: `pages/assets/site.css`.
+- Catalog hero radius `2rem`, card radius `1.5rem`, pill buttons `999px`, background blur `18px` / `24px`, maximum width `1440px`; source: `pages/assets/site.css`.
+- Catalog card shadow `0 10px 35px rgba(23,46,56,.06)`; source: `pages/assets/site.css`.
+
 ## Typography and layout
 - System font stack (`system-ui`, `-apple-system`, `Segoe UI`, `sans-serif`) from `pages/simple-past/style.css`; no external fonts.
 - Hero heading uses `clamp(2.6rem,7vw,5rem)` / line-height `1.05`; body uses natural system text from `pages/simple-past/style.css`.
