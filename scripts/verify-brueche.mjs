@@ -17,6 +17,8 @@ const checks = [
   ['dark mode control', /theme-toggle|dark/i],
   ['keyboard focus', /focus-visible/],
   ['reduced motion', /prefers-reduced-motion/],
+  ['vertical fraction formatter', /fractionPattern[\s\S]*fraction-numerator[\s\S]*fraction-denominator/],
+  ['accessible fraction values', /setAttribute\('aria-label',match\[0\]\)[\s\S]*setAttribute\('aria-label',source\)/],
   ['no fraction multiplication or division', /multipli(?:kation|zieren)|division|Brüche\s*(?:multiplizieren|dividieren)/i, true],
 ];
 for (const [name, pattern, forbidden = false] of checks) {
