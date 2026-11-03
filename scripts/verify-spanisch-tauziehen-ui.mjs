@@ -109,7 +109,8 @@ const answerText = panel => {
     return vocabulary.find(pair => pair.spanish === spanish)?.german;
   }
   const german = prompt.slice('Wie heißt „'.length, -2);
-  return vocabulary.find(pair => pair.german === german)?.spanish;
+  const choices = panel.querySelectorAll('button').map(choice => choice.textContent);
+  return vocabulary.find(pair => pair.german === german && choices.includes(pair.spanish))?.spanish;
 };
 const correctButton = panel => panel.querySelectorAll('button').find(answerButton => answerButton.textContent === answerText(panel));
 const wrongButton = panel => panel.querySelectorAll('button').find(answerButton => answerButton !== correctButton(panel) && !answerButton.textContent.includes('Weiter'));
