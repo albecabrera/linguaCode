@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="assets/site.css">
   <title>LinguaCode · Schülerübungen</title>
 </head>
-<body>
-  <header><a class="brand" href="./">Lingua<span>Code</span></a><p>Öffentliche Schülerübungen</p></header>
+<body class="catalog">
+  <header><a class="brand" href="./">Lingua<span>Code</span></a><p>Öffentliche Schülerübungen</p><button class="theme-toggle" type="button" aria-pressed="false" aria-label="Dunkles Design aktivieren">☾ Dunkel</button></header>
   <main>
     <section class="hero"><p class="eyebrow">Direkt starten</p><h1>Üben. Verstehen. Weiterkommen.</h1><p>Alle Angebote sind ohne Anmeldung erreichbar. Wähle eine Übung oder teile sie per QR-Code.</p></section>
     <div class="subject-filter" aria-label="Nach Unterrichtsfach filtern"><span class="filter-label">Unterrichtsfach:</span><div class="filter-buttons" role="group" aria-label="Fächer"><button class="filter-button active" data-filter="all" aria-pressed="true">Alle</button><button class="filter-button" data-filter="Spanisch" aria-pressed="false">Spanisch</button><button class="filter-button" data-filter="Englisch" aria-pressed="false">Englisch</button><button class="filter-button" data-filter="Informatik" aria-pressed="false">Informatik</button><button class="filter-button" data-filter="Mathematik" aria-pressed="false">Mathematik</button><button class="filter-button" data-filter="Sport" aria-pressed="false">Sport</button></div><p id="filter-empty" class="filter-empty" hidden>Für dieses Fach sind aktuell noch keine Übungen verfügbar.</p></div>
@@ -40,6 +40,6 @@
     </section>
   </main>
   <dialog id="share"><button class="close" aria-label="Schließen">×</button><h2>Link teilen</h2><img id="qr" alt="QR-Code zur Übung"><input id="url" readonly><button id="copy">Link kopieren</button></dialog>
-  <script src="assets/qrcode-generator.min.js"></script><script src="assets/site.js"></script>
+  <script src="assets/qrcode-generator.min.js"></script><script src="assets/site.js"></script><script src="assets/theme.js"></script>
 </body>
 </html>
