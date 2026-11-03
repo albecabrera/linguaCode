@@ -140,26 +140,68 @@ function shuffle(items, random) {
   return result;
 }
 
-export function createGame(random = Math.random) {
-  const gameQuestions = shuffle(pairs, random).map((pair, index) => makeQuestion(pair, index, random));
-  return { phase: 'playing', position: 0, winner: null, questions: gameQuestions, teams: [0, 1].map(() => ({ index: 0, score: 0, feedback: null })) };
+const validDurations = new Set([1, 3, 5]);
+const promptFor = ([spanish, german], index) => index % 2 === 0 ? `Was bedeutet «${spanish}»?` : `Wie heißt „${german}“?`;
+function distinctOrder(first, second) {
+  const result = Array(first.length);
+  const used = new Set();
+  const assign = index => {
+    if (index === first.length) return true;
+    for (let candidateIndex = 0; candidateIndex < second.length; candidateIndex++) {
+      if (used.has(candidateIndex) || promptFor(first[index], index) === promptFor(second[candidateIndex], index)) continue;
+      used.add(candidateIndex); result[index] = second[candidateIndex];
+      if (assign(index + 1)) return true;
+      used.delete(candidateIndex);
+    }
+    return false;
+  };
+  if (!assign(0)) throw new Error('Unable to create distinct team question decks');
+  return result;
+}
+
+export function createGame(random = Math.random, durationMinutes = 3) {
+  const firstPairs = shuffle(pairs, random);
+  const secondPairs = distinctOrder(firstPairs, shuffle(pairs, random));
+  const teamQuestions = [firstPairs, secondPairs].map(deck => deck.map((pair, index) => makeQuestion(pair, index, random)));
+  const safeDuration = validDurations.has(durationMinutes) ? durationMinutes : 3;
+  return {
+    phase: 'playing', position: 0, winner: null, durationMinutes: safeDuration, deadline: null,
+    teamQuestions, questions: teamQuestions[0],
+    teams: [0, 1].map(() => ({ index: 0, score: 0, feedback: null }))
+  };
+}
+export function start(game, now = Date.now()) {
+  if (game.phase !== 'playing' || game.deadline !== null) return false;
+  game.startedAt = now;
+  game.deadline = now + game.durationMinutes * 60_000;
+  return true;
 }
 function finish(game) {
-  if (Math.abs(game.position) >= 5 || game.teams.every(t => t.index >= game.questions.length)) {
+  if (Math.abs(game.position) >= 5 || game.teams.every((t, index) => t.index >= game.teamQuestions[index].length)) {
     game.phase = 'finished';
     game.winner = game.position === 0 ? null : game.position < 0 ? 0 : 1;
   }
 }
-export function answer(game, team, index, choice) {
+export function timeout(game, now = Date.now()) {
+  if (game.phase !== 'playing' || game.deadline === null || now < game.deadline) return false;
+  game.phase = 'finished';
+  game.winner = game.position === 0 ? null : game.position < 0 ? 0 : 1;
+  game.endedBy = 'timeout';
+  return true;
+}
+export function answer(game, team, index, choice, now = Date.now()) {
+  timeout(game, now);
   const state = game.teams[team];
-  if (game.phase !== 'playing' || !state || state.feedback || state.index !== index || !game.questions[index] || !Number.isInteger(choice) || choice < 0 || choice > 3) return false;
-  const correct = game.questions[index].correct === choice;
+  const question = game.teamQuestions[team]?.[index];
+  if (game.phase !== 'playing' || !state || state.feedback || state.index !== index || !question || !Number.isInteger(choice) || choice < 0 || choice > 3) return false;
+  const correct = question.correct === choice;
   state.feedback = { correct, choice };
   if (correct) { state.score++; game.position += team === 0 ? -1 : 1; }
   finish(game);
   return true;
 }
-export function advance(game, team) {
+export function advance(game, team, now = Date.now()) {
+  timeout(game, now);
   const state = game.teams[team];
   if (game.phase !== 'playing' || !state?.feedback) return false;
   state.index++;

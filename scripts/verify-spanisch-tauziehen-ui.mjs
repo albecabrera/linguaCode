@@ -75,7 +75,8 @@ class Element {
 const makeFixture = () => {
   const elements = new Map();
   const add = (id, tag = 'div') => { const node = new Element(tag, id); elements.set(id, node); return node; };
-  ['fullscreen', 'start', 'intro', 'teams', 'team-0', 'team-1', 'result', 'restart', 'reset', 'score-0', 'score-1', 'rope', 'match-status', 'screen-note', 'result-title', 'result-detail'].forEach(id => add(id, id === 'fullscreen' || id === 'start' || id === 'restart' || id === 'reset' ? 'button' : 'div'));
+  ['fullscreen', 'start', 'duration-1', 'duration-3', 'duration-5', 'intro', 'teams', 'team-0', 'team-1', 'result', 'restart', 'reset', 'score-0', 'score-1', 'rope', 'timer', 'match-status', 'screen-note', 'result-title', 'result-detail'].forEach(id => add(id, id === 'fullscreen' || id === 'start' || id === 'restart' || id === 'reset' || id.startsWith('duration-') ? 'button' : 'div'));
+  [1, 3, 5].forEach(minutes => { const button = elements.get(`duration-${minutes}`); button.dataset.duration = String(minutes); button.setAttribute('aria-pressed', minutes === 3 ? 'true' : 'false'); });
   const documentElement = new Element('html');
   const document = {
     documentElement,
@@ -93,6 +94,12 @@ const makeFixture = () => {
   return {elements, document};
 };
 
+let now = 1000;
+let activeTimers = [];
+globalThis.Date.now = () => now;
+globalThis.setInterval = callback => { activeTimers.push(callback); return callback; };
+globalThis.clearInterval = callback => { activeTimers = activeTimers.filter(timer => timer !== callback); };
+const tick = () => activeTimers.slice().forEach(callback => callback());
 let bootNumber = 0;
 const boot = async () => {
   const fixture = makeFixture();
@@ -114,12 +121,15 @@ const answerText = panel => {
 };
 const correctButton = panel => panel.querySelectorAll('button').find(answerButton => answerButton.textContent === answerText(panel));
 const wrongButton = panel => panel.querySelectorAll('button').find(answerButton => answerButton !== correctButton(panel) && !answerButton.textContent.includes('Weiter'));
-const startGame = fixture => { fixture.elements.get('start').dispatch('click'); assert.equal(fixture.elements.get('teams').hidden, false); };
+const startGame = fixture => { fixture.elements.get('duration-1').dispatch('click'); fixture.elements.get('start').dispatch('click'); assert.equal(fixture.elements.get('teams').hidden, false); };
 const scene = fixture => fixture.elements.get('rope');
 
 const game = await boot();
 assert.equal(game.elements.get('intro').hidden, false, 'intro is visible before start');
 assert.equal(game.elements.get('teams').hidden, true, 'teams are hidden before start');
+for (const minutes of [1, 3, 5]) assert.ok(game.elements.get(`duration-${minutes}`), `${minutes}-minute control exists`);
+game.elements.get('duration-5').dispatch('click');
+assert.equal(game.elements.get('duration-5').getAttribute('aria-pressed'), 'true');
 startGame(game);
 assert.equal(game.elements.get('reset').hidden, false, 'reset is available during play');
 assert.equal(game.elements.get('team-0').querySelectorAll('button').length, 4, 'green team gets four answers');
@@ -127,7 +137,9 @@ assert.equal(game.elements.get('team-1').querySelectorAll('button').length, 4, '
 assert.equal(scene(game).className, 'rope-scene', 'scene starts still');
 const firstGreenPrompt = game.elements.get('team-0').children.find(child => child.tagName === 'H2')?.textContent;
 const firstOrangePrompt = game.elements.get('team-1').children.find(child => child.tagName === 'H2')?.textContent;
-assert.equal(firstGreenPrompt, firstOrangePrompt, 'both teams visibly receive the same per-game prompt');
+assert.notEqual(firstGreenPrompt, firstOrangePrompt, 'teams receive different same-index prompts');
+assert.equal(game.elements.get('timer').textContent, 'Zeit: 1:00', 'selected one-minute duration starts on click');
+assert.equal(game.elements.get('duration-1').getAttribute('aria-pressed'), 'true');
 
 const green = game.elements.get('team-0');
 const orange = game.elements.get('team-1');
@@ -155,6 +167,14 @@ assert.match(orange.textContent, /Aufgabe 2 \/ 99/);
 assert.equal(scene(game).className, 'rope-scene pull-right', 'Weiter preserves the final scene without starting another pull');
 
 
+now = 61000;
+tick();
+assert.equal(game.elements.get('result').hidden, false, 'deadline ends the game');
+assert.match(game.elements.get('result-detail').textContent, /Zeit ist abgelaufen/);
+const lateScore = game.elements.get('score-0').textContent;
+button(game.elements.get('team-0'), 0)?.dispatch('click');
+assert.equal(game.elements.get('score-0').textContent, lateScore, 'late touches cannot score');
+
 const winner = await boot();
 startGame(winner);
 const winnerPanel = winner.elements.get('team-0');
@@ -179,6 +199,7 @@ winner.elements.get('restart').dispatch('click');
 assert.equal(winner.elements.get('result').hidden, true, 'restart hides result');
 assert.equal(winner.elements.get('score-0').textContent, '0', 'restart resets green score');
 assert.equal(winner.elements.get('score-1').textContent, '0', 'restart resets orange score');
+assert.equal(winner.elements.get('timer').textContent, 'Zeit: 1:00', 'restart keeps the selected duration');
 assert.equal(scene(winner).className, 'rope-scene', 'restart restores the still scene');
 winner.elements.get('reset').dispatch('click');
 assert.equal(winner.elements.get('intro').hidden, false, 'reset returns to intro');
@@ -189,5 +210,27 @@ const fullscreen = await boot();
 fullscreen.elements.get('fullscreen').dispatch('click');
 await new Promise(resolve => setImmediate(resolve));
 assert.match(fullscreen.elements.get('screen-note').textContent, /Vollbild ist hier nicht verfügbar/);
+
+activeTimers = [];
+now = 1000;
+const timerFixture = await boot();
+timerFixture.elements.get('duration-3').dispatch('click');
+timerFixture.elements.get('start').dispatch('click');
+assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 3:00');
+now = 2000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 2:59');
+now = 120000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 1:01');
+now = 121000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 1:00');
+now = 180000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 0:01');
+const detached = button(timerFixture.elements.get('team-0'), 0);
+now = 181000;
+detached.dispatch('click');
+assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 0:00');
+assert.equal(timerFixture.elements.get('result').hidden, false, 'late answer ends immediately without interval tick');
+assert.ok(timerFixture.elements.get('team-0').querySelectorAll('button').every(answerButton => answerButton.disabled));
+timerFixture.elements.get('reset').dispatch('click');
+assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 3:00', 'reset restores selected duration display');
+timerFixture.elements.get('start').dispatch('click');
+detached.dispatch('click');
+assert.equal(timerFixture.elements.get('score-0').textContent, '0', 'detached button cannot affect a later game');
 
 console.log('PASS: Spanisch-Tauziehen UI — Start, beide Teams, richtig/falsch, Weiter, Sieg-Ende, deaktivierte Eingaben, Neustart, Reset und Vollbild-Fallback. DOM touch-button checks passed; echtes Smartboard-Touch/Layout bleibt unverified.');

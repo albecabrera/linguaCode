@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createGame, answer, advance, questions, vocabulary } from '../pages/spanisch-tauziehen/core.mjs';
+import { createGame, start, timeout, answer, advance, questions, vocabulary } from '../pages/spanisch-tauziehen/core.mjs';
 
 assert.equal(questions.length, vocabulary.length);
 assert.ok(questions.length >= 90);
@@ -33,6 +33,33 @@ for (const gameOrder of [first.questions, second.questions]) {
   assert.ok(gameOrder.some(q => q.direction === 'de-es'));
   for (const q of gameOrder) assert.equal(q.options.length, 4);
 }
+for (const game of [first, second, createGame(() => 0)]) {
+  assert.equal(game.teamQuestions[0].length, vocabulary.length);
+  assert.equal(game.teamQuestions[1].length, vocabulary.length);
+  assert.deepEqual(new Set(game.teamQuestions[0].map(q => q.spanish)), new Set(vocabulary.map(pair => pair.spanish)));
+  assert.deepEqual(new Set(game.teamQuestions[1].map(q => q.spanish)), new Set(vocabulary.map(pair => pair.spanish)));
+  for (let i = 0; i < vocabulary.length; i++) {
+    assert.notEqual(game.teamQuestions[0][i].prompt, game.teamQuestions[1][i].prompt, `same-index prompts differ at ${i}`);
+    assert.equal(game.teamQuestions[0][i].direction, game.teamQuestions[1][i].direction, `same-index directions match at ${i}`);
+  }
+}
+for (let seed = 1; seed <= 64; seed++) {
+  let state = seed;
+  const random = () => ((state = (state * 48271) % 2147483647) / 2147483647);
+  const game = createGame(random);
+  for (let i = 0; i < vocabulary.length; i++) {
+    assert.notEqual(game.teamQuestions[0][i].prompt, game.teamQuestions[1][i].prompt, `seed ${seed} prompt collision at ${i}`);
+    assert.equal(game.teamQuestions[0][i].direction, game.teamQuestions[1][i].direction);
+  }
+}
+const timedSetup = createGame(() => 0, 1);
+assert.equal(start(timedSetup, 1000), true);
+assert.equal(timedSetup.deadline, 61000);
+assert.equal(timeout(timedSetup, 60999), false);
+assert.equal(timeout(timedSetup, 61000), true);
+assert.equal(timedSetup.winner, null);
+assert.equal(answer(timedSetup, 0, 0, timedSetup.teamQuestions[0][0].correct, 61000), false);
+assert.equal(advance(timedSetup, 0, 61000), false);
 const aliases = [
   ['el escribidor', 'el escribano', 'el evangelista'],
   ['el oficio', 'la profesión'],
@@ -60,37 +87,38 @@ for (let seed = 1; seed <= 32; seed++) {
   for (const q of completeGame.questions) assert.equal(new Set(q.options).size, 4, `seed ${seed} has duplicate options`);
 }
 
-const game = createGame(() => 0);
+const game = createGame(() => 0, 3);
+start(game, 1000);
 assert.equal(game.phase, 'playing');
-assert.equal(answer(game, 0, 0, game.questions[0].correct), true);
+assert.equal(answer(game, 0, 0, game.teamQuestions[0][0].correct, 1001), true);
 assert.equal(game.position, -1);
 assert.equal(game.teams[0].score, 1);
 const snapshot = JSON.stringify(game);
-assert.equal(answer(game, 0, 0, game.questions[0].correct), false);
+assert.equal(answer(game, 0, 0, game.teamQuestions[0][0].correct, 1001), false);
 assert.equal(JSON.stringify(game), snapshot);
-assert.equal(answer(game, 1, 0, (game.questions[0].correct + 1) % 4), true);
+assert.equal(answer(game, 1, 0, (game.teamQuestions[1][0].correct + 1) % 4, 1001), true);
 assert.equal(game.position, -1);
 assert.equal(game.teams[1].score, 0);
 assert.equal(game.teams[1].feedback.correct, false);
-assert.equal(advance(game, 0), true);
+assert.equal(advance(game, 0, 1001), true);
 assert.equal(game.teams[0].index, 1);
-assert.equal(answer(game, 0, 0, 0), false, 'stale touch must not answer a new question');
-assert.equal(advance(game, 0), false);
+assert.equal(answer(game, 0, 0, 0, 1001), false, 'stale touch must not answer a new question');
+assert.equal(advance(game, 0, 1001), false);
 for (let i = 1; i < 5; i++) {
-  answer(game, 0, i, game.questions[i].correct);
-  advance(game, 0);
+  answer(game, 0, i, game.teamQuestions[0][i].correct, 1001);
+  advance(game, 0, 1001);
 }
 assert.equal(game.phase, 'finished');
 assert.equal(game.winner, 0);
 const finished = JSON.stringify(game);
-assert.equal(answer(game, 1, 0, 0), false);
+assert.equal(answer(game, 1, 0, 0, 1001), false);
 assert.equal(advance(game, 1), false);
 assert.equal(JSON.stringify(game), finished);
 
 const exhaustion = createGame(() => 0);
 for (const team of [0, 1]) {
   for (let i = 0; i < exhaustion.questions.length; i++) {
-    answer(exhaustion, team, i, (exhaustion.questions[i].correct + 1) % 4);
+    answer(exhaustion, team, i, (exhaustion.teamQuestions[team][i].correct + 1) % 4);
     advance(exhaustion, team);
   }
 }
