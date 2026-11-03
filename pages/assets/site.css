@@ -12,3 +12,18 @@ html[data-theme=dark] .catalog{--surface:rgba(23,46,56,.85);--text:#f7f8f7;--mut
 @media(max-width:560px){.catalog header{display:flex;flex-wrap:wrap}.catalog header p{display:none}.catalog .theme-toggle{margin-left:auto}.catalog .hero{border-radius:1.5rem}.catalog main{padding-top:.5rem}}
 
 .catalog .grid article.course-featured{background:var(--surface);border-color:var(--border)}
+
+/* Colorful catalog accents retain readable glass surfaces in both themes. */
+.catalog{background:radial-gradient(circle at 8% 0%,rgba(169,217,200,.8),transparent 34%),radial-gradient(circle at 100% 18%,rgba(232,110,74,.22),transparent 28%),#f7f8f7}
+.catalog .hero{position:relative;overflow:hidden;background:linear-gradient(120deg,rgba(169,217,200,.88),rgba(245,244,237,.9) 58%,rgba(232,110,74,.3))}
+.catalog .hero::after{content:"";position:absolute;right:-60px;bottom:-100px;width:220px;height:220px;border-radius:50%;background:#e86e4a;opacity:.34;filter:blur(12px);pointer-events:none}
+.catalog .hero>*{position:relative;z-index:1}
+.catalog .grid article,.catalog .grid article.course-featured{position:relative;overflow:hidden;background:var(--surface);border-color:var(--border)}
+.catalog .grid article::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#20816f,#e86e4a,#b96d13)}
+.catalog .grid article[data-subject="Spanisch"]::before{background:linear-gradient(90deg,#a84628,#e86e4a,#b96d13)}
+.catalog .grid article[data-subject="Mathematik"]::before{background:linear-gradient(90deg,#b96d13,#e86e4a,#20816f)}
+.catalog .grid article[data-subject="Englisch"]::before{background:linear-gradient(90deg,#20816f,#318e76,#a9d9c8)}
+.catalog .filter-button:hover,.catalog .theme-toggle:hover{border-color:#a84628}
+html[data-theme=dark] .catalog{background:radial-gradient(circle at 90% 0%,rgba(49,142,118,.55),transparent 35%),radial-gradient(circle at 0% 80%,rgba(185,109,19,.2),transparent 28%),#19252f}
+html[data-theme=dark] .catalog .hero{background:linear-gradient(120deg,#172e38 0%,#172e38 52%,#20816f 100%)}
+html[data-theme=dark] .catalog :focus-visible{outline-color:#a9d9c8}
