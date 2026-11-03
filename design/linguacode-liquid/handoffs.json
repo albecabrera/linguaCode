@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "chosen": "01-aurora.html",
+  "handoffs": {
+    "01-aurora.html": {
+      "status": "implemented",
+      "queued": false,
+      "sentAt": "2026-11-03T21:43:48.259Z",
+      "startedAt": "2026-11-03T21:43:49.995Z",
+      "implementedAt": "2026-11-03T21:45:09.160Z",
+      "note": "Implemented catalog styling and persistent light/dark toggle; automated checks passed. Browser rendering not yet verified."
+    }
+  }
+}

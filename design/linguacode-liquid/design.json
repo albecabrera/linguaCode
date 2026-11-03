@@ -1,0 +1,27 @@
+{
+  "title": "LinguaCode Liquid Glass",
+  "brief": "Premium redesign of the main exercise catalog with light and dark modes.",
+  "artboards": [
+    {
+      "file": "01-aurora.html",
+      "title": "Aurora",
+      "tradeoff": "Hero destacado y catálogo abierto; más expresivo, menos compacto.",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "02-library.html",
+      "title": "Library",
+      "tradeoff": "Barra lateral de materias; navegación persistente a costa de espacio.",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "03-spotlight.html",
+      "title": "Spotlight",
+      "tradeoff": "Hero compacto y cuadrícula protagonista; más contenido visible, menos impacto inicial.",
+      "width": 1440,
+      "height": 900
+    }
+  ]
+}
