@@ -81,7 +81,7 @@ assert.ok(KI_MISSION_02.tasks.length >= 3);
 assert.ok(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).some((block) => block.type === 'task'));
 assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'quiz', 'task', 'text']);
 assert.deepEqual(KI_MISSION_02.phases.slice(0, 2).map((phase) => phase.blocks), [
-  [{ type: 'text', title: 'Schwache und starke KI', text: 'Schwache KI löst einzelne, klar abgegrenzte Aufgaben. Starke KI würde menschliche Intelligenz umfassend nachbilden. Bis heute gibt es keine starke KI.', image: '../mission/strong-and-weak-ai.jpg', imageAlt: 'Buchseite mit einer Gegenüberstellung von schwacher und starker künstlicher Intelligenz.' }],
+  [{ type: 'text', title: 'Schwache und starke KI', text: 'Schwache KI löst einzelne, klar abgegrenzte Aufgaben. Starke KI würde menschliche Intelligenz umfassend nachbilden. Bis heute gibt es keine starke KI.', image: '../mission/strong-and-weak-ai.png', imageAlt: 'Buchausschnitte: Schwache KI bildet einzelne Bereiche menschlicher Intelligenz für konkrete Aufgaben nach; starke KI würde menschliche Intelligenz umfassend nachbilden.' }],
   [{ type: 'media', mediaId: 'klickpunktSchule' }],
 ]);
 assert.equal(KI_MISSION_02.tasks.find(({ id }) => id === 'task-training').type, 'resource-link');

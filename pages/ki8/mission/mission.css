@@ -20,3 +20,6 @@ button:active:not(:disabled),.button-link:active,.text-link:active,.theme-toggle
 @keyframes mission-entry{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.phase-card,.phase-card:nth-of-type(2n),.phase-card:nth-of-type(3n){animation:none}.journey-phase.is-complete,.journey-phase.is-current,.phase-nav li.complete>span:first-child,.phase-nav li.current>span:first-child{transform:none}}
 @media(forced-colors:active){button:hover:not(:disabled),.button-link:hover,.text-link:hover,.theme-toggle:hover,.presentation-toggle:hover,.journey-link:hover{box-shadow:none;filter:none}}
+
+#phase-rules figure{margin:0;min-width:0}
+#phase-rules figure img{display:block;max-width:100%;height:auto}
