@@ -150,6 +150,11 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
   }
 
   function renderBlock(block, phase, index) {
+    if (block.type === 'text') {
+      const done = state.answers[`phase-${phase.id}-done`];
+      return `<div class="content-block"><h3>${esc(block.title ?? '')}</h3><p>${esc(block.text ?? '')}</p>${block.image ? `<figure><img src="${esc(block.image)}" alt="${esc(block.imageAlt ?? '')}" loading="lazy"><figcaption>${esc(block.imageCaption ?? '')}</figcaption></figure>` : ''}<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${done ? 'checked' : ''}> Ich habe diese Phase bearbeitet.</label><button type="button" data-advance="${index}" ${done ? '' : 'disabled'}>Nächste Phase freischalten</button></div>`;
+    }
+    if (block.type === 'resource-link') return `<article class="task"><h3>${esc(block.title ?? 'Material')}</h3><p>${esc(block.description ?? '')}</p><p><a class="button-link" href="${esc(block.url)}" target="_blank" rel="noopener noreferrer">${esc(block.label ?? 'Quelle öffnen ↗')}</a></p></article>`;
     if (block.type === 'media') {
       const media = lesson.media?.[block.mediaId];
       const relatedMedia = (media?.relatedMediaIds ?? []).map((mediaId) => lesson.media?.[mediaId]).filter((item) => item?.url);
@@ -167,6 +172,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
   }
 
   function renderTask(task) {
+    if (task?.type === 'resource-link') return `<article class="task"><h3>${esc(task.title ?? 'Material')}</h3><p>${esc(task.description ?? '')}</p><p><a class="button-link" href="${esc(task.url)}" target="_blank" rel="noopener noreferrer">${esc(task.label ?? 'Quelle öffnen ↗')}</a></p></article>`;
     const answer = state.answers[task.id] ?? '';
     if (task.type === 'gap-fill') return `<article class="task"><h3>${esc(task.title)}</h3><p>${esc(task.prompt)}</p><div class="gap-grid"><label>Erstes Feld<input data-answer="${task.id}.first" value="${esc(answer.first ?? '')}" autocomplete="off"></label><label>Zweites Feld<input data-answer="${task.id}.second" value="${esc(answer.second ?? '')}" autocomplete="off"></label></div><button type="button" data-check-gap="${task.id}">Antwort prüfen</button><p class="feedback" data-feedback="${task.id}" role="status" aria-live="polite"></p></article>`;
     return `<article class="task"><h3>${esc(task.title)}</h3><p>${esc(task.prompt)}</p><textarea data-answer="${task.id}" rows="4" placeholder="Schreibe deine Gedanken hier auf …">${esc(typeof answer === 'string' ? answer : '')}</textarea><div class="task-actions"><button type="button" data-check-open="${task.id}">${esc(task.checkLabel)}</button><button type="button" class="secondary" data-example="${task.id}">${esc(task.exampleLabel)}</button><button type="button" class="secondary" data-revise="${task.id}">${esc(task.reviseLabel)}</button></div><p class="feedback" data-feedback="${task.id}" role="status" aria-live="polite"></p><p class="example" hidden data-example-text="${task.id}">${esc(task.exampleAnswer)}</p></article>`;

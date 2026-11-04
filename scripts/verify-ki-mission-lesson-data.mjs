@@ -67,9 +67,8 @@ assert.equal(KI_MISSION_02.media.video.kind, 'educational-video');
 assert.equal(KI_MISSION_02.media.video.language, 'de');
 assert.equal(KI_MISSION_02.media.video.duration, '4–7 Minuten');
 assert.equal(KI_MISSION_02.media.video.targetGrade, 'ab Jahrgangsstufe 7');
-assert.deepEqual(KI_MISSION_02.media.experienceAi.relatedMediaIds, ['video']);
-assert.equal(KI_MISSION_02.media.experienceAi.url, 'https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13');
-assert.equal(KI_MISSION_02.media.klickpunktSchule.url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial');
+assert.equal(Object.hasOwn(KI_MISSION_02.media, 'experienceAi'), false);
+assert.equal(KI_MISSION_02.media.klickpunktSchule.url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8/modul-1-wie-funktionieren-ki-systeme/maschinelles-lernen');
 assert.equal(KI_MISSION_02.resourceNotes.video.status, 'confirmed-source');
 assert.match(KI_MISSION_02.resourceNotes.video.text, /deutschsprachig.*Jahrgangsstufe 7.*4–7 Minuten/);
 assert.equal(KI_MISSION_02.resourceNotes.worksheet.status, 'confirmed-source');
@@ -77,14 +76,16 @@ assert.match(KI_MISSION_02.resourceNotes.worksheet.text, /Klasse 5–8/);
 assert.deepEqual(KI_MISSION_02.phases.map((phase) => phase.minutes), [10, 10, 19, 6]);
 assert.ok(KI_MISSION_02.phases.every(({ blocks }) => !blocks.some(({ type }) => type === 'media') || blocks.length === 1));
 assert.equal(KI_MISSION_02.phases.at(-1).blocks[0].type, 'quiz');
-assert.equal(KI_MISSION_02.phases.at(-1).questions.length, 5);
+assert.equal(KI_MISSION_02.phases.at(-1).questions.length, 3);
 assert.ok(KI_MISSION_02.tasks.length >= 3);
 assert.ok(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).some((block) => block.type === 'task'));
-assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'quiz', 'task']);
+assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'quiz', 'task', 'text']);
 assert.deepEqual(KI_MISSION_02.phases.slice(0, 2).map((phase) => phase.blocks), [
-  [{ type: 'media', mediaId: 'experienceAi' }],
+  [{ type: 'text', title: 'Schwache und starke KI', text: 'Schwache KI löst einzelne, klar abgegrenzte Aufgaben. Starke KI würde menschliche Intelligenz umfassend nachbilden. Bis heute gibt es keine starke KI.', image: '../mission/strong-and-weak-ai.jpg', imageAlt: 'Buchseite mit einer Gegenüberstellung von schwacher und starker künstlicher Intelligenz.' }],
   [{ type: 'media', mediaId: 'klickpunktSchule' }],
 ]);
+assert.equal(KI_MISSION_02.tasks.find(({ id }) => id === 'task-training').type, 'resource-link');
+assert.equal(KI_MISSION_02.tasks.find(({ id }) => id === 'task-training').url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8/modul-1-wie-funktionieren-ki-systeme/maschinelles-lernen');
 assert.equal(validateLessonDefinition(KI_MISSION_02), true);
 assert.equal(getLesson('ki-03'), KI_MISSION_03);
 assert.equal(KI_MISSION_03.id, 'ki-03');

@@ -101,20 +101,6 @@ const KI_MISSION_02_QUESTIONS = Object.freeze([
   },
   {
     id: 'q3',
-    prompt: 'Warum braucht man ungesehene Testdaten?',
-    choices: ['Damit das Modell mehr Trainingsdaten bekommt.', 'Damit man prüft, ob das Modell auch bei neuen Beispielen funktioniert.', 'Damit feste Regeln nicht mehr gelten.'],
-    correctIndex: 1,
-    explanation: 'Ungesehene Testdaten zeigen, ob ein Modell verallgemeinern kann und nicht nur bekannte Beispiele auswendig gelernt hat.',
-  },
-  {
-    id: 'q4',
-    prompt: 'Was ist eine mögliche Grenze eines Modells?',
-    choices: ['Es kann bei neuen oder seltenen Beispielen Fehler machen.', 'Es kann niemals falsche Antworten geben.', 'Es braucht keine passenden Trainingsbeispiele.'],
-    correctIndex: 0,
-    explanation: 'Wenn neue Beispiele anders sind als die Trainingsdaten, kann ein Modell Schwierigkeiten haben.',
-  },
-  {
-    id: 'q5',
     prompt: 'Welche Reihenfolge passt zu einem fairen Test?',
     choices: ['Testen, trainieren, Testdaten verändern.', 'Trainieren, mit neuen Testdaten prüfen, Ergebnis besprechen.', 'Eine Regel auswendig lernen, dann alle Antworten vorgeben.'],
     correctIndex: 1,
@@ -134,15 +120,14 @@ export const KI_MISSION_02 = Object.freeze({
     'Du erklärst, warum neue, ungesehene Testdaten zum Prüfen eines Modells wichtig sind.',
   ],
   phases: [
-    { id: 'rules', title: 'Regel oder gelerntes Muster?', minutes: 10, blocks: [{ type: 'media', mediaId: 'experienceAi' }] },
+    { id: 'rules', title: 'Regel oder gelerntes Muster?', minutes: 10, blocks: [{ type: 'text', title: 'Schwache und starke KI', text: 'Schwache KI löst einzelne, klar abgegrenzte Aufgaben. Starke KI würde menschliche Intelligenz umfassend nachbilden. Bis heute gibt es keine starke KI.', image: '../mission/strong-and-weak-ai.jpg', imageAlt: 'Buchseite mit einer Gegenüberstellung von schwacher und starker künstlicher Intelligenz.' }] },
     { id: 'materials', title: 'Maschinelles Lernen entdecken', minutes: 10, blocks: [{ type: 'media', mediaId: 'klickpunktSchule' }] },
     { id: 'practice', title: 'Training und Testdaten anwenden', minutes: 19, blocks: [{ type: 'task', taskId: 'task-rules' }, { type: 'task', taskId: 'task-training' }, { type: 'task', taskId: 'task-pattern' }, { type: 'task', taskId: 'task-testing' }] },
     { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_02_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_02_QUESTIONS },
   ],
   media: {
-    experienceAi: { url: 'https://experience-ai.org/de/units/understanding-ai-11-14/lessons/13', kind: 'official-lesson', title: 'Maschinelles Lernen: Regeln und Daten', provider: 'Experience AI', observation: 'Lies, wie regelbasierte und datenbasierte Systeme Probleme unterschiedlich lösen.', relatedMediaIds: ['video'], checkboxLabel: 'Ich habe das Video oder die Lektion angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
     video: { url: 'https://www.youtube.com/watch?v=l_HSWmxMRlU', kind: 'educational-video', title: 'KI und maschinelles Lernen', provider: 'So lernen Maschinen · Plattform Lernende Systeme', linkLabel: 'Video ansehen: KI und maschinelles Lernen (4–7 Min.) ↗', duration: '4–7 Minuten', language: 'de', targetGrade: 'ab Jahrgangsstufe 7', license: 'unverified', observation: 'Kurzes Einführungsvideo dazu, was KI und maschinelles Lernen sind und wie Maschinen aus Daten lernen.' },
-    klickpunktSchule: { url: 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8-begleitmaterial/modul-1-wie-funktionieren-ki-systeme-begleitmaterial/maschinelles-lernen-begleitmaterial', kind: 'official-material-page', title: 'Maschinelles Lernen: Begleitmaterial', provider: 'Klickpunkt Schule', observation: 'Die Seite bietet eine Weblektion und Materialhinweise für die Klassen 5–8. Nutze nur die verlinkte Quelle.', checkboxLabel: 'Ich habe die Materialseite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
+    klickpunktSchule: { url: 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8/modul-1-wie-funktionieren-ki-systeme/maschinelles-lernen', kind: 'official-material-page', title: 'Maschinelles Lernen', provider: 'Klickpunkt Schule', observation: 'Öffne die Weblektion zum maschinellen Lernen für die Klassen 5–8.', checkboxLabel: 'Ich habe die Materialseite angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
   },
   resourceNotes: {
     video: { status: 'confirmed-source', text: '„KI und maschinelles Lernen“ ist das erste Video der Reihe „So lernen Maschinen“. Die Reihe ist deutschsprachig, für Lernende ab Jahrgangsstufe 7 geeignet und dauert laut klickpunkt.schule etwa 4–7 Minuten pro Clip; die genaue Dauer dieses Videos ist nicht angegeben. Die Lizenz ist nicht verifiziert; deshalb nur zur Originalquelle verlinken.' },
@@ -154,7 +139,7 @@ export const KI_MISSION_02 = Object.freeze({
   ],
   tasks: [
     { id: 'task-rules', type: 'open-response', title: 'Selbst-Check: Regel oder Muster?', prompt: 'Eine Sortierhilfe sagt: „Alles mit einem roten Aufkleber kommt in Kiste A.“ Ist das eine feste Regel oder ein gelerntes Muster? Begründe deine Antwort.', exampleAnswer: 'Das ist eine feste Regel, weil sie von Menschen vorgegeben ist und direkt auf die Farbe des Aufklebers angewendet wird.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
-    { id: 'task-training', type: 'open-response', title: 'Training planen', prompt: 'Du möchtest ein Modell trainieren, Äpfel und Birnen auf Bildern zu unterscheiden. Nenne zwei Merkmale oder Beispiele, die im Training vorkommen sollten.', exampleAnswer: 'Zum Beispiel Bilder von Äpfeln und Birnen mit unterschiedlichen Farben, Formen und Größen. Beide Obstsorten sollten in verschiedenen Varianten vorkommen.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
+    { id: 'task-training', type: 'resource-link', title: 'Aufgabe 2: Maschinelles Lernen', url: 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8/modul-1-wie-funktionieren-ki-systeme/maschinelles-lernen', label: 'Weblektion öffnen ↗', description: 'Bearbeite die Weblektion zum maschinellen Lernen bei Klickpunkt Schule.' },
     { id: 'task-pattern', type: 'gap-fill', title: 'Begriffe sichern', prompt: 'Ein Modell lernt aus ______. Seine Antworten werden mit neuen ______ geprüft.', selfCheck: true },
     { id: 'task-testing', type: 'open-response', title: 'Warum testen?', prompt: 'Warum sollte ein Modell nicht nur mit den Beispielen geprüft werden, die es schon im Training gesehen hat? Erkläre es mit einem eigenen Beispiel.', exampleAnswer: 'Mit neuen Testdaten sieht man, ob das Modell ein Muster gelernt hat. Wenn es nur bekannte Bilder richtig sortiert, könnte es diese auswendig gelernt haben und bei einem neuen Bild scheitern.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
   ],
