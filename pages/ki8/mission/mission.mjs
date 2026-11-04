@@ -42,6 +42,11 @@ function browserStorage() {
 function isPlainObject(value) { return value !== null && typeof value === 'object' && !Array.isArray(value) && (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null); }
 function isValidFruitState(value) { return isPlainObject(value) && (value.selectedExample === null || value.selectedExample === 'banana' || value.selectedExample === 'apple') && typeof value.shapeRuleEnabled === 'boolean' && typeof value.examplesApplied === 'boolean' && (value.reflectionAnswer === null || ['A', 'B', 'C'].includes(value.reflectionAnswer)) && typeof value.optionalText === 'string' && value.optionalText.length <= 500; }
 function isValidMissionState(value, phaseCount) { return isPlainObject(value) && Number.isInteger(value.phase) && value.phase >= 0 && value.phase < phaseCount && isPlainObject(value.answers) && Object.values(value.answers).every((answer) => typeof answer === 'string' || typeof answer === 'boolean' || (isPlainObject(answer) && Object.values(answer).every((part) => typeof part === 'string'))) && isValidFruitState(value.fruit) && Array.isArray(value.quizAnswers) && value.quizAnswers.every((answer) => answer === null || (Number.isInteger(answer) && answer >= 0 && answer <= 2)) && typeof value.quizSubmitted === 'boolean' && (value.completed === undefined || typeof value.completed === 'boolean'); }
+function restoreMissionState(lesson, value) {
+  if (isValidMissionState(value, lesson.phases.length)) return { ...value, completed: value.completed === true };
+  if (lesson.id === 'ki-02' && value?.phase === 3 && isValidMissionState(value, 4)) return { ...value, phase: 2, completed: value.completed === true };
+  return undefined;
+}
 
 function readJourneyState(route, activeLesson, activeState, storage) {
   const lesson = getLesson(route.lessonId);
@@ -50,8 +55,9 @@ function readJourneyState(route, activeLesson, activeState, storage) {
   const loaded = createProgressStore(storage, progressKeyForLesson(route.progressKey)).load();
   if (loaded.status !== 'success') return { lesson, state: undefined, available: false };
   const state = loaded.state ?? DEFAULT_STATE();
-  if (!isValidMissionState(state, lesson.phases.length)) return { lesson, state: undefined, available: false };
-  return { lesson, state: { ...state, completed: state.completed === true }, available: true };
+  const restoredState = restoreMissionState(lesson, state);
+  if (!restoredState) return { lesson, state: undefined, available: false };
+  return { lesson, state: restoredState, available: true };
 }
 
 function renderJourneySidebar(activeLesson, activeState, storage) {
@@ -93,8 +99,11 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
   const loaded = store.load();
   let writesFrozen = loaded.reason === 'malformed-data' || loaded.reason === 'future-version';
   let storageMessage = loaded.status === 'success' ? '' : `Lokaler Fortschritt konnte nicht geladen werden (${loaded.reason}). Diese Sitzung bleibt verfügbar; Antworten werden nicht übertragen.`;
-  if (loaded.status === 'success' && loaded.state && isValidMissionState(loaded.state, phaseCount)) state = { ...loaded.state, completed: loaded.state.completed === true };
-  else if (loaded.status === 'success' && loaded.state !== null) { writesFrozen = true; storageMessage = 'Der gespeicherte Fortschritt hat ein unbekanntes Format und wurde nicht verwendet. Deine bisherigen Browserdaten wurden nicht überschrieben.'; }
+  if (loaded.status === 'success' && loaded.state) {
+    const restoredState = restoreMissionState(lesson, loaded.state);
+    if (restoredState) state = restoredState;
+    else { writesFrozen = true; storageMessage = 'Der gespeicherte Fortschritt hat ein unbekanntes Format und wurde nicht verwendet. Deine bisherigen Browserdaten wurden nicht überschrieben.'; }
+  } else if (loaded.status === 'success' && loaded.state !== null) { writesFrozen = true; storageMessage = 'Der gespeicherte Fortschritt hat ein unbekanntes Format und wurde nicht verwendet. Deine bisherigen Browserdaten wurden nicht überschrieben.'; }
   state.phase = Math.max(0, Math.min(phaseCount - 1, Number.isInteger(state.phase) ? state.phase : 0));
 
   const saveOnly = () => {
@@ -152,7 +161,10 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
   function renderBlock(block, phase, index) {
     if (block.type === 'text') {
       const done = state.answers[`phase-${phase.id}-done`];
-      return `<div class="content-block"><h3>${esc(block.title ?? '')}</h3><p>${esc(block.text ?? '')}</p>${block.image ? `<figure><img src="${esc(block.image)}" alt="${esc(block.imageAlt ?? '')}" loading="lazy"><figcaption>${esc(block.imageCaption ?? '')}</figcaption></figure>` : ''}<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${done ? 'checked' : ''}> Ich habe diese Phase bearbeitet.</label><button type="button" data-advance="${index}" ${done ? '' : 'disabled'}>Nächste Phase freischalten</button></div>`;
+      const finalPhase = index === phaseCount - 1;
+      const action = finalPhase ? `<button type="button" data-complete-mission ${done && !state.completed ? '' : 'disabled'}>Mission abschließen</button>` : `<button type="button" data-advance="${index}" ${done ? '' : 'disabled'}>Nächste Phase freischalten</button>`;
+      const disclaimer = finalPhase ? 'Selbstmeldung; die Datei wird nicht technisch geprüft.' : '';
+      return `<div class="content-block"><h3>${esc(block.title ?? '')}</h3><p>${esc(block.text ?? '')}</p>${block.image ? `<figure><img src="${esc(block.image)}" alt="${esc(block.imageAlt ?? '')}" loading="lazy"><figcaption>${esc(block.imageCaption ?? '')}</figcaption></figure>` : ''}<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${done ? 'checked' : ''}> Ich habe diese Phase bearbeitet.${disclaimer ? ` <small>(${disclaimer})</small>` : ''}</label>${action}</div>`;
     }
     if (block.type === 'resource-link') return `<article class="task"><h3>${esc(block.title ?? 'Material')}</h3><p>${esc(block.description ?? '')}</p><p><a class="button-link" href="${esc(block.url)}" target="_blank" rel="noopener noreferrer">${esc(block.label ?? 'Quelle öffnen ↗')}</a></p></article>`;
     if (block.type === 'media') {
@@ -196,6 +208,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
     root.querySelector('[data-reset]').onclick = () => { const result = store.reset(); if (result.status === 'success') { state = DEFAULT_STATE(); writesFrozen = false; storageMessage = ''; } else storageMessage = `Zurücksetzen nicht möglich (${result.reason}). Deine lokalen Daten wurden nicht verändert.`; render(); };
     root.querySelectorAll('[data-phase-done]').forEach((input) => input.onchange = () => setAnswer(input.dataset.phaseId === 'film' ? 'filmDone' : `phase-${input.dataset.phaseId}-done`, input.checked));
     root.querySelectorAll('[data-advance]').forEach((button) => button.onclick = () => advance(Number(button.dataset.advance)));
+    root.querySelector('[data-complete-mission]')?.addEventListener('click', () => { if (state.answers['phase-final-summary-done']) { state.completed = true; persist(); } });
     root.querySelectorAll('[data-answer]').forEach((input) => input.oninput = () => { const [id, part] = input.dataset.answer.split('.'); const previous = state.answers[id]; setAnswer(id, part ? { ...(previous ?? {}), [part]: input.value } : input.value, false); });
     root.querySelectorAll('[data-check-open]').forEach((button) => button.onclick = () => { const task = lesson.tasks.find((item) => item.id === button.dataset.checkOpen); const value = state.answers[task.id] ?? ''; root.querySelector(`[data-feedback="${task.id}"]`).textContent = value.trim() ? 'Selbst-Check: Vergleiche deine Antwort mit der Beispielantwort.' : 'Schreibe zuerst eine eigene Antwort.'; });
     root.querySelectorAll('[data-example]').forEach((button) => button.onclick = () => { const item = root.querySelector(`[data-example-text="${button.dataset.example}"]`); item.hidden = !item.hidden; });
