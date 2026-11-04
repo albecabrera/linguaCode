@@ -57,6 +57,7 @@ assert.equal(getLesson('ki-02'), KI_MISSION_02);
 assert.equal(KI_MISSION_02.id, 'ki-02');
 assert.equal(KI_MISSION_02.title, 'Mission 02 – Regeln, Training und Grenzen');
 assert.equal(KI_MISSION_02.duration, 45);
+assert.equal(KI_MISSION_02.phases.length, 3);
 assert.deepEqual(KI_MISSION_02.context, { subject: 'WP 8', module: 'Modul 1', hour: 'Stunde 2', overviewHref: '../' });
 assert.deepEqual(KI_MISSION_02.objectives, [
   'Du unterscheidest vorgegebene Regeln von Mustern, die ein Modell aus Trainingsbeispielen lernt.',
@@ -73,19 +74,23 @@ assert.equal(KI_MISSION_02.resourceNotes.video.status, 'confirmed-source');
 assert.match(KI_MISSION_02.resourceNotes.video.text, /deutschsprachig.*Jahrgangsstufe 7.*4–7 Minuten/);
 assert.equal(KI_MISSION_02.resourceNotes.worksheet.status, 'confirmed-source');
 assert.match(KI_MISSION_02.resourceNotes.worksheet.text, /Klasse 5–8/);
-assert.deepEqual(KI_MISSION_02.phases.map((phase) => phase.minutes), [10, 10, 19, 6]);
+assert.deepEqual(KI_MISSION_02.phases.map((phase) => phase.minutes), [10, 10, 25]);
 assert.ok(KI_MISSION_02.phases.every(({ blocks }) => !blocks.some(({ type }) => type === 'media') || blocks.length === 1));
-assert.equal(KI_MISSION_02.phases.at(-1).blocks[0].type, 'quiz');
-assert.equal(KI_MISSION_02.phases.at(-1).questions.length, 3);
-assert.ok(KI_MISSION_02.tasks.length >= 3);
-assert.ok(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).some((block) => block.type === 'task'));
-assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'quiz', 'task', 'text']);
+assert.equal(KI_MISSION_02.phases[2].title, 'Fasse zusammen, was du in der heutigen Stunde gelernt hast. Dies solltest du in einer Worddatei erledigen und dann in deinem Informatikordner im PC speichern.');
+assert.deepEqual(KI_MISSION_02.phases[2].blocks, [{ type: 'text', title: 'Aufgabe 3', text: 'Fasse zusammen, was du in der heutigen Stunde gelernt hast. Dies solltest du in einer Worddatei erledigen und dann in deinem Informatikordner im PC speichern.' }]);
+assert.equal(KI_MISSION_02.phases.some(({ id }) => id === 'practice' || id === 'quiz'), false);
+assert.deepEqual(KI_MISSION_02.tasks, []);
+assert.deepEqual(KI_MISSION_02.solutions, []);
+assert.deepEqual([...new Set(KI_MISSION_02.phases.flatMap((phase) => phase.blocks).map((block) => block.type))].sort(), ['media', 'text']);
+assert.deepEqual(KI_MISSION_02.phases.slice(0, 2).map(({ id, title, blocks }) => ({ id, title, blocks })), [
+  { id: 'rules', title: 'Schwache und starke KI', blocks: [{ type: 'text', title: 'Schwache und starke KI', text: 'Schwache KI löst einzelne, klar abgegrenzte Aufgaben. Starke KI würde menschliche Intelligenz umfassend nachbilden. Bis heute gibt es keine starke KI.', image: '../mission/strong-and-weak-ai.png', imageAlt: 'Buchausschnitte: Schwache KI bildet einzelne Bereiche menschlicher Intelligenz für konkrete Aufgaben nach; starke KI würde menschliche Intelligenz umfassend nachbilden.' }] },
+  { id: 'materials', title: 'Maschinelles Lernen entdecken', blocks: [{ type: 'media', mediaId: 'klickpunktSchule' }] },
+]);
 assert.deepEqual(KI_MISSION_02.phases.slice(0, 2).map((phase) => phase.blocks), [
   [{ type: 'text', title: 'Schwache und starke KI', text: 'Schwache KI löst einzelne, klar abgegrenzte Aufgaben. Starke KI würde menschliche Intelligenz umfassend nachbilden. Bis heute gibt es keine starke KI.', image: '../mission/strong-and-weak-ai.png', imageAlt: 'Buchausschnitte: Schwache KI bildet einzelne Bereiche menschlicher Intelligenz für konkrete Aufgaben nach; starke KI würde menschliche Intelligenz umfassend nachbilden.' }],
   [{ type: 'media', mediaId: 'klickpunktSchule' }],
 ]);
-assert.equal(KI_MISSION_02.tasks.find(({ id }) => id === 'task-training').type, 'resource-link');
-assert.equal(KI_MISSION_02.tasks.find(({ id }) => id === 'task-training').url, 'https://klickpunktschule.bycs.de/digitalkompass/startseite/ki-kompass/ki-kompass-5-8-uebersicht/ki-kompass-5-8/modul-1-wie-funktionieren-ki-systeme/maschinelles-lernen');
+assert.equal(KI_MISSION_02.phases[1].blocks[0].mediaId, 'klickpunktSchule');
 assert.equal(validateLessonDefinition(KI_MISSION_02), true);
 assert.equal(getLesson('ki-03'), KI_MISSION_03);
 assert.equal(KI_MISSION_03.id, 'ki-03');
