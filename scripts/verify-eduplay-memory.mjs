@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { isMatch, makeCards, selectPairs, getHideDelay, resolveMemoryImage } from '../pages/eduplay/memory.mjs';
+const pairs = [{id:'one',first:'a',second:'b'},{id:'two',first:'a',second:'b'},{id:'three',first:'c',second:'d'}];
+assert.deepEqual(selectPairs(pairs, 2), pairs.slice(0, 2));
+assert.deepEqual(selectPairs(pairs), pairs);
+assert.equal(getHideDelay({difficulty:'easy'}), 1400);
+assert.equal(getHideDelay({difficulty:'medium'}), 900);
+assert.equal(getHideDelay({difficulty:'hard'}), 500);
+const cards = makeCards(pairs.slice(0, 2), false);
+assert.equal(cards.length,4);
+assert.equal(isMatch(cards[0],cards[1]),true);
+assert.equal(isMatch(cards[0],cards[2]),false);
+assert.equal(isMatch(cards[0],cards[0]),false);
+assert.equal(resolveMemoryImage('/images/card.png', 'https://linguacode.example/eduplay/'), 'https://linguacode.example/images/card.png');
+assert.equal(resolveMemoryImage('./images/card.webp', 'https://linguacode.example/eduplay/'), 'https://linguacode.example/eduplay/images/card.webp');
+assert.equal(resolveMemoryImage('data:image/png;base64,AA==', 'https://linguacode.example/eduplay/'), 'data:image/png;base64,AA==');
+for (const image of ['https://third-party.example/card.png','http://127.0.0.1/card.png','data:image/svg+xml;base64,PHN2Zy8+']) assert.equal(resolveMemoryImage(image, 'https://linguacode.example/eduplay/'), null);
+console.log('EduPlay memory checks passed');
