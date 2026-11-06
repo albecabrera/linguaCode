@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { createDraftStore } from '../pages/eduplay/storage.mjs';
+import { activities } from '../pages/eduplay/examples.mjs';
+const data = new Map();
+const storage = {getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+const store=createDraftStore(storage);
+assert.deepEqual(store.list(),[]);
+store.save(activities[0]); assert.equal(store.list()[0].id,activities[0].id);
+store.remove(activities[0].id); assert.deepEqual(store.list(),[]);
+assert.throws(()=>store.save({...activities[0],title:''}));
+data.set('linguacode.eduplay.drafts.v1','not json'); assert.throws(()=>store.list());
+console.log('EduPlay draft storage checks passed');
