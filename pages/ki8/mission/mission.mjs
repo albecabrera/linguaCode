@@ -162,7 +162,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
     if (block.type === 'text') {
       const done = state.answers[`phase-${phase.id}-done`];
       const finalPhase = index === phaseCount - 1;
-      const action = finalPhase ? `<button type="button" data-complete-mission ${done && !state.completed ? '' : 'disabled'}>Mission abschließen</button>` : `<button type="button" data-advance="${index}" ${done ? '' : 'disabled'}>Nächste Phase freischalten</button>`;
+      const action = finalPhase ? `<button type="button" data-complete-mission data-phase-id="${esc(phase.id)}" ${done && !state.completed ? '' : 'disabled'}>Mission abschließen</button>` : `<button type="button" data-advance="${index}" ${done ? '' : 'disabled'}>Nächste Phase freischalten</button>`;
       const disclaimer = finalPhase ? 'Selbstmeldung; die Datei wird nicht technisch geprüft.' : '';
       return `<div class="content-block"><h3>${esc(block.title ?? '')}</h3><p>${esc(block.text ?? '')}</p>${block.image ? `<figure><img src="${esc(block.image)}" alt="${esc(block.imageAlt ?? '')}" loading="lazy"><figcaption>${esc(block.imageCaption ?? '')}</figcaption></figure>` : ''}<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${done ? 'checked' : ''}> Ich habe diese Phase bearbeitet.${disclaimer ? ` <small>(${disclaimer})</small>` : ''}</label>${action}</div>`;
     }
@@ -174,7 +174,10 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
       const label = media?.checkboxLabel ?? 'Ich habe diese Phase bearbeitet';
       const disclaimer = media?.selfReportDisclaimer ?? 'Nur eine Selbstmeldung.';
       const phaseHasTasks = phase.blocks.some((item) => item.type === 'task');
-      const mediaCompletionControls = phaseHasTasks ? '' : `<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${phase.id === 'film' ? 'data-film-done' : ''} ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? 'checked' : ''}> ${esc(label)} <small>(${esc(disclaimer)})</small></label><button type="button" data-advance="${index}" ${(state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone)) ? '' : 'disabled'}>Nächste Phase freischalten</button>`;
+      const phaseHasText = phase.blocks.some((item) => item.type === 'text');
+      const finalPhase = index === phaseCount - 1;
+      const phaseDone = state.answers[`phase-${phase.id}-done`] || (phase.id === 'film' && state.answers.filmDone);
+      const mediaCompletionControls = phaseHasTasks || phaseHasText ? '' : `<label class="check-row"><input type="checkbox" data-phase-done data-phase-id="${esc(phase.id)}" ${phase.id === 'film' ? 'data-film-done' : ''} ${phaseDone ? 'checked' : ''}> ${esc(label)} <small>(${esc(disclaimer)})</small></label>${finalPhase ? `<button type="button" data-complete-mission data-phase-id="${esc(phase.id)}" ${phaseDone && !state.completed ? '' : 'disabled'}>Mission abschließen</button>` : `<button type="button" data-advance="${index}" ${phaseDone ? '' : 'disabled'}>Nächste Phase freischalten</button>`}`;
       return `<div class="content-block"><h3>${esc(media?.title ?? lesson.title)}</h3>${media?.provider ? `<p><strong>${esc(media.provider)}</strong></p>` : ''}${media?.observation ? `<p>${esc(media.observation)}</p>` : ''}${mediaLinks || '<p>Diese Medienphase enthält keine externe Quelle.</p>'}${mediaCompletionControls}</div>`;
     }
     if (block.type === 'task') return renderTask(lesson.tasks.find((task) => task.id === block.taskId));
@@ -208,7 +211,7 @@ export function createMissionRenderer({ root, lesson = getLesson('ki-01'), progr
     root.querySelector('[data-reset]').onclick = () => { const result = store.reset(); if (result.status === 'success') { state = DEFAULT_STATE(); writesFrozen = false; storageMessage = ''; } else storageMessage = `Zurücksetzen nicht möglich (${result.reason}). Deine lokalen Daten wurden nicht verändert.`; render(); };
     root.querySelectorAll('[data-phase-done]').forEach((input) => input.onchange = () => setAnswer(input.dataset.phaseId === 'film' ? 'filmDone' : `phase-${input.dataset.phaseId}-done`, input.checked));
     root.querySelectorAll('[data-advance]').forEach((button) => button.onclick = () => advance(Number(button.dataset.advance)));
-    root.querySelector('[data-complete-mission]')?.addEventListener('click', () => { if (state.answers['phase-final-summary-done']) { state.completed = true; persist(); } });
+    root.querySelector('[data-complete-mission]')?.addEventListener('click', (event) => { const phaseId = (event.currentTarget ?? event.target).dataset.phaseId; if (state.answers[`phase-${phaseId}-done`]) { state.completed = true; persist(); } });
     root.querySelectorAll('[data-answer]').forEach((input) => input.oninput = () => { const [id, part] = input.dataset.answer.split('.'); const previous = state.answers[id]; setAnswer(id, part ? { ...(previous ?? {}), [part]: input.value } : input.value, false); });
     root.querySelectorAll('[data-check-open]').forEach((button) => button.onclick = () => { const task = lesson.tasks.find((item) => item.id === button.dataset.checkOpen); const value = state.answers[task.id] ?? ''; root.querySelector(`[data-feedback="${task.id}"]`).textContent = value.trim() ? 'Selbst-Check: Vergleiche deine Antwort mit der Beispielantwort.' : 'Schreibe zuerst eine eigene Antwort.'; });
     root.querySelectorAll('[data-example]').forEach((button) => button.onclick = () => { const item = root.querySelector(`[data-example-text="${button.dataset.example}"]`); item.hidden = !item.hidden; });
