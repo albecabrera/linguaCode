@@ -84,6 +84,12 @@ Es werden keine Schülernamen oder Logins gespeichert. `exercise_sessions` ist f
 - Es ist keine LinguaCode-Anmeldung erforderlich; die Adventure-Inhalte werden extern von Code.org bereitgestellt.
 - Prüfung ohne Build: `node scripts/verify-minecraft-adventures.mjs`, `node scripts/verify-ki-catalog.mjs`, `node scripts/verify-ki-wp8-public.mjs`.
 
+## Computerführerschein · Informatik Klasse 6
+
+- Öffentliche Katalogkarte für das eigenständige Modul `pages/computerfuehrerschein/`; lokal über `/computerfuehrerschein/` erreichbar.
+- Sichere Windows-11-Simulation zum Klicken, Schreiben, Speichern und Organisieren mit lokalem Lernstand; echte Dateien werden nicht verändert.
+- Prüfung ohne Build: `node scripts/verify-computerfuehrerschein.mjs`.
+
 ## Java-Interaktiv · Informatik Oberstufe
 
 - Neues eigenständiges Modul: `/java-interaktiv/`, öffentlicher Pages-Kurzlink `s/j/`. Das bestehende Java-Lab bleibt unverändert.

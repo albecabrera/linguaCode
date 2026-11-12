@@ -3,6 +3,23 @@ declare(strict_types=1);
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = rtrim($path, '/') ?: '/';
+if ($path === '/computerfuehrerschein' || str_starts_with($path, '/computerfuehrerschein/')) {
+    $relativePath = $path === '/computerfuehrerschein' ? '/index.html' : substr($path, strlen('/computerfuehrerschein'));
+    $file = realpath(__DIR__ . '/../pages/computerfuehrerschein' . $relativePath);
+    $root = realpath(__DIR__ . '/../pages/computerfuehrerschein');
+    if ($file === false || $root === false || !str_starts_with($file, $root . DIRECTORY_SEPARATOR) || !is_file($file)) {
+        http_response_code(404);
+        exit('Nicht gefunden.');
+    }
+    header('Content-Type: ' . match (pathinfo($file, PATHINFO_EXTENSION)) {
+        'mjs', 'js' => 'text/javascript; charset=utf-8',
+        'css' => 'text/css; charset=utf-8',
+        'html' => 'text/html; charset=utf-8',
+        default => 'application/octet-stream',
+    });
+    readfile($file);
+    exit;
+}
 if ($path === '/java-interaktiv' || str_starts_with($path, '/java-interaktiv/')) {
     $relativePath = $path === '/java-interaktiv' ? '/index.html' : substr($path, strlen('/java-interaktiv'));
     $file = realpath(__DIR__ . '/../pages/java-interaktiv' . $relativePath);
