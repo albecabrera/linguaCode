@@ -80,6 +80,12 @@ Prüfung ohne Build: `node scripts/verify-ki-wp8-module1.mjs`, `node scripts/ver
 - Quelle: [Code.org · Minecraft Aquatic, Lektion 1](https://studio.code.org/de/courses/aquatic/units/1/lessons/1/levels/1). LinguaCode hostet die externe Lektion nicht.
 - Prüfung ohne Build: `node scripts/verify-minecraft-card.mjs`.
 
+## Computerführerschein · Informatik Klasse 6
+
+- Öffentliche Katalogkarte für das eigenständige Modul `pages/computerfuehrerschein/`; lokal über `/computerfuehrerschein/` erreichbar.
+- Sichere Windows-11-Simulation zum Klicken, Schreiben, Speichern und Organisieren mit lokalem Lernstand; echte Dateien werden nicht verändert.
+- Prüfung ohne Build: `node scripts/verify-computerfuehrerschein.mjs`.
+
 ## Tastatur-Profi · Informatik Klasse 6
 
 - Schülertrainer: `/tastatur/` auf dem PHP-Testserver, `pages/tastatur/` auf GitHub Pages; öffentlicher Pages-Kurzlink: `s/b/`.
