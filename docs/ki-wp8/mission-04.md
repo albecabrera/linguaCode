@@ -1,26 +1,29 @@
-# Mission 04 – Trainieren, testen und Fehler untersuchen
+# Mission 04 – Entscheidungsbäume kennenlernen
 
-> **Status: lokale Implementierung.** Die Mission wird aus Modul 2, Stunde 2 abgeleitet. Die bestehenden Moduldateien und Aktivitäten bleiben erhalten. Veröffentlichung erfolgt erst nach Prüfung und Commit über den no-build-GitHub-Pages-Workflow.
+> **Status: lokale Implementierung.** Die Mission dauert 45 Minuten. Veröffentlichung erfolgt erst nach Prüfung und Commit über den no-build-GitHub-Pages-Workflow.
 
 ## Ziel und Ablauf
 
-Die 45-minütige Mission führt durch:
-
 | Phase | Zeit | Inhalt |
 |---|---:|---|
-| Entscheidungsbäume kennenlernen | 10 Min. | Externe Lernseite zu Klassifizierungsmodellen und Trainingsdaten |
+| Entscheidungsbäume kennenlernen | 10 Min. | Kurzes deutsches openHPI-Video und Verständnischeck |
 | Training und Test unterscheiden | 10 Min. | Externe Seite zu Trainingsbeispielen, Schwellenwerten und Testobjekten |
-| Fehler untersuchen | 19 Min. | Offene Selbst-Checks zu getrennten Testdaten und Fehlklassifikationen |
-| Abschlussquiz | 6 Min. | Fünf Fragen zu Training, Test und der Bedeutung eines Fehlers |
+| Fehler untersuchen | 5 Min. | Offene Selbst-Checks zu getrennten Testdaten und Fehlklassifikationen |
+| Zusammenfassung schreiben | 20 Min. | Word-Aufgabe mit kurzer Zusammenfassung des Gelernten |
 
-Kernregel: Testdaten bleiben von den Trainingsbeispielen getrennt. Eine falsche Vorhersage ist ein Fehler bei diesem Testobjekt; für sich allein beweist sie nicht, dass ein Modell insgesamt unbrauchbar ist. Ein Testlabel wird nicht passend zur Vorhersage geändert.
+Die letzte Phase umfasst exakt die letzten 20 Minuten. Ihre Aufgabe lautet:
 
-## Externe Quellen und Grenzen
+> **Öffne in den letzten 20 Minuten ein neues Word-Dokument und schreibe eine kurze Zusammenfassung dessen, was du gelernt hast.**
 
-- [Experience AI: Lektion 4 – Entscheidungsbäume](https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4) erläutert Klassifizierungsmodelle mit Entscheidungsbäumen und wie Trainingsdaten ein Modell verändern.
-- [inf-schule: Überwachtes Lernen mit Entscheidungsbäumen](https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume) erklärt gelabelte Trainingsbeispiele, Schwellenwerte, das Durchlaufen eines Baums und Fehler bei ungeeigneten Daten.
+Als Orientierung sollte die Zusammenfassung erklären, wie Fragen oder Merkmale in einem Entscheidungsbaum zu Verzweigungen führen und am Ende ein Label zur Klassifikation entsteht. Trainings- und Testdaten oder ein möglicher Fehler können zusätzlich genannt werden.
 
-Die Quellen werden ausschließlich verlinkt. Auf den geprüften Unterrichtsseiten waren Zieljahrgang und Lizenz nicht angegeben; eine Altersfreigabe für WP 8 und Nachnutzungsrechte werden daher nicht behauptet. Kein geeignetes, spezifisches Video für diese Stunde wurde bestätigt; keines ist zugewiesen. Externe Texte, Abbildungen, Videos und Arbeitsblätter werden nicht kopiert oder eingebettet.
+## Video und externe Quellen
+
+- [openHPI: 3.6 Entscheidungsbäume](https://open.hpi.de/learn/kieinstieg2020/items/yRX6ZcCDd7c7pC2ssvP00?locale=de) ist ein deutschsprachiger Clip von 8 Minuten 18 Sekunden aus dem Einsteigerkurs „Künstliche Intelligenz und maschinelles Lernen für Einsteiger“ für Klassen 8–13. Die Lizenz des einzelnen Videos ist nicht verifiziert; daher wird nur zur Originalseite verlinkt.
+- [inf-schule: Überwachtes Lernen mit Entscheidungsbäumen](https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume) erklärt Trainingsbeispiele, Schwellenwerte, Testobjekte und mögliche Fehler.
+- [Experience AI: Lektion 4 – Entscheidungsbäume](https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4) ist als ergänzende Referenz verlinkt.
+
+Externe Texte, Abbildungen, Videos und Arbeitsblätter werden nicht kopiert oder eingebettet. Videos und andere Ressourcen bleiben externe Links.
 
 ## Fortschritt und Route
 
