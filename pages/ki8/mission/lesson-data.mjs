@@ -192,60 +192,33 @@ export const KI_MISSION_04 = Object.freeze({
   progress: { version: 1, localOnly: true },
 });
 
-const KI_MISSION_05_QUESTIONS = Object.freeze([
-  { id: 'q1', prompt: 'Was ist ein Merkmal im Affen-Labor?', choices: ['Eine beobachtbare Eigenschaft wie „X-Augen?“.', 'Das Label „Beißt“.', 'Die berechnete Accuracy.'], correctIndex: 0, explanation: 'Merkmale sind beobachtbare Eigenschaften, über die der Baum Fragen stellt.' },
-  { id: 'q2', prompt: 'Wozu dienen die gelabelten Trainingsbeispiele?', choices: ['Sie helfen, Fragen und Regeln für den Baum zu finden.', 'Sie garantieren jede spätere Vorhersage.', 'Sie ersetzen die Testbeispiele.'], correctIndex: 0, explanation: 'Training zeigt dem Baum, welche Muster zu bekannten Labels passen.' },
-  { id: 'q3', prompt: 'Warum bleiben die Testbeispiele beim Training außen vor?', choices: ['Nur so prüfen sie unabhängig, wie der Baum mit neuen Beispielen umgeht.', 'Damit wir die Testlabels nachträglich ändern können.', 'Damit Accuracy immer 100 % beträgt.'], correctIndex: 0, explanation: 'Ungesehene Testdaten machen die Prüfung aussagekräftiger.' },
-  { id: 'q4', prompt: 'Was bedeutet Accuracy = 4 von 5?', choices: ['Vier von fünf Testvorhersagen waren richtig, also 80 %.', 'Der Baum hat vier Merkmale.', 'Alle fünf Vorhersagen waren falsch.'], correctIndex: 0, explanation: 'Accuracy zählt die korrekten Testvorhersagen geteilt durch alle Testbeispiele.' },
-  { id: 'q5', prompt: 'Was bedeuten widersprüchliche Labels bei gleichen beobachtbaren Merkmalen?', choices: ['Die Merkmale reichen nicht aus; zusätzliche Merkmale wären sinnvoll.', 'Der Baum kann das fehlende Merkmal einfach erfinden.', 'Das Testlabel darf passend geändert werden.'], correctIndex: 0, explanation: 'Gleiche Beobachtungen mit verschiedenen Labels sind mit diesen Merkmalen nicht perfekt trennbar.' },
-]);
-
 export const KI_MISSION_05 = Object.freeze({
   id: 'ki-05',
   module: 'Künstliche Intelligenz',
   context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 2', overviewHref: '../' },
-  title: 'Mission 05 – Entscheidungsbäume im Affen-Labor',
-  description: 'Baue einen Entscheidungsbaum aus sichtbaren Beispielen, verfolge seine Entscheidungen und prüfe ihn ehrlich an neuen Fällen.',
+  title: 'Mission 05 – Entscheidungsbäume erstellen',
+  description: 'Bearbeite zuerst das Arbeitsblatt und erstelle danach einen eigenen Entscheidungsbaum zum Schulweg.',
   duration: 45,
   objectives: [
-    'Du erklärst, wie Ja/Nein-Fragen einen Entscheidungsbaum bilden.',
-    'Du trennst Training und Test und berechnest Accuracy.',
-    'Du erkennst Grenzen widersprüchlicher Beobachtungen.',
+    'Du erklärst anhand des Arbeitsblatts, wie Fragen, Antworten und Ergebnisse einen Entscheidungsbaum bilden.',
+    'Du beantwortest die Verständnisfragen und planst einen eigenen Entscheidungsbaum.',
+    'Du erstellst in diagrams.net einen Baum zum Thema „Welches Verkehrsmittel nehme ich zur Schule?“ mit mindestens 3 Fragen und 4 Ergebnissen.',
   ],
   phases: [
-    { id: 'orient', title: 'Vom Merkmal zur Verzweigung', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
-    { id: 'train-tree', title: 'Deinen Baum trainieren', minutes: 12, blocks: [{ type: 'interactive', id: 'tree-training' }] },
-    { id: 'test-tree', title: 'Ungesehene Fälle testen', minutes: 17, blocks: [{ type: 'interactive', id: 'tree-test' }] },
-    { id: 'understand', title: 'Verstehen und übertragen', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_05_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_05_QUESTIONS },
+    { id: 'worksheet', title: 'Arbeitsblatt bearbeiten', minutes: 25, blocks: [{ type: 'media', mediaId: 'worksheet' }] },
+    { id: 'practice', title: 'Praktische Aufgabe', minutes: 20, blocks: [{ type: 'media', mediaId: 'diagramsNet' }] },
   ],
   media: {
-    infSchule: { url: 'https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI', kind: 'official-learning-sequence', title: 'Entscheide wie eine KI', provider: 'inf-schule', observation: 'Die Lernstrecke behandelt überwachtes Lernen, Schwellenwerte und Entscheidungsbäume. Nutze die Abschnitte zu Merkmalen und Regeln.', relatedMediaIds: ['video'], checkboxLabel: 'Ich habe die Lernstrecke oder das Video angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
-    video: { url: 'https://open.hpi.de/learn/kieinstieg2020/items/yRX6ZcCDd7c7pC2ssvP00?locale=de', kind: 'educational-video', title: '3.6 Entscheidungsbäume', provider: 'openHPI · Künstliche Intelligenz und maschinelles Lernen für Einsteiger', linkLabel: 'Video ansehen: Entscheidungsbäume (8:18 Min.) ↗', duration: '8 Minuten 18 Sekunden', language: 'de', targetGrade: 'Klassen 8–13', license: 'unverified', observation: 'Der deutschsprachige Clip zeigt, wie Merkmale und Labels in einen Entscheidungsbaum eingehen; ab 5:57 wird eine weitere Altersgrenze als Unterscheidung eingeführt. Spätere Abschnitte behandeln Gini-Koeffizient und Entropie.' },
+    worksheet: { url: './stunde-5/arbeitsblatt-entscheidungsbaeume.png', kind: 'student-worksheet', title: 'Entscheidungsbäume erstellen – Informatik-Arbeitsblatt', provider: 'Eigene Unterrichtsunterlage', observation: 'Bearbeite Aufgabe 1 und plane in Aufgabe 2 einen Entscheidungsbaum zum Schulweg.', imageAlt: 'Arbeitsblatt mit Definitionen, Symbolen, einem Regenschirm-Beispiel und zwei Aufgaben zu Entscheidungsbäumen.', downloadLabel: 'Arbeitsblatt herunterladen oder drucken' },
+    diagramsNet: { url: 'https://app.diagrams.net', kind: 'external-diagram-tool', title: 'diagrams.net', provider: 'diagrams.net', observation: 'Erstelle dort den Entscheidungsbaum zum Schulweg. Das Werkzeug öffnet sich in einem neuen Tab.', external: true },
   },
   resourceNotes: {
-    video: { status: 'confirmed-source', text: 'Das deutschsprachige openHPI-Video „3.6 Entscheidungsbäume“ gehört zum kostenlosen Einsteigerkurs ohne technische Vorkenntnisse, der für Klassen 8–13 ausgewiesen ist. Es dauert 8 Minuten 18 Sekunden; eine Altersgrenze als weitere Unterscheidung wird ab 5:57 gezeigt. Die Videoseite stellt einen Player bereit; der Zugriff auf weitere Kursinhalte erfordert eine kostenlose Einschreibung. Die Lizenz des Einzelvideos ist nicht verifiziert, deshalb nur zur Originalseite verlinken. Gini-Koeffizient und Entropie im späteren Teil sind anspruchsvoller; für M05 reicht ein gezielter Ausschnitt.' },
-    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die Mission nutzt eigene, vereinfachte Beispieldaten; PDF-Figuren und exakte Daten werden nicht kopiert. Externe Lernseiten bleiben nur verlinkt.' },
+    material: { status: 'linked', targetGrade: 'Klasse 8', license: 'not-stated', text: 'Das bereitgestellte deutsche Arbeitsblatt wird als lokale PNG-Datei vollständig angezeigt und zum Herunterladen oder Drucken angeboten. Die praktische Aufgabe nutzt diagrams.net als bewusst externes Online-Werkzeug; der Link öffnet die Seite in einem neuen Tab und wird nicht eingebettet. Für das Arbeitsblatt ist keine separate Lizenzangabe dokumentiert.' },
   },
-  interactive: {
-    kind: 'decision-tree-lab',
-    notice: 'Alle Affen und Labels sind fiktiv und vereinfacht – inspiriert von einem Arbeitsblatt, keine Aussage über echtes Tierverhalten.',
-    features: [{ id: 'smile', label: 'Lächelt der Mund?' }, { id: 'xEyes', label: 'X-Augen?' }],
-    labels: ['Beißt', 'Beißt nicht'],
-    trainingExamples: [
-      { id: 't1', smile: true, xEyes: false, label: 'Beißt' }, { id: 't2', smile: true, xEyes: true, label: 'Beißt' },
-      { id: 't3', smile: false, xEyes: false, label: 'Beißt nicht' }, { id: 't4', smile: false, xEyes: true, label: 'Beißt nicht' },
-      { id: 't5', smile: true, xEyes: false, label: 'Beißt' }, { id: 't6', smile: false, xEyes: true, label: 'Beißt nicht' },
-    ],
-    testExamples: [
-      { id: 'p1', smile: true, xEyes: true, label: 'Beißt' }, { id: 'p2', smile: false, xEyes: false, label: 'Beißt nicht' },
-      { id: 'p3', smile: true, xEyes: false, label: 'Beißt' }, { id: 'p4', smile: false, xEyes: true, label: 'Beißt nicht' },
-      { id: 'p5', smile: true, xEyes: true, label: 'Beißt nicht' },
-    ],
-  },
-  contentBlocks: [{ type: 'intro', text: 'Ein Entscheidungsbaum stellt Ja/Nein-Fragen. Jede Antwort führt zu einem Ast; am Ende steht ein Label. Du trainierst mit sichtbaren Beispielen und prüfst danach getrennte Testbeispiele.' }],
-  tasks: [{ id: 'task-contradiction', type: 'open-response', title: 'Wenn Beispiele widersprechen', prompt: 'Warum kann ein Baum bei gleichen beobachtbaren Merkmalen widersprüchliche Labels nicht sicher auflösen?', exampleAnswer: 'Die Merkmale liefern dann nicht genug Information. Zusätzliche Merkmale helfen; die Testgenauigkeit bleibt ehrlich.', checkLabel: 'Selbst-Check', exampleLabel: 'Merksatz anzeigen', reviseLabel: 'Antwort überarbeiten', selfCheck: true, selfCheckOnly: true }],
+  contentBlocks: [{ type: 'intro', text: 'Bearbeite zuerst das Arbeitsblatt. Erstelle danach in diagrams.net einen eigenen Entscheidungsbaum zum Schulweg mit mindestens 3 Fragen und 4 möglichen Ergebnissen.' }],
+  tasks: [],
   solutions: [],
-  feedback: { quiz: QUIZ_BAND_LABELS },
+  feedback: {},
   progress: { version: 1, localOnly: true },
 });
 

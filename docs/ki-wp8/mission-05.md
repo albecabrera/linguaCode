@@ -1,28 +1,31 @@
-# Mission 05 – Entscheidungsbäume im Affen-Labor
+# Mission 05 – Entscheidungsbäume erstellen
 
-> **Status: lokale Implementierung.** Die Mission nutzt die bestehende Route `/ki8/stunde-5/` und den lokalen, versionierten Fortschrittsschlüssel `ki-05`.
+> **Status: lokale Implementierung.** Die Mission nutzt die bestehende Route `/ki8/stunde-5/` und den lokalen Kursfortschritt.
 
 ## Lernziel und Ablauf
 
-Die Schülerinnen und Schüler bauen einen einfachen Entscheidungsbaum aus Ja/Nein-Fragen zu zwei sichtbaren Merkmalen: „Lächelt der Mund?“ und „X-Augen?“. Sie sehen sechs fiktive Trainingsbeispiele, wählen die Fragen ihres Baums, verfolgen Testpfade und geben fünf getrennte Testvorhersagen ab.
+Die Schülerinnen und Schüler bearbeiten zuerst das bereitgestellte Arbeitsblatt „Entscheidungsbäume erstellen“. Danach erstellen sie mit diagrams.net einen eigenen Entscheidungsbaum zum Schulweg.
 
 | Schritt | Zeit | Inhalt |
 |---|---:|---|
-| Vom Merkmal zur Verzweigung | 10 Min. | Sichtbare, fiktive Trainingskarten vergleichen |
-| Deinen Baum trainieren | 12 Min. | Wurzelfrage und zweite Frage wählen; tatsächlichen Baum anzeigen |
-| Ungesehene Fälle testen | 17 Min. | Pfad verfolgen, Vorhersagen abgeben, Accuracy berechnen |
-| Verstehen und übertragen | 6 Min. | Abschlusscheck zu Training, Test, Accuracy und widersprüchlichen Labels |
+| Arbeitsblatt bearbeiten | 25 Min. | Aufgabe 1: drei Verständnisfragen; Aufgabe 2: Planung zum Thema „Welches Verkehrsmittel nehme ich zur Schule?“ |
+| Praktische Aufgabe | 20 Min. | In diagrams.net einen Baum mit mindestens 3 Fragen und 4 möglichen Ergebnissen erstellen |
 
-Die Genauigkeit wird aus der **ersten vollständigen Abgabe** berechnet. Nachträgliche Korrekturen verändern diesen Wert nicht. Leere Eingaben werden abgewiesen und verändern weder Daten noch Fortschritt.
+Die Partnerkontrolle ist optional. Die Mission markiert die Arbeit nicht automatisch als abgeschlossen.
 
-## Datenherkunft und Grenzen
+## Arbeitsblatt
 
-Die Beispiele sind ausdrücklich **vereinfacht erfunden und von der supplied PDF-Arbeitsblattidee inspiriert**. Die PDF-Figuren, exakten Zeichnungen und Daten werden nicht kopiert. „Beißt“ und „Beißt nicht“ sind hier künstliche Labels und keine Aussage über echtes Tierverhalten. Ein Testfall trägt absichtlich dieselben sichtbaren Merkmale wie ein anderer, aber ein widersprüchliches Label. Das zeigt: Mit den vorhandenen Merkmalen ist eine perfekte Trennung nicht möglich; zusätzliche Merkmale wären nötig und die Testgenauigkeit muss offengelegt werden.
+Das vom Auftraggeber bereitgestellte PNG liegt unter `pages/ki8/stunde-5/arbeitsblatt-entscheidungsbaeume.png`. Es wird im Unterricht als responsive, druckbare und herunterladbare Abbildung angezeigt; eine Texttranskription unterstützt die Zugänglichkeit.
+
+## Praktische Aufgabe
+
+Der externe Link [diagrams.net](https://app.diagrams.net) öffnet sich sicher in einem neuen Tab. Die Schülerinnen und Schüler erstellen dort einen Entscheidungsbaum zum Schulweg mit mindestens drei Fragen und vier möglichen Ergebnissen.
 
 ## Technische Integration
 
 - Kanonische Route: `/ki8/stunde-5/`
 - Isoliertes Modul: `pages/ki8/stunde-5/mission05.mjs`
 - Missionsspezifische Styles: `pages/ki8/stunde-5/mission05.css`
-- Gemeinsame lokale Speicherung und Theme-Controller werden wiederverwendet; der gemeinsame Missionsrenderer bleibt unverändert.
-- Keine Remote-Abhängigkeiten, keine eingebettete PDF und keine Übertragung persönlicher Antworten.
+- Lokales Arbeitsblatt: `pages/ki8/stunde-5/arbeitsblatt-entscheidungsbaeume.png`
+- Service Worker: Bild und Missionsressourcen werden offline gecacht; diagrams.net bleibt ein externes Online-Werkzeug.
+- Keine zusätzlichen Remote-Abhängigkeiten für die lokale Mission: Das Arbeitsblatt und die Missionslogik liegen lokal vor. `diagrams.net` ist die ausdrücklich verlinkte externe Online-Anwendung für die praktische Aufgabe; sie wird nicht eingebettet und benötigt Netzwerkzugriff.

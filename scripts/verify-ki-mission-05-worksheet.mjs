@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import { readFileSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { getLesson } from '../pages/ki8/mission/lesson-data.mjs';
+
+const root = new URL('../pages/ki8/stunde-5/', import.meta.url);
+const sourceImage = '/Users/acabrera/Desktop/Entscheidungsbäume erstellen – Informatik-Arbeitsblatt.png';
+const image = new URL('arbeitsblatt-entscheidungsbaeume.png', root);
+const html = readFileSync(new URL('index.html', root), 'utf8');
+const source = readFileSync(new URL('mission05.mjs', root), 'utf8');
+const css = readFileSync(new URL('mission05.css', root), 'utf8');
+const docs = readFileSync(new URL('../docs/ki-wp8/mission-05.md', import.meta.url), 'utf8');
+const lesson = getLesson('ki-05');
+
+assert.ok(existsSync(image), 'local worksheet image must exist');
+const digest = (path) => createHash('sha256').update(readFileSync(path)).digest('hex');
+assert.equal(digest(image), digest(sourceImage), 'repository worksheet must be byte-identical to supplied original');
+assert.match(html, /lang="de"/);
+assert.match(source, /arbeitsblatt-entscheidungsbaeume\.png/);
+assert.match(source, /Arbeitsblatt bearbeiten/);
+assert.match(source, /Welches Verkehrsmittel nehme ich zur Schule\?/);
+assert.match(source, /mindestens 3 Fragen.*4 mögliche Ergebnisse/);
+assert.match(source, /https:\/\/app\.diagrams\.net/);
+assert.match(source, /target="_blank" rel="noopener noreferrer"/);
+assert.match(source, /alt="[^"]*(Entscheidungsbaum|Arbeitsblatt)[^"]*"/);
+assert.match(source, /Transkription|Inhalt des Arbeitsblatts/);
+assert.doesNotMatch(source, /Affen|Beißt|Accuracy|Testfälle|quiz/i);
+assert.match(docs, /diagrams\.net.*extern|extern.*diagrams\.net/is);
+assert.match(docs, /nicht eingebettet.*Netzwerkzugriff/is);
+assert.match(css, /max-width:100%/);
+assert.match(css, /overflow-wrap:anywhere/);
+assert.match(css, /@media\(max-width:700px\)/);
+assert.equal(lesson.title, 'Mission 05 – Entscheidungsbäume erstellen');
+assert.deepEqual(lesson.phases.map(({ id }) => id), ['worksheet', 'practice']);
+assert.equal(lesson.media.worksheet.url, './stunde-5/arbeitsblatt-entscheidungsbaeume.png');
+assert.equal(lesson.media.diagramsNet.url, 'https://app.diagrams.net');
+console.log('PASS: Mission 05 worksheet asset, German sequence, accessible transcription, diagrams.net link, and obsolete-lab removal.');

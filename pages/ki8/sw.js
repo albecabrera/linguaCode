@@ -1,9 +1,9 @@
-const CACHE_NAME = 'ki8-shell-v3';
+const CACHE_NAME = 'ki8-shell-v4';
 const MISSION_ROUTES = Array.from({length: 19}, (_, index) => `./stunde-${index + 1}/`);
 const SHELL_ASSETS = [
   './', './index.html', './style.css', './checkpoints.css', './app.mjs', './catalog.mjs', './checkpoints.mjs', './presentation.mjs', './manifest.webmanifest', './icon.svg',
   './mission/course-integration.css', './mission/course-integration.mjs', './mission/theme.mjs', './mission/mission.css', './mission/mission.mjs', './mission/progress.mjs', './mission/lesson-data.mjs', './mission/fruit-lab.mjs',
-  './stunde-5/mission05.mjs', './stunde-5/mission05.css',
+  './stunde-5/mission05.mjs', './stunde-5/mission05.css', './stunde-5/arbeitsblatt-entscheidungsbaeume.png',
   '../assets/qrcode-generator.min.js',
   ...MISSION_ROUTES,
 ];
