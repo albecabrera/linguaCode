@@ -1,30 +1,28 @@
-# Mission 05 – Vom Merkmal zur ersten Regel
+# Mission 05 – Entscheidungsbäume im Affen-Labor
 
-> **Status: lokale Implementierung.** Die Mission wird aus Modul 3, Stunde 1 abgeleitet. Die bestehenden Moduldateien und Aktivitäten bleiben erhalten. Veröffentlichung erfolgt nach Prüfung und Commit über den no-build-GitHub-Pages-Workflow.
+> **Status: lokale Implementierung.** Die Mission nutzt die bestehende Route `/ki8/stunde-5/` und den lokalen, versionierten Fortschrittsschlüssel `ki-05`.
 
-## Ziel und Ablauf
+## Lernziel und Ablauf
 
-Die 45-minütige Mission führt durch:
+Die Schülerinnen und Schüler bauen einen einfachen Entscheidungsbaum aus Ja/Nein-Fragen zu zwei sichtbaren Merkmalen: „Lächelt der Mund?“ und „X-Augen?“. Sie sehen sechs fiktive Trainingsbeispiele, wählen die Fragen ihres Baums, verfolgen Testpfade und geben fünf getrennte Testvorhersagen ab.
 
-| Phase | Zeit | Inhalt |
+| Schritt | Zeit | Inhalt |
 |---|---:|---|
-| Schwellenwerte entdecken | 10 Min. | Externe Lernstrecke zu überwachtem Lernen und Entscheidungsregeln |
-| Merkmal und Labels unterscheiden | 10 Min. | Selbst-Check mit einer fiktiven Lieferroboter-Regel |
-| Grenzwerte anwenden | 19 Min. | Prüfe 30 % gegenüber 31 % und Punktzahl 6 gegenüber 7 |
-| Abschlussquiz | 6 Min. | Fünf Fragen zu Merkmalen, Labels und eingeschlossenen Grenzwerten |
+| Vom Merkmal zur Verzweigung | 10 Min. | Sichtbare, fiktive Trainingskarten vergleichen |
+| Deinen Baum trainieren | 12 Min. | Wurzelfrage und zweite Frage wählen; tatsächlichen Baum anzeigen |
+| Ungesehene Fälle testen | 17 Min. | Pfad verfolgen, Vorhersagen abgeben, Accuracy berechnen |
+| Verstehen und übertragen | 6 Min. | Abschlusscheck zu Training, Test, Accuracy und widersprüchlichen Labels |
 
-Die Beispiele bleiben fiktiv. Bei der Akkuregel bedeutet `≤30 %` „Ladepause“ und ein Wert darüber „weiterfahren“. Bei Lernkarten bedeutet `≥7` „bereit“ und ein kleinerer Wert „üben“. Die Mission unterscheidet den beobachteten Wert (Merkmal) von der zugeordneten Kategorie (Label).
+Die Genauigkeit wird aus der **ersten vollständigen Abgabe** berechnet. Nachträgliche Korrekturen verändern diesen Wert nicht. Leere Eingaben werden abgewiesen und verändern weder Daten noch Fortschritt.
 
-## Externe Quellen und Grenzen
+## Datenherkunft und Grenzen
 
-- [inf-schule: Entscheide wie eine KI](https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI) behandelt überwachtes Lernen, Merkmale, Schwellenwerte und Entscheidungsbäume. Die Seite verlinkt außerdem eine druckbare Vorlage für Lebensmittel-Datenkarten, ein kostenfreies Kartenset für Schulen über ProDaBi und weitere Unterrichtsmaterialien.
-- [openHPI: 3.6 Entscheidungsbäume](https://open.hpi.de/learn/kieinstieg2020/items/yRX6ZcCDd7c7pC2ssvP00?locale=de) ist ein deutschsprachiger Clip von 8:18 Minuten. Merkmale und Labels werden an einem Entscheidungsbaum gezeigt; ab 5:57 folgt eine zusätzliche Altersgrenze. Gini-Koeffizient und Entropie im späteren Teil sind anspruchsvoller, deshalb kann die Lehrkraft den passenden Ausschnitt auswählen.
+Die Beispiele sind ausdrücklich **vereinfacht erfunden und von der supplied PDF-Arbeitsblattidee inspiriert**. Die PDF-Figuren, exakten Zeichnungen und Daten werden nicht kopiert. „Beißt“ und „Beißt nicht“ sind hier künstliche Labels und keine Aussage über echtes Tierverhalten. Ein Testfall trägt absichtlich dieselben sichtbaren Merkmale wie ein anderer, aber ein widersprüchliches Label. Das zeigt: Mit den vorhandenen Merkmalen ist eine perfekte Trennung nicht möglich; zusätzliche Merkmale wären nötig und die Testgenauigkeit muss offengelegt werden.
 
-Beide Quellen bleiben externe Links; es werden keine Texte, Abbildungen, Videos oder Arbeitsblätter kopiert/eingebettet. openHPI weist den Kurs für Klassen 8–13 und ohne technische Vorkenntnisse aus; weitere Kursinhalte sind nach kostenloser Einschreibung verfügbar. Die Lizenz des Einzelvideos ist nicht verifiziert. Die inf-schule-Seite nennt weder einen Zieljahrgang noch Lizenzen für die ergänzenden Materialien.
+## Technische Integration
 
-## Fortschritt und Route
-
-- Route: `/ki8/stunde-5/`
-- Lesson-ID und isolierter Fortschrittsschlüssel: `ki-05`
-- Speicherung bleibt lokal und versioniert; keine Anmeldung, Schülerdatenbank, Fortschrittsübertragung oder persönlichen Eingabedaten.
-- Der öffentliche Direktlink und QR-Code führen auf die kanonische GitHub-Pages-Route. Der vorhandene Modul-3-Unterricht bleibt daneben erhalten.
+- Kanonische Route: `/ki8/stunde-5/`
+- Isoliertes Modul: `pages/ki8/stunde-5/mission05.mjs`
+- Missionsspezifische Styles: `pages/ki8/stunde-5/mission05.css`
+- Gemeinsame lokale Speicherung und Theme-Controller werden wiederverwendet; der gemeinsame Missionsrenderer bleibt unverändert.
+- Keine Remote-Abhängigkeiten, keine eingebettete PDF und keine Übertragung persönlicher Antworten.

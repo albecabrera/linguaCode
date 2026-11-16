@@ -193,47 +193,57 @@ export const KI_MISSION_04 = Object.freeze({
 });
 
 const KI_MISSION_05_QUESTIONS = Object.freeze([
-  { id: 'q1', prompt: 'Was ist bei der fiktiven Lieferregel das Merkmal?', choices: ['Die Akkuladung in Prozent.', 'Das Label „Ladepause“.', 'Der Name des Roboters.'], correctIndex: 0, explanation: 'Die Akkuladung ist der beobachtete Wert und damit das Merkmal.' },
-  { id: 'q2', prompt: 'Welche Aussage ordnet die Labels richtig zu?', choices: ['„Ladepause“ und „weiterfahren“ sind Labels.', 'Die Zahl 30 ist immer das Label.', 'Der Robotername ist das Merkmal.'], correctIndex: 0, explanation: 'Labels sind die Kategorien, die einer Beobachtung zugeordnet werden.' },
-  { id: 'q3', prompt: 'Die Regel lautet: bis einschließlich 30 % → „Ladepause“, darüber → „weiterfahren“. Was gilt bei genau 30 %?', choices: ['Ladepause.', 'Weiterfahren.', 'Die Regel enthält für 30 % keine Entscheidung.'], correctIndex: 0, explanation: '„Bis einschließlich 30 %“ schließt den Grenzwert 30 % ein.' },
-  { id: 'q4', prompt: 'Eine Lernkarte mit Punktzahl 7 wird nach der Regel „ab 7 → bereit“ eingeordnet. Welches Label erhält sie?', choices: ['bereit', 'üben', 'kein Label'], correctIndex: 0, explanation: '„Ab 7“ bedeutet 7 oder mehr; deshalb erhält die Karte das Label „bereit“.' },
-  { id: 'q5', prompt: 'Was macht ein Schwellenwert in einer einfachen Regel?', choices: ['Er trennt Werte danach, welches Label sie erhalten.', 'Er beweist, dass jede Vorhersage immer stimmt.', 'Er löscht die beobachteten Merkmale.'], correctIndex: 0, explanation: 'Ein Schwellenwert legt fest, an welcher Grenze sich die zugeordnete Kategorie ändert.' },
+  { id: 'q1', prompt: 'Was ist ein Merkmal im Affen-Labor?', choices: ['Eine beobachtbare Eigenschaft wie „X-Augen?“.', 'Das Label „Beißt“.', 'Die berechnete Accuracy.'], correctIndex: 0, explanation: 'Merkmale sind beobachtbare Eigenschaften, über die der Baum Fragen stellt.' },
+  { id: 'q2', prompt: 'Wozu dienen die gelabelten Trainingsbeispiele?', choices: ['Sie helfen, Fragen und Regeln für den Baum zu finden.', 'Sie garantieren jede spätere Vorhersage.', 'Sie ersetzen die Testbeispiele.'], correctIndex: 0, explanation: 'Training zeigt dem Baum, welche Muster zu bekannten Labels passen.' },
+  { id: 'q3', prompt: 'Warum bleiben die Testbeispiele beim Training außen vor?', choices: ['Nur so prüfen sie unabhängig, wie der Baum mit neuen Beispielen umgeht.', 'Damit wir die Testlabels nachträglich ändern können.', 'Damit Accuracy immer 100 % beträgt.'], correctIndex: 0, explanation: 'Ungesehene Testdaten machen die Prüfung aussagekräftiger.' },
+  { id: 'q4', prompt: 'Was bedeutet Accuracy = 4 von 5?', choices: ['Vier von fünf Testvorhersagen waren richtig, also 80 %.', 'Der Baum hat vier Merkmale.', 'Alle fünf Vorhersagen waren falsch.'], correctIndex: 0, explanation: 'Accuracy zählt die korrekten Testvorhersagen geteilt durch alle Testbeispiele.' },
+  { id: 'q5', prompt: 'Was bedeuten widersprüchliche Labels bei gleichen beobachtbaren Merkmalen?', choices: ['Die Merkmale reichen nicht aus; zusätzliche Merkmale wären sinnvoll.', 'Der Baum kann das fehlende Merkmal einfach erfinden.', 'Das Testlabel darf passend geändert werden.'], correctIndex: 0, explanation: 'Gleiche Beobachtungen mit verschiedenen Labels sind mit diesen Merkmalen nicht perfekt trennbar.' },
 ]);
 
 export const KI_MISSION_05 = Object.freeze({
   id: 'ki-05',
   module: 'Künstliche Intelligenz',
   context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../' },
-  title: 'Mission 05 – Vom Merkmal zur ersten Regel',
-  description: 'Verbinde ein beobachtetes Merkmal mit einem Label und untersuche, was genau an einem Schwellenwert gilt.',
+  title: 'Mission 05 – Entscheidungsbäume im Affen-Labor',
+  description: 'Baue einen Entscheidungsbaum aus sichtbaren Beispielen, verfolge seine Entscheidungen und prüfe ihn ehrlich an neuen Fällen.',
   duration: 45,
   objectives: [
-    'Du unterscheidest das Merkmal von den Labels einer Regel.',
-    'Du wendest die Grenzen ≤30 % und ≥7 korrekt an.',
+    'Du erklärst, wie Ja/Nein-Fragen einen Entscheidungsbaum bilden.',
+    'Du trennst Training und Test und berechnest Accuracy.',
+    'Du erkennst Grenzen widersprüchlicher Beobachtungen.',
   ],
   phases: [
-    { id: 'thresholds', title: 'Schwellenwerte entdecken', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
-    { id: 'feature-and-label', title: 'Merkmal und Labels unterscheiden', minutes: 10, blocks: [{ type: 'task', taskId: 'task-feature' }] },
-    { id: 'apply-rules', title: 'Grenzwerte anwenden', minutes: 19, blocks: [{ type: 'task', taskId: 'task-battery' }, { type: 'task', taskId: 'task-score' }] },
-    { id: 'quiz', title: 'Abschlussquiz', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_05_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_05_QUESTIONS },
+    { id: 'orient', title: 'Vom Merkmal zur Verzweigung', minutes: 10, blocks: [{ type: 'media', mediaId: 'infSchule' }] },
+    { id: 'train-tree', title: 'Deinen Baum trainieren', minutes: 12, blocks: [{ type: 'interactive', id: 'tree-training' }] },
+    { id: 'test-tree', title: 'Ungesehene Fälle testen', minutes: 17, blocks: [{ type: 'interactive', id: 'tree-test' }] },
+    { id: 'understand', title: 'Verstehen und übertragen', minutes: 6, blocks: [{ type: 'quiz', questionIds: KI_MISSION_05_QUESTIONS.map(({ id }) => id) }], questions: KI_MISSION_05_QUESTIONS },
   ],
   media: {
     infSchule: { url: 'https://inf-schule.de/kids/computerinalltag/entscheide-wie-eine-KI', kind: 'official-learning-sequence', title: 'Entscheide wie eine KI', provider: 'inf-schule', observation: 'Die Lernstrecke behandelt überwachtes Lernen, Schwellenwerte und Entscheidungsbäume. Nutze die Abschnitte zu Merkmalen und Regeln.', relatedMediaIds: ['video'], checkboxLabel: 'Ich habe die Lernstrecke oder das Video angesehen', selfReportDisclaimer: 'Nur eine Selbstmeldung, kein technischer Nachweis.' },
-    video: { url: 'https://open.hpi.de/learn/kieinstieg2020/items/yRX6ZcCDd7c7pC2ssvP00?locale=de', kind: 'educational-video', title: '3.6 Entscheidungsbäume', provider: 'openHPI · Künstliche Intelligenz und maschinelles Lernen für Einsteiger', linkLabel: 'Video ansehen: Entscheidungsbäume (8:18 Min.; Schwellenwert ab 5:57) ↗', duration: '8 Minuten 18 Sekunden', language: 'de', targetGrade: 'Klassen 8–13', license: 'unverified', observation: 'Der deutschsprachige Clip zeigt, wie Merkmale und Labels in einen Entscheidungsbaum eingehen; ab 5:57 wird eine weitere Altersgrenze als Unterscheidung eingeführt. Spätere Abschnitte behandeln Gini-Koeffizient und Entropie.' },
+    video: { url: 'https://open.hpi.de/learn/kieinstieg2020/items/yRX6ZcCDd7c7pC2ssvP00?locale=de', kind: 'educational-video', title: '3.6 Entscheidungsbäume', provider: 'openHPI · Künstliche Intelligenz und maschinelles Lernen für Einsteiger', linkLabel: 'Video ansehen: Entscheidungsbäume (8:18 Min.) ↗', duration: '8 Minuten 18 Sekunden', language: 'de', targetGrade: 'Klassen 8–13', license: 'unverified', observation: 'Der deutschsprachige Clip zeigt, wie Merkmale und Labels in einen Entscheidungsbaum eingehen; ab 5:57 wird eine weitere Altersgrenze als Unterscheidung eingeführt. Spätere Abschnitte behandeln Gini-Koeffizient und Entropie.' },
   },
   resourceNotes: {
     video: { status: 'confirmed-source', text: 'Das deutschsprachige openHPI-Video „3.6 Entscheidungsbäume“ gehört zum kostenlosen Einsteigerkurs ohne technische Vorkenntnisse, der für Klassen 8–13 ausgewiesen ist. Es dauert 8 Minuten 18 Sekunden; eine Altersgrenze als weitere Unterscheidung wird ab 5:57 gezeigt. Die Videoseite stellt einen Player bereit; der Zugriff auf weitere Kursinhalte erfordert eine kostenlose Einschreibung. Die Lizenz des Einzelvideos ist nicht verifiziert, deshalb nur zur Originalseite verlinken. Gini-Koeffizient und Entropie im späteren Teil sind anspruchsvoller; für M05 reicht ein gezielter Ausschnitt.' },
-    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die inf-schule-Lernstrecke zu Merkmalen, Schwellenwerten und Entscheidungsbäumen verlinkt eine druckbare Vorlage für Lebensmittel-Datenkarten, ein kostenfreies Kartenset für Schulen über ProDaBi und weitere Unterrichtsmaterialien. Zieljahrgang und Lizenzen der ergänzenden Materialien sind auf der geprüften Seite nicht angegeben.' },
+    material: { status: 'linked', targetGrade: 'not-stated', license: 'not-stated', text: 'Die Mission nutzt eigene, vereinfachte Beispieldaten; PDF-Figuren und exakte Daten werden nicht kopiert. Externe Lernseiten bleiben nur verlinkt.' },
   },
-  contentBlocks: [
-    { type: 'intro', text: 'Ein Merkmal ist ein beobachteter Wert; ein Label ist die zugeordnete Kategorie. Bei einer fiktiven Lieferregel gilt bis einschließlich 30 % „Ladepause“ und darüber „weiterfahren“. Bei Lernkarten bedeutet eine Punktzahl ab 7 das Label „bereit“; darunter heißt es „üben“. Die Grenzwerte selbst gehören also jeweils zu „Ladepause“ und „bereit“.' },
-    { type: 'reflection', id: 'boundary-reflection', prompt: 'Warum sind die Wörter „bis einschließlich“ und „ab“ wichtig?', examples: ['Sie zeigen, ob der Grenzwert selbst noch zur Kategorie gehört.', 'Genau 30 % ist noch „Ladepause“; genau 7 ist schon „bereit“.'] },
-  ],
-  tasks: [
-    { id: 'task-feature', type: 'open-response', title: 'Merkmal oder Label?', prompt: 'Eine fiktive Lieferregel nutzt die Akkuladung in Prozent. Bis einschließlich 30 % lautet das Label „Ladepause“, darüber „weiterfahren“. Was ist das Merkmal und was sind die Labels?', exampleAnswer: 'Das Merkmal ist die Akkuladung in Prozent. „Ladepause“ und „weiterfahren“ sind die Labels.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
-    { id: 'task-battery', type: 'open-response', title: 'Grenzwert bei der Akkuladung', prompt: 'Die Regel lautet: Akkuladung ≤ 30 % → „Ladepause“, darüber → „weiterfahren“. Welches Label erhält ein Roboter bei genau 30 % und welches bei 31 %?', exampleAnswer: 'Bei 30 % gilt „Ladepause“, weil ≤ den Grenzwert einschließt. Bei 31 % gilt „weiterfahren“, weil der Wert über 30 % liegt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
-    { id: 'task-score', type: 'open-response', title: 'Grenzwert bei Lernkarten', prompt: 'Eine Karte erhält ab einer Punktzahl ≥ 7 das Label „bereit“, darunter „üben“. Welches Label erhalten die Punktzahlen 6 und 7?', exampleAnswer: 'Bei 6 heißt das Label „üben“. Bei 7 heißt es „bereit“, weil ≥ den Grenzwert einschließt.', checkLabel: 'Meine Antwort prüfen', exampleLabel: 'Beispielantwort anzeigen', reviseLabel: 'Meine Antwort überarbeiten', selfCheck: true, selfCheckOnly: true },
-  ],
+  interactive: {
+    kind: 'decision-tree-lab',
+    notice: 'Alle Affen und Labels sind fiktiv und vereinfacht – inspiriert von einem Arbeitsblatt, keine Aussage über echtes Tierverhalten.',
+    features: [{ id: 'smile', label: 'Lächelt der Mund?' }, { id: 'xEyes', label: 'X-Augen?' }],
+    labels: ['Beißt', 'Beißt nicht'],
+    trainingExamples: [
+      { id: 't1', smile: true, xEyes: false, label: 'Beißt' }, { id: 't2', smile: true, xEyes: true, label: 'Beißt' },
+      { id: 't3', smile: false, xEyes: false, label: 'Beißt nicht' }, { id: 't4', smile: false, xEyes: true, label: 'Beißt nicht' },
+      { id: 't5', smile: true, xEyes: false, label: 'Beißt' }, { id: 't6', smile: false, xEyes: true, label: 'Beißt nicht' },
+    ],
+    testExamples: [
+      { id: 'p1', smile: true, xEyes: true, label: 'Beißt' }, { id: 'p2', smile: false, xEyes: false, label: 'Beißt nicht' },
+      { id: 'p3', smile: true, xEyes: false, label: 'Beißt' }, { id: 'p4', smile: false, xEyes: true, label: 'Beißt nicht' },
+      { id: 'p5', smile: true, xEyes: true, label: 'Beißt nicht' },
+    ],
+  },
+  contentBlocks: [{ type: 'intro', text: 'Ein Entscheidungsbaum stellt Ja/Nein-Fragen. Jede Antwort führt zu einem Ast; am Ende steht ein Label. Du trainierst mit sichtbaren Beispielen und prüfst danach getrennte Testbeispiele.' }],
+  tasks: [{ id: 'task-contradiction', type: 'open-response', title: 'Wenn Beispiele widersprechen', prompt: 'Warum kann ein Baum bei gleichen beobachtbaren Merkmalen widersprüchliche Labels nicht sicher auflösen?', exampleAnswer: 'Die Merkmale liefern dann nicht genug Information. Zusätzliche Merkmale helfen; die Testgenauigkeit bleibt ehrlich.', checkLabel: 'Selbst-Check', exampleLabel: 'Merksatz anzeigen', reviseLabel: 'Antwort überarbeiten', selfCheck: true, selfCheckOnly: true }],
   solutions: [],
   feedback: { quiz: QUIZ_BAND_LABELS },
   progress: { version: 1, localOnly: true },
