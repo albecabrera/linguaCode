@@ -203,7 +203,7 @@ const KI_MISSION_05_QUESTIONS = Object.freeze([
 export const KI_MISSION_05 = Object.freeze({
   id: 'ki-05',
   module: 'Künstliche Intelligenz',
-  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../' },
+  context: { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 2', overviewHref: '../' },
   title: 'Mission 05 – Entscheidungsbäume im Affen-Labor',
   description: 'Baue einen Entscheidungsbaum aus sichtbaren Beispielen, verfolge seine Entscheidungen und prüfe ihn ehrlich an neuen Fällen.',
   duration: 45,

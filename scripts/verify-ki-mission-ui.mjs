@@ -174,6 +174,8 @@ assert.doesNotMatch(mission04Root.innerHTML, /<iframe/i, 'video remains link-onl
 assert.match(mission05Html, /href="\.\/mission05\.css"/);
 assert.match(mission05Html, /src="\.\/mission05\.mjs"/);
 assert.match(mission05Source, /decision-tree-lab|Entscheidungsbaum/);
+assert.match(mission05Source, /lesson\.context\.hour/);
+assert.doesNotMatch(mission05Source, /WP 8 · Stunde 1/);
 assert.match(mission05Source, /Accuracy deiner ersten Abgabe/);
 assert.match(mission05Source, /Entscheidungspfad/);
 assert.match(mission05Source, /themeController\.toggle/);

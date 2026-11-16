@@ -160,7 +160,7 @@ assert.equal(KI_MISSION_05.interactive.testExamples.length, 5);
 assert.match(KI_MISSION_05.interactive.notice, /fiktiv|vereinfacht/i);
 assert.equal(KI_MISSION_05.interactive.testExamples.filter(({ label }) => label === 'Beißt nicht').length, 3);
 assert.equal(KI_MISSION_05.duration, 45);
-assert.deepEqual(KI_MISSION_05.context, { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 1', overviewHref: '../' });
+assert.deepEqual(KI_MISSION_05.context, { subject: 'WP 8', module: 'Modul 3', hour: 'Stunde 2', overviewHref: '../' });
 assert.deepEqual(KI_MISSION_05.phases.map(({ minutes }) => minutes), [10, 12, 17, 6]);
 assert.equal(KI_MISSION_05.phases.reduce((total, { minutes }) => total + minutes, 0), 45);
 assert.match(KI_MISSION_05.contentBlocks[0].text, /Ja\/Nein-Fragen.*Label/i);

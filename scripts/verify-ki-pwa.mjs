@@ -23,7 +23,7 @@ assert.match(app, /Offline-Bereitschaft aktiv/);
 assert.match(app, /Offline-Bereitschaft[^\n]*nicht verfügbar/);
 assert.match(style, /\.offline-status\s*\{/);
 
-assert.match(worker, /const CACHE_NAME = 'ki8-shell-v\d+'/);
+assert.match(worker, /const CACHE_NAME = 'ki8-shell-v3'/);
 assert.match(worker, /new URL\(event\.request\.url\)/);
 assert.match(worker, /requestURL\.origin === self\.location\.origin/);
 assert.match(worker, /request\.mode === 'navigate'/);
@@ -32,6 +32,8 @@ assert.match(worker, /const SHELL_ASSETS = \[/);
 assert.match(worker, /Array.from\(\{length: 19\}/);
 assert.match(worker, /\.\/mission\/progress\.mjs/);
 assert.match(worker, /\.\/mission\/lesson-data\.mjs/);
+assert.match(worker, /\.\/stunde-5\/mission05\.mjs/);
+assert.match(worker, /\.\/stunde-5\/mission05\.css/);
 assert.match(worker, /\.\.\/assets\/qrcode-generator\.min\.js/);
 assert.match(worker, /const ASSET_PATHS = new Set/);
 assert.match(worker, /caches\.match\(event\.request\)/);
