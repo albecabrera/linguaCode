@@ -37,3 +37,28 @@ DOM-UI-Prüfung ohne externe Abhängigkeiten (Editor, Import, Navigation und all
 ```bash
 node scripts/verify-spiele-ui.mjs
 ```
+
+Touch-Browser-QA (isoliert, nur für lokale Prüfung): Playwright 1.65.1 sowie Chromium und WebKit liegen im projektlokalen Ordner `.spiele-browser-qa/`; die Produktionsabhängigkeiten bleiben unverändert. Die Touch-Suite erstellt und öffnet alle fünf Spiele in isolierten Chromium-/WebKit-Kontexten und schreibt `touch-*`-Screenshots nach `.spiele-browser-qa/evidence/`.
+
+```bash
+PLAYWRIGHT_BROWSERS_PATH="$PWD/.spiele-browser-qa/browsers" node scripts/verify-spiele-touch.mjs
+```
+
+Bestehende Browser-QA (Chromium, Desktop-/Tastaturregressionen):
+
+```bash
+PLAYWRIGHT_BROWSERS_PATH="$PWD/.spiele-browser-qa/browsers" node scripts/verify-spiele-browser.mjs
+```
+
+Bei einer neuen lokalen QA-Umgebung (nicht als Produktionsabhängigkeit) reproduzierbar mit privatem Manifest und lokalen Caches:
+
+```bash
+mkdir -p .spiele-browser-qa .spiele-browser-qa/npm-cache
+printf '%s\n' '{"name":"linguacode-spiele-browser-qa","private":true,"type":"module"}' > .spiele-browser-qa/package.json
+npm install --prefix .spiele-browser-qa --cache "$PWD/.spiele-browser-qa/npm-cache" --ignore-scripts playwright@1.65.1
+PLAYWRIGHT_BROWSERS_PATH="$PWD/.spiele-browser-qa/browsers" .spiele-browser-qa/node_modules/.bin/playwright install chromium webkit
+```
+
+Danach startet der Test einen statischen Loopback-Server mit `/linguaCode/`-Basis-Pfad und schreibt Screenshots sowie temporäre Export-/Importdateien nach `.spiele-browser-qa/evidence/`. Er prüft im echten Chromium Create/Save/Reopen/Export/Import, alle fünf Spiele, Tastatur, Touch-Emulation, 1440×900, 390×844, reduzierte Bewegung, Filter und EduPlay-Link. Normales `localStorage` wird genutzt; frische Kontexte simulieren nicht verfügbaren Speicher durch fehlschlagendes `getItem`/`setItem` sowie ein Kontingentproblem durch fehlschlagendes `setItem`. Der gültige Entwurf bleibt dabei im Editor und erzeugt keine Karte. Ein echter Browser-Quota-Overflow wurde nicht simuliert. Auch bei absichtlich fehlschlagendem `window.localStorage`-Getter rendert die App weiter; ein gültiger Entwurf bleibt im Editor und zeigt eine ehrliche Nicht-speichern-Meldung. Unter `prefers-reduced-motion: reduce` prüft der Wheel-Test nur unterschiedliche Fragen, Zustand und Erschöpfung; sichtbare Animationsbewegung wird dort nicht behauptet.
+
+Nicht bewiesen: reale Smartboard-/iPad-Hardware, andere Browser, Netzwerkbetrieb, Veröffentlichung oder Synchronisation. Die lokale WebKit-Prüfung ist Geräteemulation und keine Safari-/Hardware-Zertifizierung. Browser-Fehler und fehlende Assets lassen den Test fehlschlagen.
