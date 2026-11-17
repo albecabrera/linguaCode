@@ -4,7 +4,7 @@
 
 ## Formate
 
-- **Tauziehen:** Fragen mit zwei Teams; die Lehrkraft entscheidet bei freien Antworten.
+- **Tauziehen:** Team Blau und Team Rot beantworten parallel und unabhängig dieselbe Frage. Text- und Zahlantworten werden automatisch verglichen: Unicode-Normalisierung (NFKC), trimmen, Leerraumfolgen zu einem Leerzeichen zusammenfassen und Groß-/Kleinschreibung ignorieren. Leere Antworten werden abgewiesen. Falsche Antworten zählen nicht und geben dem jeweiligen Team die nächste eigene Frage; richtige Antworten bewegen Seil und Figuren. Beide Teams spielen unabhängig bis alle eigenen Fragen beantwortet sind.
 - **Glücksrad:** Fragen werden einmalig nacheinander gezogen.
 - **Jeopardy:** Kategorien, Punkte und Fragen, die nach Auswahl deaktiviert werden.
 - **Memory:** Eigene Kartenpaare aufdecken.
@@ -61,4 +61,4 @@ PLAYWRIGHT_BROWSERS_PATH="$PWD/.spiele-browser-qa/browsers" .spiele-browser-qa/n
 
 Danach startet der Test einen statischen Loopback-Server mit `/linguaCode/`-Basis-Pfad und schreibt Screenshots sowie temporäre Export-/Importdateien nach `.spiele-browser-qa/evidence/`. Er prüft im echten Chromium Create/Save/Reopen/Export/Import, alle fünf Spiele, Tastatur, Touch-Emulation, 1440×900, 390×844, reduzierte Bewegung, Filter und EduPlay-Link. Normales `localStorage` wird genutzt; frische Kontexte simulieren nicht verfügbaren Speicher durch fehlschlagendes `getItem`/`setItem` sowie ein Kontingentproblem durch fehlschlagendes `setItem`. Der gültige Entwurf bleibt dabei im Editor und erzeugt keine Karte. Ein echter Browser-Quota-Overflow wurde nicht simuliert. Auch bei absichtlich fehlschlagendem `window.localStorage`-Getter rendert die App weiter; ein gültiger Entwurf bleibt im Editor und zeigt eine ehrliche Nicht-speichern-Meldung. Unter `prefers-reduced-motion: reduce` prüft der Wheel-Test nur unterschiedliche Fragen, Zustand und Erschöpfung; sichtbare Animationsbewegung wird dort nicht behauptet.
 
-Nicht bewiesen: reale Smartboard-/iPad-Hardware, andere Browser, Netzwerkbetrieb, Veröffentlichung oder Synchronisation. Die lokale WebKit-Prüfung ist Geräteemulation und keine Safari-/Hardware-Zertifizierung. Browser-Fehler und fehlende Assets lassen den Test fehlschlagen.
+Nicht bewiesen: reale Smartboard-/iPad-Hardware, andere Browser, Netzwerkbetrieb, Veröffentlichung oder Synchronisation. Die Animationsbewegung ist eine lokale CSS-Illustration ohne fremde Assets; reduzierte Bewegung deaktiviert Animationen und Übergänge. Die lokale WebKit-Prüfung ist Geräteemulation und keine Safari-/Hardware-Zertifizierung. Browser-Fehler und fehlende Assets lassen den Test fehlschlagen.

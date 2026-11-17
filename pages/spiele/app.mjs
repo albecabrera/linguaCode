@@ -323,32 +323,76 @@ export function mountSpiele(container, storage) {
   }
 
   function playTug(game, panel) {
-    let index = 0;
-    let left = 0;
-    let right = 0;
-    let answered = false;
+    let blue = 0;
+    let red = 0;
+    const indexes = [0, 0];
     let finished = false;
-    const prompt = makeElement('p'); prompt.className = 'question';
+    const feedback = makeElement('p'); feedback.className = 'status';
     const score = makeElement('p');
-    const answerHost = makeElement('div');
     const rope = makeElement('div'); rope.className = 'rope';
-    const progress = makeElement('progress'); progress.max = game.content.questions.length; progress.value = 0; progress.setAttribute('aria-label', 'Tauziehen-Fortschritt');
-    const teamButtons = makeElement('div'); teamButtons.className = 'team-grid';
-    const next = makeButton('Nächste Frage', () => { if (!answered || finished) return; index += 1; answered = false; update(); });
-    const update = () => {
-      const question = game.content.questions[index];
-      finished = !question;
-      prompt.textContent = question ? question.prompt : (left === right ? 'Unentschieden!' : left > right ? 'Team A gewinnt!' : 'Team B gewinnt!');
-      score.textContent = `Team A: ${left} · Team B: ${right} · Frage ${Math.min(index + 1, game.content.questions.length)} von ${game.content.questions.length}`;
-      progress.value = index;
-      rope.style.setProperty('--rope-position', `${50 + (right - left) * 12}%`);
-      teamButtons.querySelectorAll('button').forEach(button => { button.disabled = answered || finished; });
-      next.disabled = !answered || finished;
-      if (question) answerReveal(answerHost, question); else answerHost.replaceChildren();
+    const stage = makeElement('div'); stage.className = 'tug-stage';
+    const createFigure = (team, variant) => {
+      const figure = makeElement('div'); figure.className = `tug-figure ${team}-figure figure-${variant}`; figure.setAttribute('aria-hidden', 'true');
+      const head = makeElement('span'); head.className = 'figure-head';
+      const body = makeElement('span'); body.className = 'figure-body';
+      const arm = makeElement('span'); arm.className = 'figure-arm';
+      const legs = makeElement('span'); legs.className = 'figure-legs';
+      figure.append(head, body, arm, legs);
+      return figure;
     };
-    const award = team => { if (answered || finished) return; answered = true; if (team === 'left') left += 1; else right += 1; update(); };
-    teamButtons.append(makeButton('Team A gewinnt', () => award('left'), 'team'), makeButton('Team B gewinnt', () => award('right'), 'team'));
-    panel.append(makeElement('p', 'Lies die Frage vor. Die Lehrkraft entscheidet bei freien Antworten und vergibt genau einen Punkt.'), progress, rope, prompt, answerHost, score, teamButtons, next);
+    const blueFigures = makeElement('div'); blueFigures.className = 'tug-figures blue-figures';
+    const redFigures = makeElement('div'); redFigures.className = 'tug-figures red-figures';
+    blueFigures.append(createFigure('blue', 'one'), createFigure('blue', 'two'));
+    redFigures.append(createFigure('red', 'one'), createFigure('red', 'two'));
+    stage.append(blueFigures, rope, redFigures);
+    const teamGrid = makeElement('div'); teamGrid.className = 'team-grid tug-teams';
+    const tugLayout = makeElement('div'); tugLayout.className = 'tug-layout';
+    const teams = [
+      { name: 'Team Blau', color: 'blue', add: () => { blue += 1; } },
+      { name: 'Team Rot', color: 'red', add: () => { red += 1; } }
+    ];
+    const normalizeAnswer = value => String(value ?? '').normalize('NFKC').trim().replace(/\s+/g, ' ').toLocaleLowerCase('de-DE');
+    const answerFields = teams.map((team, teamIndex) => {
+      const wrapper = makeElement('div'); wrapper.className = `tug-answer ${team.color}-answer`;
+      const prompt = makeElement('p'); prompt.className = 'question tug-team-question';
+      const progress = makeElement('progress'); progress.max = game.content.questions.length; progress.setAttribute('aria-label', `${team.name} Fortschritt`);
+      const label = makeElement('label'); label.className = 'field';
+      const input = makeElement('input'); input.type = 'text'; input.autocomplete = 'off'; input.inputMode = 'text';
+      const answerId = `tug-answer-${team.color}`; input.id = answerId; label.htmlFor = answerId;
+      label.append(makeElement('span', `${team.name} Antwort`), input); wrapper.append(prompt, progress, label);
+      const button = makeButton(`${team.name} antworten`, () => {
+        if (finished || indexes[teamIndex] >= game.content.questions.length) return;
+        const value = normalizeAnswer(input.value);
+        if (!value) { feedback.textContent = `${team.name}: Bitte gib eine Antwort ein.`; feedback.className = 'status error'; input.focus?.(); return; }
+        const question = game.content.questions[indexes[teamIndex]];
+        const correct = value === normalizeAnswer(question.answer);
+        if (correct) team.add();
+        indexes[teamIndex] += 1;
+        input.value = '';
+        feedback.textContent = correct ? `${team.name} hat richtig geantwortet.` : `${team.name}: Falsch – die nächste Frage ist bereit.`;
+        feedback.className = correct ? 'status success' : 'status error';
+        update();
+      }, 'team');
+      input.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault?.(); button.click(); } });
+      wrapper.append(button); teamGrid.append(wrapper);
+      return { prompt, progress, input, button };
+    });
+    const update = () => {
+      finished = indexes.every(index => index >= game.content.questions.length);
+      answerFields.forEach(({ prompt, progress, input, button }, teamIndex) => {
+        const question = game.content.questions[indexes[teamIndex]];
+        prompt.textContent = question ? question.prompt : 'Alle Fragen beantwortet.';
+        progress.value = indexes[teamIndex];
+        input.disabled = !question || finished; button.disabled = !question || finished;
+      });
+      if (finished) feedback.textContent = blue === red ? 'Unentschieden!' : blue > red ? 'Team Blau gewinnt!' : 'Team Rot gewinnt!';
+      score.textContent = `Team Blau: ${blue} · Team Rot: ${red}`;
+      rope.style.setProperty('--rope-position', `${50 + (red - blue) * 12}%`);
+      if (blue > red) stage.classList.add('blue-pull'); else stage.classList.remove('blue-pull');
+      if (red > blue) stage.classList.add('red-pull'); else stage.classList.remove('red-pull');
+    };
+    tugLayout.append(teamGrid, stage);
+    panel.append(makeElement('p', 'Beide Teams erhalten eigene Fragen und bewegen sich unabhängig durch den Fragenpool. Leerzeichen und Groß-/Kleinschreibung werden bei der Prüfung nicht berücksichtigt; falsche Antworten zählen nicht und geben die nächste Frage frei.'), tugLayout, feedback, score);
     update();
   }
 

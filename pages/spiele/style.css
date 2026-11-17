@@ -70,11 +70,42 @@
 .question { font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 700; margin: 1rem 0; }
 .answer { padding: 1rem; background: #eef5ff; border-left: 4px solid var(--game-blue); font-size: 1.25rem; }
 .team-grid, .choice-grid, .memory-grid, .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .8rem; }
-.team { min-height: 100px; font-size: 1.2rem; background: #fce7dd !important; border-color: var(--game-orange) !important; }
-.team:last-child { background: #e3f1e9 !important; border-color: var(--game-green) !important; }
+.team { min-height: 100px; font-size: 1.2rem; }
+.tug-teams { align-items: start; }
+.tug-answer { display: grid; gap: .6rem; padding: 1rem; border: 3px solid; border-radius: 1rem; background: #fff; }
+.blue-answer { border-color: #1769aa; }
+.red-answer { border-color: #c83d30; }
+.blue-answer .team { background: #e3efff !important; border-color: #1769aa !important; }
+.red-answer .team { background: #ffe8e5 !important; border-color: #c83d30 !important; }
+.tug-layout { display: grid; gap: 1rem; }
+.tug-stage { position: relative; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; min-height: 180px; margin: 0; overflow: hidden; border-radius: 1rem; background: linear-gradient(#eaf4ff 0 62%, #d9ead7 62%); }
+.tug-figures { z-index: 1; display: flex; align-items: end; justify-content: center; gap: .2rem; transition: transform .3s ease; }
+.tug-figure { position: relative; width: 3rem; height: 5.5rem; flex: 0 0 3rem; transition: transform .3s ease; }
+.figure-head { position: absolute; top: 0; left: .7rem; width: 1.6rem; height: 1.6rem; border: 2px solid var(--game-ink); border-radius: 50%; background: #f2c6a0; }
+.figure-body { position: absolute; top: 1.35rem; left: .8rem; width: 1.4rem; height: 2.35rem; border: 2px solid var(--game-ink); border-radius: .6rem .6rem .3rem .3rem; }
+.figure-arm { position: absolute; top: 1.8rem; left: .1rem; width: 2.8rem; height: .35rem; border: 2px solid var(--game-ink); border-radius: 99px; transform: rotate(-18deg); transform-origin: right center; }
+.figure-legs { position: absolute; top: 3.55rem; left: .85rem; width: 1.3rem; height: 1.8rem; border-left: 4px solid var(--game-ink); border-right: 4px solid var(--game-ink); transform: skewX(-12deg); }
+.blue-figure .figure-body { background: #1769aa; }
+.red-figure .figure-body { background: #c83d30; }
+.red-figures .tug-figure { transform: scaleX(-1); }
+.tug-stage.blue-pull .blue-figures { transform: translateX(1rem) rotate(-2deg); }
+.tug-stage.red-pull .red-figures { transform: translateX(-1rem) rotate(2deg); }
+.tug-stage.blue-pull .figure-two { transform: translateY(-.3rem) rotate(-4deg); }
+.tug-stage.red-pull .red-figures .figure-two { transform: scaleX(-1) translateY(-.3rem) rotate(-4deg); }
 .rope { position: relative; min-height: 34px; margin: 1rem 0; border: 2px solid var(--game-ink); border-radius: .7rem; background: #fff7ed; overflow: hidden; }
 .rope::before { content: ''; position: absolute; left: 1rem; right: 1rem; top: 50%; height: 6px; transform: translateY(-50%); border-radius: 999px; background: repeating-linear-gradient(90deg, var(--game-orange) 0 16px, #f2b17e 16px 24px); }
 .rope::after { content: ''; position: absolute; top: 3px; bottom: 3px; left: clamp(0px, calc(var(--rope-position) - 1rem), calc(100% - 2rem)); width: 2rem; border: 2px solid var(--game-ink); border-radius: .35rem; background: var(--game-blue); box-shadow: 0 0 0 2px #fff; transition: left .25s ease; }
+.tug-answer input { min-height: 50px; }
+@media (min-width: 900px) {
+  .tug-layout { grid-template-columns: minmax(230px, 1fr) minmax(300px, 1.25fr) minmax(230px, 1fr); align-items: stretch; }
+  .tug-layout > .tug-teams { display: contents; }
+  .tug-layout > .tug-teams .blue-answer { grid-column: 1; grid-row: 1; }
+  .tug-layout > .tug-teams .red-answer { grid-column: 3; grid-row: 1; }
+  .tug-layout > .tug-stage { grid-column: 2; grid-row: 1; }
+}
+@media (max-width: 899px) {
+  .tug-stage { min-height: 150px; }
+}
 .wheel-face { display: grid; place-items: center; width: min(42vw, 220px); aspect-ratio: 1; margin: 1rem auto; border: 10px solid var(--game-orange); border-radius: 50%; background: conic-gradient(#f7c85e 0 25%, #e9f0ff 25% 50%, #bde3d0 50% 75%, #f6c9b5 75%); font-weight: 800; }
 .wheel-face.spinning { animation: wheel-spin .7s ease-out; }
 @keyframes wheel-spin { to { transform: rotate(360deg); } }

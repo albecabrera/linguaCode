@@ -64,15 +64,34 @@ function game(type) {
 }
 
 controller.play(game('tug'));
-const tugAnswer = app.querySelector('.answer');
-assert.equal(tugAnswer.hidden, true, 'tug answer starts hidden');
-const tugTeams = app.querySelectorAll('.team');
-tugTeams[0].click(); tugTeams[0].click();
-assert.match(app.textContent, /Team A: 1/);
-const tugNext = app.querySelectorAll('button').find(node => node.textContent === 'Nächste Frage');
-tugNext.click(); tugTeams[1].click(); tugNext.click();
-assert.match(app.textContent, /Team A gewinnt|Team B gewinnt|Unentschieden/);
-assert.equal(tugNext.disabled, true, 'tug cannot score after final question');
+assert.equal(app.querySelectorAll('.tug-answer').length, 2, 'tug has independent answer fields');
+assert.match(app.textContent, /Team Blau/);
+assert.match(app.textContent, /Team Rot/);
+const tugInputs = app.querySelectorAll('input').filter(node => node.type !== 'file');
+assert.equal(tugInputs.length, 2, 'tug renders two text/number inputs');
+const tugSubmit = app.querySelectorAll('button').filter(node => /antworten/i.test(node.textContent));
+assert.equal(tugSubmit.length, 2, 'tug renders two answer controls');
+const tugPrompts = app.querySelectorAll('.tug-team-question');
+assert.match(tugPrompts[0].textContent, /Frage 1/);
+assert.match(tugPrompts[1].textContent, /Frage 1/);
+tugInputs[0].value = ' Antwort   1 ';
+tugInputs[0].dispatch('input');
+tugSubmit[0].click();
+assert.match(app.textContent, /Team Blau: 1/);
+assert.match(tugPrompts[0].textContent, /Frage 2/, 'blue advances independently');
+assert.match(tugPrompts[1].textContent, /Frage 1/, 'red remains on its own question');
+tugInputs[1].value = '';
+tugInputs[1].dispatch('input');
+tugSubmit[1].click();
+assert.match(app.textContent, /Bitte gib eine Antwort ein/);
+tugInputs[1].value = 'falsch';
+tugInputs[1].dispatch('input');
+tugSubmit[1].click();
+assert.match(tugPrompts[1].textContent, /Frage 2/, 'red advances after a miss');
+tugInputs[0].value = 'Antwort 2'; tugInputs[0].dispatch('input'); tugSubmit[0].click();
+tugInputs[1].value = 'Antwort 2'; tugInputs[1].dispatch('input'); tugSubmit[1].click();
+assert.match(app.textContent, /Team Blau gewinnt!/);
+assert.match(app.textContent, /Team Blau: 2 · Team Rot: 1/);
 
 controller.play(game('wheel'));
 const wheelButton = app.querySelectorAll('button').find(node => node.textContent === 'Glücksrad drehen');
