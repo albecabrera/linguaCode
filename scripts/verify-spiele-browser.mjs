@@ -150,7 +150,7 @@ async function playTug(page, title) {
   const initialMarker = await rope.evaluate(node => getComputedStyle(node, '::after').left);
   await shared.locator('#tug-shared-input').fill(' Antwort   eins ');
   await page.keyboard.press('Enter');
-  check(await shared.getByText('Team Rot ist am Zug', { exact: false }).isVisible(), 'turn did not alternate');
+  check(await shared.getByText('Team B ist am Zug', { exact: false }).isVisible(), 'turn did not alternate');
   const movedMarker = await rope.evaluate(node => getComputedStyle(node, '::after').left);
   check(initialMarker !== movedMarker, 'tug marker did not move after correct answer');
   await shared.locator('#tug-shared-input').fill('falsch');
@@ -161,7 +161,7 @@ async function playTug(page, title) {
   await shared.getByRole('button', { name: 'Weiter →' }).click();
   await shared.locator('#tug-shared-input').fill('falsch');
   await shared.getByRole('button', { name: 'Antwort prüfen' }).click();
-  check(await page.getByText('Team Blau gewinnt!').isVisible(), 'unequal tug winner missing');
+  check(await page.getByText('Team A gewinnt!').isVisible(), 'unequal tug winner missing');
   const ropeBox = await rope.boundingBox();
   const panel = await page.locator('.play-panel').boundingBox();
   check(ropeBox && ropeBox.height >= 20, 'rope has no visible rendered height');

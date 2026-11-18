@@ -70,7 +70,7 @@ class Element {
   }
 }
 
-const makeFixture = () => {
+const makeFixture = (deferredFullscreen = false) => {
   const elements = new Map();
   const add = (id, tag = 'div') => { const node = new Element(tag, id); elements.set(id, node); return node; };
   ['fullscreen', 'start', 'duration-1', 'duration-3', 'duration-5', 'intro', 'teams', 'team-0', 'team-1', 'shared-turn', 'result', 'restart', 'reset', 'score-0', 'score-1', 'rope', 'timer', 'match-status', 'screen-note', 'result-title', 'result-detail'].forEach(id => add(id, id === 'fullscreen' || id === 'start' || id === 'restart' || id === 'reset' || id.startsWith('duration-') ? 'button' : 'div'));
@@ -88,8 +88,11 @@ const makeFixture = () => {
   elements.get('teams').hidden = true;
   elements.get('result').hidden = true;
   elements.get('reset').hidden = true;
-  documentElement.requestFullscreen = async () => { throw new Error('fullscreen unavailable in verifier'); };
-  return {elements, document};
+  let rejectFullscreen;
+  documentElement.requestFullscreen = deferredFullscreen
+    ? () => new Promise((_, reject) => { rejectFullscreen = reject; })
+    : async () => { throw new Error('fullscreen unavailable in verifier'); };
+  return {elements, document, rejectFullscreen: () => rejectFullscreen?.(new Error('fullscreen unavailable in verifier'))};
 };
 
 let now = 1000;
@@ -99,8 +102,8 @@ globalThis.setInterval = callback => { activeTimers.push(callback); return callb
 globalThis.clearInterval = callback => { activeTimers = activeTimers.filter(timer => timer !== callback); };
 const tick = () => activeTimers.slice().forEach(callback => callback());
 let bootNumber = 0;
-const boot = async () => {
-  const fixture = makeFixture();
+const boot = async (deferredFullscreen = false) => {
+  const fixture = makeFixture(deferredFullscreen);
   globalThis.document = fixture.document;
   await import(`../pages/spanisch-tauziehen/app.mjs?ui-boot=${++bootNumber}`);
   return fixture;
@@ -129,6 +132,9 @@ for (const minutes of [1, 3, 5]) assert.ok(game.elements.get(`duration-${minutes
 game.elements.get('duration-5').dispatch('click');
 assert.equal(game.elements.get('duration-5').getAttribute('aria-pressed'), 'true');
 startGame(game);
+await new Promise(resolve => setImmediate(resolve));
+assert.match(game.elements.get('screen-note').textContent, /Vollbild ist hier nicht verfügbar/, 'automatic fullscreen denial is non-blocking');
+assert.match(game.elements.get('shared-turn').textContent, /Team A ist am Zug/);
 assert.equal(game.elements.get('reset').hidden, false, 'reset is available during play');
 assert.equal(game.elements.get('teams').hidden, true, 'legacy team cards remain hidden');
 assert.equal(game.elements.get('shared-turn').hidden, false, 'one shared turn panel is visible');
@@ -143,14 +149,14 @@ assert.match(feedback(shared).textContent, /Noch nicht richtig/);
 assert.equal(game.elements.get('score-0').textContent, '0', 'wrong answer does not score');
 assert.ok(shared.querySelectorAll('button').filter(answerButton => !answerButton.textContent.includes('Weiter')).every(answerButton => answerButton.disabled), 'answered choices are disabled');
 const next = shared.querySelectorAll('button').find(answerButton => answerButton.textContent === 'Weiter →'); next.dispatch('click');
-assert.match(shared.textContent, /Equipo Naranja ist am Zug/);
+assert.match(shared.textContent, /Team B ist am Zug/);
 assert.equal(scene(game).className, 'rope-scene', 'wrong answer does not animate');
 correctButton(shared).dispatch('click');
 assert.match(feedback(shared).textContent, /Richtig/);
 assert.equal(game.elements.get('score-1').textContent, '1', 'orange team scores on its turn');
 assert.equal(scene(game).className, 'rope-scene pull-right', 'correct answer pulls right');
 shared.querySelectorAll('button').find(answerButton => answerButton.textContent === 'Weiter →').dispatch('click');
-assert.match(shared.textContent, /Equipo Verde ist am Zug/);
+assert.match(shared.textContent, /Team A ist am Zug/);
 
 
 now = 61000;
@@ -176,7 +182,7 @@ for (let round = 0; round < 5; round += 1) {
   }
 }
 assert.equal(winner.elements.get('result').hidden, false, 'five correct pulls end the duel');
-assert.match(winner.elements.get('result-title').textContent, /Equipo Verde gewinnt/);
+assert.match(winner.elements.get('result-title').textContent, /Team A gewinnt/);
 assert.equal(winner.elements.get('score-0').textContent, '5');
 assert.equal(scene(winner).className, 'rope-scene pull-left', 'repeated correct pulls animate the winning direction');
 assert.equal(Number(scene(winner).dataset.pullSequence), 5, 'every correct pull restarts motion');
@@ -223,5 +229,12 @@ assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 3:00', 'rese
 timerFixture.elements.get('start').dispatch('click');
 detached.dispatch('click');
 assert.equal(timerFixture.elements.get('score-0').textContent, '0', 'detached button cannot affect a later game');
+
+const delayed = await boot(true);
+delayed.elements.get('start').dispatch('click');
+delayed.elements.get('reset').dispatch('click');
+delayed.rejectFullscreen();
+await new Promise(resolve => setImmediate(resolve));
+assert.equal(delayed.elements.get('screen-note').textContent, '', 'stale fullscreen rejection does not update the reset screen');
 
 console.log('PASS: Spanisch-Tauziehen UI — Start, beide Teams, richtig/falsch, Weiter, Sieg-Ende, deaktivierte Eingaben, Neustart, Reset und Vollbild-Fallback. DOM touch-button checks passed; echtes Smartboard-Touch/Layout bleibt unverified.');

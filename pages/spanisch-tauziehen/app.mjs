@@ -1,9 +1,10 @@
 import { createGame, start as startGameClock, timeout, answer, advance } from './core.mjs';
 const $ = id => document.getElementById(id);
-const names = ['Equipo Verde', 'Equipo Naranja'];
+const names = ['Team A', 'Team B'];
 let game = createGame();
 let timerHandle = null;
 let selectedDuration = 3;
+let fullscreenSession = {};
 
 function stopTimer() {
   if (timerHandle !== null) { clearInterval(timerHandle); timerHandle = null; }
@@ -131,8 +132,21 @@ function renderScore(pullDirection = 0, resetMotion = false) {
   $('match-status').textContent = game.position === 0 ? 'Gleichstand · Das Seil ist in der Mitte' : `${names[game.position < 0 ? 0 : 1]} führt mit ${Math.abs(game.position)} Zug${Math.abs(game.position) === 1 ? '' : 'en'}`;
   renderTimer();
 }
+async function requestGameFullscreen(session) {
+  const showFailure = () => {
+    if (session === fullscreenSession) $('screen-note').textContent = 'Vollbild ist hier nicht verfügbar. Das Spiel funktioniert auch ohne Vollbild.';
+  };
+  if (document.fullscreenElement || typeof document.documentElement?.requestFullscreen !== 'function') {
+    if (!document.fullscreenElement) showFailure();
+    return;
+  }
+  try { await document.documentElement.requestFullscreen(); }
+  catch { showFailure(); }
+}
 function start() {
   stopTimer(); game = createGame(Math.random, selectedDuration); startGameClock(game, Date.now());
+  const session = fullscreenSession = {};
+  requestGameFullscreen(session);
   $('intro').hidden = true; $('result').hidden = true; $('teams').hidden = true; $('shared-turn').hidden = false; $('reset').hidden = false;
   renderSharedTurn(); renderScore(0, true); renderTimer();
   timerHandle = setInterval(() => { if (timeout(game, Date.now())) endGame(); else renderTimer(); }, 250);
@@ -146,7 +160,7 @@ function syncDurationButtons() {
     option.setAttribute('aria-pressed', selected ? 'true' : 'false');
   });
 }
-$('reset').addEventListener('click', () => { stopTimer(); game = createGame(); syncDurationButtons(); $('intro').hidden = false; $('teams').hidden = true; $('shared-turn').hidden = true; $('result').hidden = true; $('reset').hidden = true; renderScore(0, true); $('start').focus(); });
+$('reset').addEventListener('click', () => { stopTimer(); fullscreenSession = {}; $('screen-note').textContent = ''; game = createGame(); syncDurationButtons(); $('intro').hidden = false; $('teams').hidden = true; $('shared-turn').hidden = true; $('result').hidden = true; $('reset').hidden = true; renderScore(0, true); $('start').focus(); });
 [1, 3, 5].map(minutes => $(`duration-${minutes}`)).forEach(button => button.addEventListener('click', () => { selectedDuration = Number(button.dataset.duration); [1, 3, 5].map(minutes => $(`duration-${minutes}`)).forEach(option => { if (option === button) option.classList.add('selected'); else option.classList.remove('selected'); option.setAttribute('aria-pressed', option === button ? 'true' : 'false'); }); }));
 $('fullscreen').addEventListener('click', async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch { $('screen-note').textContent = 'Vollbild ist hier nicht verfügbar. Das Spiel funktioniert auch ohne Vollbild.'; } });
 document.addEventListener('fullscreenchange', () => { $('fullscreen').textContent = document.fullscreenElement ? 'Vollbild verlassen ↙' : 'Vollbild ↗'; });

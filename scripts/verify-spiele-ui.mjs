@@ -18,7 +18,13 @@ class Element {
   querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }
   querySelectorAll(selector) { const found = []; const visit = node => { if (!(node instanceof Element)) return; if ((selector === 'button' && node.tagName === 'BUTTON') || (selector === 'input' && node.tagName === 'INPUT') || selector.startsWith('.') && node.classList.contains(selector.slice(1)) || (selector === '[role="alert"]' && node.attributes.role === 'alert')) found.push(node); node.children.forEach(visit); }; visit(this); return found; }
 }
-const document = { createElement: tag => new Element(tag), querySelector: selector => selector === '#app' ? app : null };
+let fullscreenRequests = 0;
+const document = {
+  createElement: tag => new Element(tag),
+  querySelector: selector => selector === '#app' ? app : null,
+  fullscreenElement: null,
+  documentElement: { requestFullscreen: async () => { fullscreenRequests += 1; } }
+};
 const app = new Element('main');
 const storage = { value: null, getItem() { return this.value; }, setItem(_, value) { this.value = value; } };
 globalThis.document = document;
@@ -76,21 +82,22 @@ assert.ok(svgNodes.some(node => node.attributes?.transform === 'translate(280 10
 assert.ok(svgNodes.some(node => node.attributes?.transform === 'translate(920 105)'), 'generic orange geometry is present');
 assert.equal(app.querySelectorAll('.tug-question-panel').length, 1, 'tug has one shared question panel');
 assert.equal(app.querySelectorAll('.tug-answer').length, 0, 'team-specific question cards are not rendered');
-assert.match(app.textContent, /Team Blau ist am Zug/);
+assert.match(app.textContent, /Team A ist am Zug/);
+assert.equal(fullscreenRequests, 1, 'starting generic tug requests fullscreen once');
 const sharedInput = app.querySelectorAll('input').find(node => node.id === 'tug-shared-input');
 assert.ok(sharedInput, 'legacy question uses shared text field');
 sharedInput.value = ' Antwort   1 '; sharedInput.dispatch('input');
 app.querySelector('.tug-question-panel').querySelectorAll('button').find(node => /Antwort prüfen/.test(node.textContent)).click();
-assert.match(app.textContent, /Team Blau: 1/);
-assert.match(app.textContent, /Team Rot ist am Zug/, 'turn alternates after answer');
+assert.match(app.textContent, /Team A: 1/);
+assert.match(app.textContent, /Team B ist am Zug/, 'turn alternates after answer');
 const redSharedInput = app.querySelectorAll('input').find(node => node.id === 'tug-shared-input');
 redSharedInput.value = 'falsch'; redSharedInput.dispatch('input');
 app.querySelector('.tug-question-panel').querySelectorAll('button').find(node => /Antwort prüfen/.test(node.textContent)).click();
-assert.match(app.textContent, /Team Blau ist am Zug/);
+assert.match(app.textContent, /Team A ist am Zug/);
 const blueSecondInput = app.querySelectorAll('input').find(node => node.id === 'tug-shared-input');
 blueSecondInput.value = 'Antwort 2'; blueSecondInput.dispatch('input');
 app.querySelector('.tug-question-panel').querySelectorAll('button').find(node => /Antwort prüfen/.test(node.textContent)).click();
-assert.match(app.textContent, /Team Rot ist am Zug/);
+assert.match(app.textContent, /Team B ist am Zug/);
 
 const choiceGame = game('tug');
 choiceGame.content.questions[0].choices = ['Falsche Antwort'];
@@ -100,7 +107,22 @@ assert.equal(configuredChoices.length, 2, 'configured choices render with the co
 configuredChoices[0].click();
 assert.match(app.textContent, /Falsch/);
 
+document.documentElement.requestFullscreen = async () => { throw new Error('denied'); };
+controller.play(game('tug'));
+await new Promise(resolve => setImmediate(resolve));
+assert.match(app.textContent, /Vollbild ist hier nicht verfügbar/, 'fullscreen denial has an accessible non-blocking fallback');
+let rejectFullscreen;
+document.documentElement.requestFullscreen = () => new Promise((_, reject) => { rejectFullscreen = reject; });
+controller.play(game('tug'));
+const detachedFeedback = app.querySelector('.status');
+controller.home();
+rejectFullscreen(new Error('denied'));
+await new Promise(resolve => setImmediate(resolve));
+assert.equal(detachedFeedback.textContent, '', 'stale fullscreen rejection does not mutate detached generic feedback');
+document.documentElement.requestFullscreen = undefined;
+const requestsBeforeWheel = fullscreenRequests;
 controller.play(game('wheel'));
+assert.equal(fullscreenRequests, requestsBeforeWheel, 'other games do not request fullscreen');
 const wheelButton = app.querySelectorAll('button').find(node => node.textContent === 'Glücksrad drehen');
 wheelButton.click(); assert.equal(app.querySelector('.answer').hidden, true);
 wheelButton.click(); wheelButton.click();

@@ -60,7 +60,7 @@ try {
   await shared.getByRole('button', { name: /Weiter/ }).click();
 
   await shared.locator('p').first().waitFor();
-  await assert.match(await shared.locator('h2').textContent(), /Equipo Naranja ist am Zug/);
+  await assert.match(await shared.locator('h2').textContent(), /Team B ist am Zug/);
   let rounds = 1;
   while (await shared.evaluate(node => node.querySelectorAll('.shared-answers button').length > 0) && rounds < 205) {
     await clickCorrect(page);

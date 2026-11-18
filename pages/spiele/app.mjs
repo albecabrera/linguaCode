@@ -60,6 +60,7 @@ export function mountSpiele(container, storage) {
   let store;
   try { store = storage ? createGameStore(storage) : null; } catch { store = null; }
   let activeCleanup = () => {};
+  let viewGeneration = 0;
   let importInput;
   let importStatus;
 
@@ -120,6 +121,7 @@ export function mountSpiele(container, storage) {
   }
 
   function renderHome() {
+    viewGeneration += 1;
     activeCleanup();
     activeCleanup = () => {};
     container.replaceChildren();
@@ -257,6 +259,7 @@ export function mountSpiele(container, storage) {
   }
 
   function edit(game) {
+    viewGeneration += 1;
     activeCleanup();
     activeCleanup = () => {};
     editorGame = game;
@@ -314,6 +317,7 @@ export function mountSpiele(container, storage) {
   }
 
   function play(game, preview = false) {
+    const generation = ++viewGeneration;
     activeCleanup();
     const cleanup = [];
     activeCleanup = () => cleanup.splice(0).forEach(fn => fn());
@@ -324,7 +328,7 @@ export function mountSpiele(container, storage) {
     const panel = makeElement('section');
     panel.className = 'panel play-panel';
     container.append(top, panel);
-    if (game.type === 'tug') playTug(game, panel);
+    if (game.type === 'tug') playTug(game, panel, generation);
     if (game.type === 'wheel') playWheelGame(game, panel);
     if (game.type === 'jeopardy') playJeopardy(game, panel);
     if (game.type === 'memory') playMemory(game, panel, cleanup);
@@ -341,14 +345,28 @@ export function mountSpiele(container, storage) {
     host.append(reveal, answer);
   }
 
-  function playTug(game, panel) {
+  async function requestTugFullscreen(onFailure, isCurrent) {
+    if (document.fullscreenElement || typeof document.documentElement?.requestFullscreen !== 'function') {
+      if (!document.fullscreenElement && isCurrent?.() !== false && typeof onFailure === 'function') onFailure('Vollbild ist hier nicht verfügbar. Das Spiel funktioniert auch ohne Vollbild.');
+      return false;
+    }
+    try {
+      await document.documentElement.requestFullscreen();
+      return true;
+    } catch {
+      if (isCurrent?.() !== false && typeof onFailure === 'function') onFailure('Vollbild ist hier nicht verfügbar. Das Spiel funktioniert auch ohne Vollbild.');
+      return false;
+    }
+  }
+
+  function playTug(game, panel, generation) {
     panel.classList.add('tug-play-shell');
     let blue = 0;
     let red = 0;
     let turn = 0;
     const indexes = [0, 0];
     let finished = false;
-    const feedback = makeElement('p'); feedback.className = 'status';
+    const feedback = makeElement('p'); feedback.className = 'status'; feedback.setAttribute('role', 'status'); feedback.setAttribute('aria-live', 'polite');
     const score = makeElement('p');
     const rope = makeElement('div'); rope.className = 'rope';
     const stage = makeElement('div'); stage.className = 'tug-stage';
@@ -401,8 +419,8 @@ export function mountSpiele(container, storage) {
     const teamGrid = makeElement('div'); teamGrid.className = 'team-grid tug-teams';
     const tugLayout = makeElement('div'); tugLayout.className = 'tug-layout';
     const teams = [
-      { name: 'Team Blau', color: 'blue', add: () => { blue += 1; } },
-      { name: 'Team Rot', color: 'red', add: () => { red += 1; } }
+      { name: 'Team A', color: 'blue', add: () => { blue += 1; } },
+      { name: 'Team B', color: 'red', add: () => { red += 1; } }
     ];
     const normalizeAnswer = value => String(value ?? '').normalize('NFKC').trim().replace(/\s+/g, ' ').toLocaleLowerCase('de-DE');
     const answerFields = teams.map((team, teamIndex) => {
@@ -450,13 +468,13 @@ export function mountSpiele(container, storage) {
         input.disabled = !question || finished || Boolean(choices.length) || turn !== teamIndex; button.hidden = Boolean(choices.length); button.disabled = !question || finished || turn !== teamIndex;
         choiceHost.querySelectorAll?.('button').forEach(choiceButton => { choiceButton.disabled = !question || finished || turn !== teamIndex; });
       });
-      if (finished) feedback.textContent = blue === red ? 'Unentschieden!' : blue > red ? 'Team Blau gewinnt!' : 'Team Rot gewinnt!';
-      score.textContent = `Team Blau: ${blue} · Team Rot: ${red}`;
+      if (finished) feedback.textContent = blue === red ? 'Unentschieden!' : blue > red ? 'Team A gewinnt!' : 'Team B gewinnt!';
+      score.textContent = `Team A: ${blue} · Team B: ${red}`;
       rope.style.setProperty('--rope-position', `${50 + (red - blue) * 12}%`);
       if (blue > red) stage.classList.add('blue-pull'); else stage.classList.remove('blue-pull');
       if (red > blue) stage.classList.add('red-pull'); else stage.classList.remove('red-pull');
       const activeQuestion = game.content.questions[indexes[turn]];
-      sharedHeading.textContent = finished ? 'Duell beendet' : `Team ${turn === 0 ? 'Blau' : 'Rot'} ist am Zug`;
+      sharedHeading.textContent = finished ? 'Duell beendet' : `Team ${turn === 0 ? 'A' : 'B'} ist am Zug`;
       sharedPrompt.textContent = activeQuestion?.prompt || 'Alle Fragen beantwortet.';
       sharedProgress.max = game.content.questions.length; sharedProgress.value = indexes[turn];
       sharedAnswerHost.replaceChildren();
@@ -478,10 +496,15 @@ export function mountSpiele(container, storage) {
     const controls = makeElement('div'); controls.className = 'actions tug-controls';
     controls.append(
       makeButton('Tauziehen neu starten', () => { blue = 0; red = 0; turn = 0; indexes[0] = 0; indexes[1] = 0; finished = false; feedback.textContent = ''; update(); }),
-      makeButton('Vollbild', async () => { try { if (document.fullscreenElement) await document.exitFullscreen?.(); else await document.documentElement.requestFullscreen?.(); } catch { feedback.textContent = 'Vollbild ist hier nicht verfügbar.'; feedback.className = 'status error'; } })
+      makeButton('Vollbild', async () => {
+        if (document.fullscreenElement) {
+          try { await document.exitFullscreen?.(); } catch { feedback.textContent = 'Vollbild konnte nicht verlassen werden.'; feedback.className = 'status error'; }
+        } else await requestTugFullscreen(message => { feedback.textContent = message; feedback.className = 'status error'; }, () => generation === viewGeneration);
+      })
     );
     panel.append(makeElement('p', 'Die Teams wechseln sich mit eigenen Fragen ab; richtige Antworten bewegen das Seil sichtbar. Leerzeichen und Groß-/Kleinschreibung werden bei der Prüfung nicht berücksichtigt; falsche Antworten zählen nicht und geben die nächste Frage frei.'), tugLayout, controls, feedback, score);
     update();
+    requestTugFullscreen(message => { feedback.textContent = message; feedback.className = 'status error'; }, () => generation === viewGeneration);
   }
 
   function playWheelGame(game, panel) {
