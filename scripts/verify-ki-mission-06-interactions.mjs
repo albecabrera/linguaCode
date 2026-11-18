@@ -63,4 +63,25 @@ const restored = createMission06({ root: new RenderRoot(), storage: legacyStorag
 assert.equal(restored.getState().phase, 1);
 assert.equal(restored.getState().answers.legacy, 'keep');
 assert.equal(writes, 0, 'loading legacy progress must not overwrite it');
+class NavigationRoot extends RenderRoot {
+  constructor() { super(); this.elements = []; }
+  set innerHTML(value) { this.html = value; this.elements = [...value.matchAll(/<button[^>]*data-phase-target="(\d+)"[^>]*>/g)].map((match) => ({ dataset: { phaseTarget: match[1] }, listeners: {}, addEventListener(type, fn) { this.listeners[type] = fn; }, click() { this.listeners.click?.({ currentTarget: this, target: this }); } })); }
+  get innerHTML() { return this.html; }
+  querySelectorAll(selector) { return selector === '[data-phase-target]' ? this.elements : []; }
+}
+const navigationState = { phase: 3, completed: true, videoDone: true, rule: 'color', labelsRevealed: true, quizAnswers: [0, 0, 1], summaryDone: true };
+const navMap = new Map([['linguacode:ki-wp8:mission-01:v1:ki-06', JSON.stringify({ version: 1, state: navigationState })]]);
+const navStorage = { getItem: (key) => navMap.get(key) ?? null, setItem: (key, value) => navMap.set(key, value), removeItem: (key) => navMap.delete(key) };
+const navRoot = new NavigationRoot();
+const navigator = createMission06({ root: navRoot, storage: navStorage });
+for (const [index, title] of [[0, 'video-title'], [1, 'lab-title'], [2, 'quiz-title'], [3, 'summary-title']]) {
+  const button = navRoot.elements.find((el) => Number(el.dataset.phaseTarget) === index);
+  assert.ok(button, `Phase ${index + 1} must be navigable`);
+  button.click();
+  assert.ok(navRoot.innerHTML.includes(`aria-labelledby="${title}"`));
+  assert.equal(navigator.getState().phase, 3, 'review must not reduce saved progress');
+  assert.equal(navigator.getState().completed, true);
+  assert.deepEqual(navigator.getState().quizAnswers, [0, 0, 1]);
+}
+assert.equal(JSON.parse(navMap.get('linguacode:ki-wp8:mission-01:v1:ki-06')).state.phase, 3);
 console.log('Mission 06 interaction contract GREEN: training cards, both fitting rules, reveal sequence, hidden sandbox, persistence, quiz, and local-only behavior verified.');
