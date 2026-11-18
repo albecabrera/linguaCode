@@ -191,9 +191,7 @@ const mission06Renderer = createMissionRenderer({ root: mission06Root, lesson: g
 assert.match(mission06Root.innerHTML, /Mission 06 – Trainingsdaten und Aufteilungen/);
 assert.match(mission06Root.innerHTML, /Video ansehen: Trainings- und Testdaten/);
 assert.match(mission06Root.innerHTML, /href="https:\/\/publikationen\.bibliothek\.kit\.edu\/1000139088" target="_blank" rel="noopener noreferrer"/);
-assert.match(mission06Root.innerHTML, /Lebensmittel-KI – Unterrichtsstunde für Klasse 8/);
-assert.match(mission06Root.innerHTML, /href="https:\/\/informatikdidaktik\.cs\.uni-saarland\.de\/lebensmittel-ki\/" target="_blank" rel="noopener noreferrer"/);
-assert.match(mission06Root.innerHTML, /href="https:\/\/inf-schule\.de\/ki\/menueansicht\/basiswissen_ki\/lernarten\/entscheidungsBaeume" target="_blank" rel="noopener noreferrer"/);
+assert.doesNotMatch(mission06Root.innerHTML, /Lebensmittel-KI|informatikdidaktik\.cs\.uni-saarland\.de|Überwachtes Lernen mit Entscheidungsbäumen|inf-schule\.de/);
 assert.equal((mission06Root.innerHTML.match(/data-phase-id="training-data"/g) ?? []).length, 1, 'related resources must retain one phase self-report');
 assert.doesNotMatch(mission06Root.innerHTML, /<iframe/i, 'video remains link-only');
 const mission06TrainingDone = mission06Root.querySelector('[data-phase-done]');
