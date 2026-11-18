@@ -7,11 +7,11 @@
 | Phase | Zeit | Inhalt |
 |---|---:|---|
 | Video-Mission | 7 Min. | KIT-Video von 3:15 bis 4:29 ansehen, Funktionen der beiden Datenstapel notieren und zu zweit vergleichen. |
-| Daten-Challenge | 13 Min. | Aus vier farbigen Trainingsbeispielen eine Regel entwickeln. Ein zweites Team hält zwei Testbeispiele zurück; erst nach der Regelwahl werden Vorhersagen mit den Labels verglichen. |
+| Daten-Challenge | 13 Min. | Zwei rote Kreise (einer klein) sind A, zwei blaue Quadrate (einer klein) sind B. Eine Farbregel oder Formregel wird gesperrt; erst danach erscheinen die Testmerkmale rotes Quadrat und blauer Kreis, Vorhersagen und getrennt die Labels. |
 | Wissenscheck | 5 Min. | Fünf Fragen zu Training und unabhängigem Test. |
 | Lernbericht | 20 Min. | Neues Word-Dokument öffnen, das Gelernte und die Challenge in eigenen Worten zusammenfassen und nach Lehrkraftvorgabe speichern. |
 
-Die Farbregel „rot, sonst blau“ passt zu den Trainingsdaten, scheitert aber zum Beispiel an einem grünen Gegenstand. Das ist ein Anlass, über begrenzte und einseitige Trainingsdaten zu sprechen. Nach einer Änderung der Regel sind für einen erneuten unabhängigen Test neue Testdaten nötig. Als Unterstützung kann die Lehrkraft Satzanfänge anbieten: „Trainingsdaten helfen …“, „Testdaten bleiben getrennt, weil …“. Schnellere Lernende erklären, weshalb auch ein erfolgreicher Test mit nur zwei Beispielen keine allgemeine Zuverlässigkeit beweist.
+Sowohl „rot → A, sonst B“ als auch „Kreis → A, sonst B“ passt zu allen vier Trainingskarten. Beim unabhängigen Test erreicht die Farbregel 2/2, die Formregel 0/2: rotes Quadrat und blauer Kreis wurden beim Training nicht gezeigt. Die Sandbox bleibt bis zur Label-Enthüllung verborgen und zeigt danach nur Vorhersagen; sie enthält kein bekanntes Label. Ein grüner Gegenstand zeigt außerdem die Begrenzung der Farbregel. Das ist ein Anlass, über begrenzte und einseitige Trainingsdaten zu sprechen. Nach einer Änderung der Regel sind für einen erneuten unabhängigen Test neue Testdaten nötig. Als Unterstützung kann die Lehrkraft Satzanfänge anbieten: „Trainingsdaten helfen …“, „Testdaten bleiben getrennt, weil …“. Schnellere Lernende erklären, weshalb auch ein erfolgreicher Test mit nur zwei Beispielen keine allgemeine Zuverlässigkeit beweist.
 
 ## Materialien und Quellen
 
@@ -26,4 +26,4 @@ Externe Materialien werden nur verlinkt, nicht kopiert oder eingebettet. Verfüg
 ## Route und Fortschritt
 
 - Route: `/ki8/stunde-6/`; Lesson-ID und lokaler Fortschrittsschlüssel: `ki-06`.
-- Die Word-Datei wird außerhalb der Webseite erstellt und gespeichert; der Lernbericht wird nicht automatisch auf der Seite geprüft oder hochgeladen.
+- Die Word-Datei wird außerhalb der Webseite erstellt und gespeichert; der Lernbericht wird nicht automatisch auf der Seite geprüft oder hochgeladen. Die Route nutzt dafür eine eigene, missionsspezifische Oberfläche: Die Regel wird vor der getrennten Label-Enthüllung gesperrt, beide Regelpfade ergeben die festgelegten Ergebnisse (Farbe 2/2, Form 0/2), und die Sandbox zeigt nur Vorhersagen ohne bekanntes Label. Antworten und Fortschritt bleiben lokal im Browser; es gibt kein eingebettetes Video und keine Übertragung von Lerntext. Der Quiz-Weiter-Button bleibt auch bei unvollständigen Antworten aktiv. Gegenüber dem generischen Kursrenderer ist die Mission-06-Interaktion deshalb bewusst individuell umgesetzt; die gemeinsame Navigation, Übersicht, Theme-Steuerung und lokale Fortschrittslogik bleiben erhalten.
