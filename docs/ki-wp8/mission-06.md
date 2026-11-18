@@ -1,32 +1,29 @@
 # Mission 06 – Trainingsdaten und Aufteilungen
 
-> **Status: lokale Implementierung.** Die Mission wird aus Modul 3, Stunde 2 abgeleitet. Die bestehenden Moduldateien und Aktivitäten bleiben erhalten. Veröffentlichung erfolgt nach Prüfung und Commit über den no-build-GitHub-Pages-Workflow.
-
 ## Ziel und Ablauf
 
-Die 45-minütige Mission führt durch:
+45 Minuten für WP Informatik, Klasse 8. Die Lernenden erklären Trainings- und Testdaten, entwickeln eine einfache Regel und prüfen sie mit zurückgehaltenen Beispielen. Benötigt werden Computer mit Internet und Word sowie Partnerarbeit; die Testgegenstände können auch auf Papier notiert werden.
 
 | Phase | Zeit | Inhalt |
 |---|---:|---|
-| Trainingsdaten verstehen | 10 Min. | Externe Lernseite zu gelabelten Beispielen und Entscheidungsbäumen |
-| Testdaten getrennt halten | 10 Min. | Externe Lektion zu Entscheidungsbäumen und Trainingseinfluss |
-| Training und Test aufteilen | 19 Min. | Selbst-Checks zu Trainingsdaten und unabhängigen Testbeispielen |
-| Abschlussquiz | 6 Min. | Fünf Fragen zu Trainings- und Testdaten |
+| Video-Mission | 7 Min. | KIT-Video von 3:15 bis 4:29 ansehen, Funktionen der beiden Datenstapel notieren und zu zweit vergleichen. |
+| Daten-Challenge | 13 Min. | Aus vier farbigen Trainingsbeispielen eine Regel entwickeln. Ein zweites Team hält zwei Testbeispiele zurück; erst nach der Regelwahl werden Vorhersagen mit den Labels verglichen. |
+| Wissenscheck | 5 Min. | Fünf Fragen zu Training und unabhängigem Test. |
+| Lernbericht | 20 Min. | Neues Word-Dokument öffnen, das Gelernte und die Challenge in eigenen Worten zusammenfassen und nach Lehrkraftvorgabe speichern. |
 
-Kernregel: Gelabelte Trainingsbeispiele helfen, Fragen und Schwellenwerte zu finden. Einige getrennte Beispiele bleiben ungesehen, bis der fertige Baum geprüft wird. Testbeispiele dürfen weder zum Training noch zur Regelwahl verwendet werden; sonst wäre die Prüfung nicht mehr unabhängig.
+Die Farbregel „rot, sonst blau“ passt zu den Trainingsdaten, scheitert aber zum Beispiel an einem grünen Gegenstand. Das ist ein Anlass, über begrenzte und einseitige Trainingsdaten zu sprechen. Nach einer Änderung der Regel sind für einen erneuten unabhängigen Test neue Testdaten nötig. Als Unterstützung kann die Lehrkraft Satzanfänge anbieten: „Trainingsdaten helfen …“, „Testdaten bleiben getrennt, weil …“. Schnellere Lernende erklären, weshalb auch ein erfolgreicher Test mit nur zwei Beispielen keine allgemeine Zuverlässigkeit beweist.
 
-## Externe Quellen und Grenzen
+## Materialien und Quellen
 
-- [inf-schule: Überwachtes Lernen mit Entscheidungsbäumen](https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume) erläutert Trainingsbeispiele, Schwellenwerte, Testobjekte und mögliche Fehler bei ungeeigneten Daten.
-- [Experience AI: Lektion 4 – Entscheidungsbäume](https://experience-ai.org/de/units/foundations-of-ai-11-14/lessons/4) behandelt Entscheidungsbäume und zeigt, wie Trainingsdaten ein Modell beeinflussen; die Reihe ist für 11–14 Jahre ausgewiesen.
-- [KIT: Jetzt geht's los mit dem Maschinellen Lernen!](https://publikationen.bibliothek.kit.edu/1000139088) ist ein deutschsprachiges Video von 6:28 Minuten. Der gezielte Ausschnitt **3:15–4:29** behandelt Datensplits, Trainingsdaten ab 3:32 und Testdaten ab 4:17. Der KIT-Eintrag nennt die Lizenz **CC BY-SA 4.0**, aber keine Zielgruppe. Spätere Teile zu Validierungsdaten und Fehlermetriken können für diese Stunde ausgelassen werden.
-- [Universität des Saarlandes: Lebensmittel-KI – Unterrichtsstunde für Klasse 8](https://informatikdidaktik.cs.uni-saarland.de/lebensmittel-ki/) beschreibt einen Klassifikator, der mit Trainingskarten erstellt und mit getrennten Testkarten geprüft wird. Der Entwurf verweist auf [ProDaBi-Lebensmittelkarten](https://www.prodabi.de/wp-content/uploads/Druckvorlage.pdf); das zugrunde liegende Material wurde für Klasse 6 entwickelt und der Saarland-Entwurf überträgt es auf Klasse 8.
+- [KIT: Jetzt geht's los mit dem Maschinellen Lernen!](https://publikationen.bibliothek.kit.edu/1000139088): deutschsprachiges Video, 6:28 Minuten; der Ausschnitt 3:15–4:29 behandelt Datensplits, Training und Test. CC BY-SA 4.0; eine Klassenstufe ist nicht angegeben. Die Aufgaben begrenzen die notwendigen Inhalte bewusst auf den Ausschnitt.
+- [Universität des Saarlandes: Lebensmittel-KI](https://informatikdidaktik.cs.uni-saarland.de/lebensmittel-ki/): Unterrichtsentwurf für eine Doppelstunde in Klasse 8 mit Trainings- und Testkarten; als Erweiterung, nicht als zusätzliches Pflichtprogramm in den 45 Minuten.
+- [ProDaBi: Entscheidungsbäume mit Datenkarten](https://www.prodabi.de/materialien/entscheidungsbaeume-datenkarten-6/): Kartenmaterial und Aufgaben zu Trainings- und Testdaten; ursprünglich für jüngere Klassen, als zusätzliche praktische Differenzierung geeignet.
+- [ProDaBi: KI und maschinelles Lernen mit Entscheidungsbäumen](https://www.prodabi.de/materialien/kuenstliche-intelligenz-und-maschinelles-lernen-mit-entscheidungsbaeumen/): ergänzende Unterrichtsmaterialien und Arbeitsblätter.
+- [inf-schule: Überwachtes Lernen mit Entscheidungsbäumen](https://inf-schule.de/ki/menueansicht/basiswissen_ki/lernarten/entscheidungsBaeume): ergänzende Lernseite zu Trainingsbeispielen und Testobjekten.
 
-Die Quellen bleiben externe Links; es werden keine Texte, Abbildungen, Videos oder Arbeitsblätter kopiert oder eingebettet. Für den KIT-Clip ist CC BY-SA 4.0 angegeben. Für den Saarland-Unterrichtsentwurf, die ProDaBi-Karten und die übrigen verlinkten Lernseiten ist keine Lizenz angegeben. Die Saarland-Seite weist den Entwurf Klasse 8 zu; die Altersangabe der weiteren Quellen ist oben genannt, soweit verfügbar.
+Externe Materialien werden nur verlinkt, nicht kopiert oder eingebettet. Verfügbarkeit und Zugang vor der Stunde prüfen. Die Karteikarten-Challenge und das Quiz sind unmittelbar in die Mission integriert.
 
-## Fortschritt und Route
+## Route und Fortschritt
 
-- Route: `/ki8/stunde-6/`
-- Lesson-ID und isolierter Fortschrittsschlüssel: `ki-06`
-- Speicherung bleibt lokal und versioniert; keine Anmeldung, Schülerdatenbank, Fortschrittsübertragung oder persönlichen Eingabedaten.
-- Der öffentliche Direktlink und QR-Code führen auf die kanonische GitHub-Pages-Route. Der vorhandene Modul-3-Unterricht bleibt daneben erhalten.
+- Route: `/ki8/stunde-6/`; Lesson-ID und lokaler Fortschrittsschlüssel: `ki-06`.
+- Die Word-Datei wird außerhalb der Webseite erstellt und gespeichert; der Lernbericht wird nicht automatisch auf der Seite geprüft oder hochgeladen.

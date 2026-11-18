@@ -201,7 +201,7 @@ mission06TrainingDone.checked = true;
 mission06TrainingDone.dispatch('change');
 mission06Root.querySelector('[data-advance]').dispatch('click');
 assert.equal(mission06Renderer.getState().phase, 1);
-assert.match(mission06Root.innerHTML, /href="https:\/\/experience-ai\.org\/de\/units\/foundations-of-ai-11-14\/lessons\/4" target="_blank" rel="noopener noreferrer"/);
+assert.match(mission06Root.innerHTML, /Challenge: Entwickle eine Sortierregel/);
 const mission07Html = fs.readFileSync(new URL('../pages/ki8/stunde-7/index.html', import.meta.url), 'utf8');
 assert.match(mission07Html, /data-lesson-id="ki-07"/);
 const mission07Root = new FakeRoot();
