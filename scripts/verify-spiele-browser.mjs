@@ -60,6 +60,11 @@ async function assertPlayLayout(page, label) {
   await expectNoOverflow(page, label);
   check(await page.locator('.play-panel button').count() > 0, `${label}: no visible controls`);
 }
+async function assertTugControlContrast(page) {
+  const data = await page.locator('.tug-controls button, .tug-question-panel button').evaluateAll(nodes => nodes.filter(node => getComputedStyle(node).display !== 'none').map(node => ({ label: node.textContent.trim(), foreground: getComputedStyle(node).color, background: getComputedStyle(node).backgroundColor })));
+  check(data.every(item => item.label.length > 0), 'tug controls must have nonempty labels');
+  for (const item of data) check(contrastRatio(parseRgb(item.foreground), parseRgb(item.background)) >= 4.5, `tug control contrast below AA: ${item.label}`);
+}
 async function expectNoOverflow(page, label) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   check(!overflow, `${label}: horizontal overflow`);
@@ -138,26 +143,25 @@ async function playTug(page, title) {
   await openGameCard(page, title);
   await screenshot(page, 'correction-desktop-play-tug-open');
   await assertPlayLayout(page, 'desktop tug');
+  await assertTugControlContrast(page);
   const rope = page.locator('.rope');
-  const prompts = page.locator('.tug-team-question');
-  check(await prompts.nth(0).textContent() === 'Tauziehen Frage eins', 'blue initial prompt missing');
-  check(await prompts.nth(1).textContent() === 'Tauziehen Frage eins', 'red initial prompt missing');
+  const shared = page.locator('.tug-question-panel');
+  check(await shared.getByText('Tauziehen Frage eins', { exact: true }).isVisible(), 'shared initial prompt missing');
   const initialMarker = await rope.evaluate(node => getComputedStyle(node, '::after').left);
-  await page.getByLabel('Team Blau Antwort', { exact: true }).fill(' Antwort   eins ');
+  await shared.locator('#tug-shared-input').fill(' Antwort   eins ');
   await page.keyboard.press('Enter');
-  check(await prompts.nth(0).textContent() === 'Tauziehen Frage zwei', 'blue did not advance independently');
-  check(await prompts.nth(1).textContent() === 'Tauziehen Frage eins', 'red advanced unexpectedly');
+  check(await shared.getByText('Team Rot ist am Zug', { exact: false }).isVisible(), 'turn did not alternate');
   const movedMarker = await rope.evaluate(node => getComputedStyle(node, '::after').left);
   check(initialMarker !== movedMarker, 'tug marker did not move after correct answer');
-  await page.getByLabel('Team Rot Antwort', { exact: true }).fill('falsch');
-  await page.getByRole('button', { name: 'Team Rot antworten' }).click();
-  check(await prompts.nth(1).textContent() === 'Tauziehen Frage zwei', 'red did not advance after miss');
-  await page.getByLabel('Team Blau Antwort', { exact: true }).fill('Antwort zwei');
-  await page.getByRole('button', { name: 'Team Blau antworten' }).click();
-  await page.getByLabel('Team Rot Antwort', { exact: true }).fill('Antwort zwei');
-  await page.getByRole('button', { name: 'Team Rot antworten' }).click();
+  await shared.locator('#tug-shared-input').fill('falsch');
+  await shared.getByRole('button', { name: 'Antwort prüfen' }).click();
+  await shared.getByRole('button', { name: 'Weiter →' }).click();
+  await shared.locator('#tug-shared-input').fill('Antwort zwei');
+  await page.keyboard.press('Enter');
+  await shared.getByRole('button', { name: 'Weiter →' }).click();
+  await shared.locator('#tug-shared-input').fill('falsch');
+  await shared.getByRole('button', { name: 'Antwort prüfen' }).click();
   check(await page.getByText('Team Blau gewinnt!').isVisible(), 'unequal tug winner missing');
-  check((await page.getByText(/^(Team Blau gewinnt!|Team Rot gewinnt!|Unentschieden!)$/).count()) === 1, 'tug end outcome missing');
   const ropeBox = await rope.boundingBox();
   const panel = await page.locator('.play-panel').boundingBox();
   check(ropeBox && ropeBox.height >= 20, 'rope has no visible rendered height');

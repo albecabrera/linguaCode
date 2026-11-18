@@ -166,7 +166,7 @@ export function createGame(random = Math.random, durationMinutes = 3) {
   const safeDuration = validDurations.has(durationMinutes) ? durationMinutes : 3;
   return {
     phase: 'playing', position: 0, winner: null, durationMinutes: safeDuration, deadline: null,
-    teamQuestions, questions: teamQuestions[0],
+    teamQuestions, questions: teamQuestions[0], turn: 0,
     teams: [0, 1].map(() => ({ index: 0, score: 0, feedback: null }))
   };
 }
@@ -206,6 +206,7 @@ export function advance(game, team, now = Date.now()) {
   if (game.phase !== 'playing' || !state?.feedback) return false;
   state.index++;
   state.feedback = null;
+  game.turn = team === 0 ? 1 : 0;
   finish(game);
   return true;
 }

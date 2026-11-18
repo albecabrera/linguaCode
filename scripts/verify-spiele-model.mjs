@@ -37,6 +37,24 @@ for (const type of ['tug', 'wheel', 'jeopardy', 'memory', 'matching']) {
   }
 }
 
+const choicesGame = validGame('tug', 'Spanisch');
+choicesGame.content.questions[0].choices = ['Falsch eins', 'Falsch zwei'];
+assert.deepEqual(validateGame(choicesGame), [], 'optional answer choices validate');
+assert.deepEqual(importGame(exportGame(choicesGame)).content.questions[0].choices, choicesGame.content.questions[0].choices, 'answer choices roundtrip');
+for (const choices of [ ['Antwort'], ['A', 'A'], ['A', '   antwort  '] ]) {
+  const candidate = structuredClone(choicesGame); candidate.content.questions[0].choices = choices;
+  assert.notDeepEqual(validateGame(candidate), [], 'duplicate or correct answer choice rejected');
+}
+const legacy = validGame('tug', 'Sport');
+delete legacy.content.questions[0].choices;
+assert.deepEqual(validateGame(legacy), [], 'legacy text-answer question remains valid');
+const wheelWithArbitraryChoices = validGame('wheel', 'Sport');
+wheelWithArbitraryChoices.content.questions[0].choices = ['', 'Antwort'];
+assert.deepEqual(validateGame(wheelWithArbitraryChoices), [], 'wheel ignores tug-only choice metadata');
+const jeopardyWithArbitraryChoices = validGame('jeopardy', 'Sport');
+jeopardyWithArbitraryChoices.content.categories[0].questions[0].choices = ['A'];
+assert.deepEqual(validateGame(jeopardyWithArbitraryChoices), [], 'jeopardy ignores tug-only choice metadata');
+
 const malformed = validGame('matching', 'Informatik');
 for (const groups of [null, [null, {}], [{ id: 'a', name: 'A', items: null }, { id: 'b', name: 'B', items: [] }], [{ id: 'a', name: 'A', items: [{ id: 'x', text: 'x' }] }, null]]) {
   const candidate = structuredClone(malformed);

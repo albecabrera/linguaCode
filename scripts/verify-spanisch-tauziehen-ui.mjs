@@ -9,42 +9,40 @@ assert.match(html, /id="intro"/);
 assert.match(html, /id="teams"/);
 assert.match(html, /id="team-0"/);
 assert.match(html, /id="team-1"/);
+assert.match(html, /id="shared-turn"/);
 assert.match(html, /id="result"/);
 assert.match(html, /id="fullscreen"/);
 assert.match(html, /<svg[^>]+class="team-scene"/);
-assert.match(html, /class="human-team green-team"/);
-assert.match(html, /class="human-team orange-team"/);
-assert.equal((html.match(/class="person /g) || []).length, 4, 'arena markup has two illustrated people per team');
-assert.match(html, /<pattern id="fabric-green"/, 'green fabric has geometric pattern definition');
-assert.match(html, /<pattern id="fabric-orange"/, 'orange fabric has geometric pattern definition');
-assert.match(html, /<pattern id="cap-pattern"/, 'caps have embroidered pattern definition');
-assert.match(html, /<line x1="180" y1="145" x2="1020" y2="145"\/>/, 'rope is centered on the hands');
-assert.equal((html.match(/transform="translate\((115|300) 0\)"/g) || []).length, 2, 'green figures use bounded staggered origins');
-assert.equal((html.match(/transform="translate\((1085|900) 0\) scale\(-1 1\)"/g) || []).length, 2, 'orange figures mirror green origins');
-assert.equal((html.match(/class="hand" cx="150" cy="145"/g) || []).length, 4, 'all hands share the rope height');
-const greenOrigins = [...html.matchAll(/class="person[^\"]*" transform="translate\((\d+) 0\)"/g)].map(match => Number(match[1]));
-const orangeOrigins = [...html.matchAll(/class="person[^\"]*" transform="translate\((\d+) 0\) scale\(-1 1\)"/g)].map(match => Number(match[1]));
-const maxSceneShift = 1200 * 0.075;
-assert.ok(Math.min(...greenOrigins) + 22 - maxSceneShift > 0, 'green figures stay inside the SVG at the left goal');
-assert.ok(Math.max(...orangeOrigins) - 22 + maxSceneShift < 1200, 'orange figures stay inside the SVG at the right goal');
-assert.match(html, /nach 99 Aufgaben je Team entscheidet der Punktestand/);
+assert.match(html, /viewBox="0 0 1200 360"/);
+assert.match(html, /M372 248Q600 256 828 248/);
+assert.match(html, /cx="600" cy="254" r="17"/);
+assert.match(html, /translate\(280 105\)/);
+assert.match(html, /translate\(920 105\)/);
+assert.match(html, /class="blue-player" transform="translate\(280 105\)"/);
+assert.match(html, /class="orange-player" transform="translate\(920 105\)"/);
+assert.match(html, /M372 248Q600 256 828 248/);
+assert.match(html, /cx="600" cy="254" r="17"/);
+assert.match(html, /fill="#3b96d1"/);
+assert.match(html, /fill="#e17b4b"/);
+assert.match(css, /background:radial-gradient/);
+assert.match(html, /99 klar lesbare Vokabelpaare bleiben vollständig erhalten/);
 assert.doesNotMatch(html, /scoring Gruppe/);
 assert.match(html, /id="movement-explanation"/);
 assert.match(css, /touch-action:manipulation/);
-assert.match(css, /aspect-ratio:1200\/260/);
+assert.match(css, /aspect-ratio:1200\/360/);
 assert.match(css, /\.field\{[^}]*height:100%/i, 'field fills its aspect-ratio box');
 assert.match(css, /\.field\{[^}]*background:[^}]*#fbfaf5/i, 'field uses a light arena background');
 assert.match(css, /#rope\{[^}]*height:100%/i, 'rope scene scales with the field');
 assert.match(css, /\.goal\{[^}]*color:#172e38[^}]*border-left:2px solid #172e38/i, 'goal markers are readable on the light field');
 assert.match(css, /\.center-line\{[^}]*border-left:2px dashed #57696e/i, 'center line is readable on the light field');
-assert.match(css, /\.human-team \.neck\{[^}]*fill:none[^}]*stroke:#f0b58b/i, 'neck uses a skin-colored outlined stroke');
-assert.match(html, /class="ribbon"/, 'center marker has a ribbon');
-assert.match(css, /\.rope-art \.ribbon\{/, 'ribbon shares rope artwork styling');
+assert.match(css, /\.blue-player,\.orange-player\{[^}]*transform-box:fill-box/);
+assert.match(css, /\.rope-marker\{/);
+assert.match(css, /\.rope-art\{/);
 assert.match(css, /\.goal\.left\{left:42\.5%\}/);
 assert.match(css, /\.goal\.right\{left:57\.5%\}/);
 assert.match(css, /transform-box:fill-box/);
-assert.match(css, /pull-left \.orange-team\{animation:stumble-left/);
-assert.match(css, /pull-right \.green-team\{animation:stumble-right/);
+assert.match(css, /pull-left \.orange-player\{animation:stumble-left/);
+assert.match(css, /pull-right \.blue-player\{animation:stumble-right/);
 assert.match(css, /min-height:60px/);
 assert.doesNotMatch(await readFile(new URL('../pages/spanisch-tauziehen/app.mjs', import.meta.url), 'utf8'), /scrollIntoView/);
 
@@ -75,7 +73,7 @@ class Element {
 const makeFixture = () => {
   const elements = new Map();
   const add = (id, tag = 'div') => { const node = new Element(tag, id); elements.set(id, node); return node; };
-  ['fullscreen', 'start', 'duration-1', 'duration-3', 'duration-5', 'intro', 'teams', 'team-0', 'team-1', 'result', 'restart', 'reset', 'score-0', 'score-1', 'rope', 'timer', 'match-status', 'screen-note', 'result-title', 'result-detail'].forEach(id => add(id, id === 'fullscreen' || id === 'start' || id === 'restart' || id === 'reset' || id.startsWith('duration-') ? 'button' : 'div'));
+  ['fullscreen', 'start', 'duration-1', 'duration-3', 'duration-5', 'intro', 'teams', 'team-0', 'team-1', 'shared-turn', 'result', 'restart', 'reset', 'score-0', 'score-1', 'rope', 'timer', 'match-status', 'screen-note', 'result-title', 'result-detail'].forEach(id => add(id, id === 'fullscreen' || id === 'start' || id === 'restart' || id === 'reset' || id.startsWith('duration-') ? 'button' : 'div'));
   [1, 3, 5].forEach(minutes => { const button = elements.get(`duration-${minutes}`); button.dataset.duration = String(minutes); button.setAttribute('aria-pressed', minutes === 3 ? 'true' : 'false'); });
   const documentElement = new Element('html');
   const document = {
@@ -110,7 +108,7 @@ const boot = async () => {
 const button = (panel, index) => panel.querySelectorAll('button')[index];
 const feedback = panel => panel.querySelectorAll('.feedback')[0];
 const answerText = panel => {
-  const prompt = panel.children.find(child => child.tagName === 'H2')?.textContent || '';
+  const prompt = panel.children.find(child => child.tagName === 'H2' && !child.textContent.includes('ist am Zug'))?.textContent || panel.children.find(child => child.tagName === 'P')?.textContent || '';
   if (prompt.startsWith('Was bedeutet «')) {
     const spanish = prompt.slice('Was bedeutet «'.length, -2);
     return vocabulary.find(pair => pair.spanish === spanish)?.german;
@@ -121,7 +119,7 @@ const answerText = panel => {
 };
 const correctButton = panel => panel.querySelectorAll('button').find(answerButton => answerButton.textContent === answerText(panel));
 const wrongButton = panel => panel.querySelectorAll('button').find(answerButton => answerButton !== correctButton(panel) && !answerButton.textContent.includes('Weiter'));
-const startGame = fixture => { fixture.elements.get('duration-1').dispatch('click'); fixture.elements.get('start').dispatch('click'); assert.equal(fixture.elements.get('teams').hidden, false); };
+const startGame = fixture => { fixture.elements.get('duration-1').dispatch('click'); fixture.elements.get('start').dispatch('click'); assert.equal(fixture.elements.get('shared-turn').hidden, false); };
 const scene = fixture => fixture.elements.get('rope');
 
 const game = await boot();
@@ -132,39 +130,27 @@ game.elements.get('duration-5').dispatch('click');
 assert.equal(game.elements.get('duration-5').getAttribute('aria-pressed'), 'true');
 startGame(game);
 assert.equal(game.elements.get('reset').hidden, false, 'reset is available during play');
-assert.equal(game.elements.get('team-0').querySelectorAll('button').length, 4, 'green team gets four answers');
-assert.equal(game.elements.get('team-1').querySelectorAll('button').length, 4, 'orange team gets four answers independently');
+assert.equal(game.elements.get('teams').hidden, true, 'legacy team cards remain hidden');
+assert.equal(game.elements.get('shared-turn').hidden, false, 'one shared turn panel is visible');
+assert.equal(game.elements.get('shared-turn').querySelectorAll('button').length, 4, 'shared panel has four answers');
 assert.equal(scene(game).className, 'rope-scene', 'scene starts still');
-const firstGreenPrompt = game.elements.get('team-0').children.find(child => child.tagName === 'H2')?.textContent;
-const firstOrangePrompt = game.elements.get('team-1').children.find(child => child.tagName === 'H2')?.textContent;
-assert.notEqual(firstGreenPrompt, firstOrangePrompt, 'teams receive different same-index prompts');
 assert.equal(game.elements.get('timer').textContent, 'Zeit: 1:00', 'selected one-minute duration starts on click');
 assert.equal(game.elements.get('duration-1').getAttribute('aria-pressed'), 'true');
 
-const green = game.elements.get('team-0');
-const orange = game.elements.get('team-1');
-wrongButton(green).dispatch('click');
-assert.match(feedback(green).textContent, /Noch nicht richtig/);
-assert.equal(game.elements.get('score-0').textContent, '0', 'wrong green answer does not score');
+const shared = game.elements.get('shared-turn');
+const firstWrong = wrongButton(shared); firstWrong.dispatch('click');
+assert.match(feedback(shared).textContent, /Noch nicht richtig/);
+assert.equal(game.elements.get('score-0').textContent, '0', 'wrong answer does not score');
+assert.ok(shared.querySelectorAll('button').filter(answerButton => !answerButton.textContent.includes('Weiter')).every(answerButton => answerButton.disabled), 'answered choices are disabled');
+const next = shared.querySelectorAll('button').find(answerButton => answerButton.textContent === 'Weiter →'); next.dispatch('click');
+assert.match(shared.textContent, /Equipo Naranja ist am Zug/);
 assert.equal(scene(game).className, 'rope-scene', 'wrong answer does not animate');
-assert.ok(green.querySelectorAll('button').filter(answerButton => !answerButton.textContent.includes('Weiter')).every(answerButton => answerButton.disabled), 'answered green choices are disabled');
-assert.ok(green.querySelectorAll('button').some(answerButton => answerButton.className === 'correct'), 'wrong feedback marks the solution');
-wrongButton(green).dispatch('click');
-assert.equal(game.elements.get('score-0').textContent, '0', 'wrong answer cannot be submitted twice');
-green.querySelectorAll('button').find(answerButton => answerButton.textContent === 'Weiter →').dispatch('click');
-assert.match(green.textContent, /Aufgabe 2 \/ 99/);
-assert.equal(scene(game).className, 'rope-scene', 'Weiter does not animate');
-
-correctButton(orange).dispatch('click');
-assert.match(feedback(orange).textContent, /Richtig/);
-assert.equal(game.elements.get('score-1').textContent, '1', 'orange team scores independently');
-assert.equal(scene(game).className, 'rope-scene pull-right', 'correct orange answer pulls right');
-const firstPull = scene(game).dataset.pullSequence;
-
-assert.match(game.elements.get('match-status').textContent, /Equipo Naranja führt/);
-orange.querySelectorAll('button').find(answerButton => answerButton.textContent === 'Weiter →').dispatch('click');
-assert.match(orange.textContent, /Aufgabe 2 \/ 99/);
-assert.equal(scene(game).className, 'rope-scene pull-right', 'Weiter preserves the final scene without starting another pull');
+correctButton(shared).dispatch('click');
+assert.match(feedback(shared).textContent, /Richtig/);
+assert.equal(game.elements.get('score-1').textContent, '1', 'orange team scores on its turn');
+assert.equal(scene(game).className, 'rope-scene pull-right', 'correct answer pulls right');
+shared.querySelectorAll('button').find(answerButton => answerButton.textContent === 'Weiter →').dispatch('click');
+assert.match(shared.textContent, /Equipo Verde ist am Zug/);
 
 
 now = 61000;
@@ -177,12 +163,17 @@ assert.equal(game.elements.get('score-0').textContent, lateScore, 'late touches 
 
 const winner = await boot();
 startGame(winner);
-const winnerPanel = winner.elements.get('team-0');
+const winnerPanel = winner.elements.get('shared-turn');
 for (let round = 0; round < 5; round += 1) {
   correctButton(winnerPanel).dispatch('click');
-  assert.match(feedback(winnerPanel).textContent, /Richtig/);
-  const next = winnerPanel.querySelectorAll('button').find(answerButton => answerButton.textContent.includes('Weiter') || answerButton.textContent.includes('Team abschließen'));
-  if (next) next.dispatch('click');
+  if (winner.elements.get('result').hidden) assert.match(feedback(winnerPanel).textContent, /Richtig/);
+  const winnerNext = winnerPanel.querySelectorAll('button').find(answerButton => answerButton.textContent.includes('Weiter'));
+  if (winnerNext) winnerNext.dispatch('click');
+  if (winner.elements.get('result').hidden) {
+    wrongButton(winnerPanel).dispatch('click');
+    const loserNext = winnerPanel.querySelectorAll('button').find(answerButton => answerButton.textContent.includes('Weiter'));
+    if (loserNext) loserNext.dispatch('click');
+  }
 }
 assert.equal(winner.elements.get('result').hidden, false, 'five correct pulls end the duel');
 assert.match(winner.elements.get('result-title').textContent, /Equipo Verde gewinnt/);
@@ -221,7 +212,7 @@ now = 2000; tick(); assert.equal(timerFixture.elements.get('timer').textContent,
 now = 120000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 1:01');
 now = 121000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 1:00');
 now = 180000; tick(); assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 0:01');
-const detached = button(timerFixture.elements.get('team-0'), 0);
+const detached = button(timerFixture.elements.get('shared-turn'), 0);
 now = 181000;
 detached.dispatch('click');
 assert.equal(timerFixture.elements.get('timer').textContent, 'Zeit: 0:00');

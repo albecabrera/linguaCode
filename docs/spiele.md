@@ -4,7 +4,7 @@
 
 ## Formate
 
-- **Tauziehen:** Team Blau und Team Rot beantworten parallel und unabhängig dieselbe Frage. Text- und Zahlantworten werden automatisch verglichen: Unicode-Normalisierung (NFKC), trimmen, Leerraumfolgen zu einem Leerzeichen zusammenfassen und Groß-/Kleinschreibung ignorieren. Leere Antworten werden abgewiesen. Falsche Antworten zählen nicht und geben dem jeweiligen Team die nächste eigene Frage; richtige Antworten bewegen Seil und Figuren. Beide Teams spielen unabhängig bis alle eigenen Fragen beantwortet sind.
+- **Tauziehen:** Team Blau und Team Rot beantworten parallel und unabhängig ihre Fragen. Jede Frage kann neben der richtigen Antwort bis zu drei optionale falsche Antwortmöglichkeiten enthalten; diese werden automatisch geprüft, eindeutig validiert und per Klick angeboten. Ohne solche Möglichkeiten bleibt die bisherige Texteingabe erhalten. Textantworten werden automatisch verglichen: Unicode-Normalisierung (NFKC), trimmen, Leerraumfolgen zu einem Leerzeichen zusammenfassen und Groß-/Kleinschreibung ignorieren. Leere Antworten werden abgewiesen. Falsche Antworten zählen nicht und geben dem jeweiligen Team die nächste eigene Frage; richtige Antworten bewegen Seil und Figuren. Beide Teams spielen unabhängig bis alle eigenen Fragen beantwortet sind.
 - **Glücksrad:** Fragen werden einmalig nacheinander gezogen.
 - **Jeopardy:** Kategorien, Punkte und Fragen, die nach Auswahl deaktiviert werden.
 - **Memory:** Eigene Kartenpaare aufdecken.

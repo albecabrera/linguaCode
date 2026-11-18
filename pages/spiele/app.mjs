@@ -188,6 +188,14 @@ export function mountSpiele(container, storage) {
     return card;
   }
 
+  let editorChoiceDrafts = new Map();
+  function compactChoiceDrafts() {
+    editorChoiceDrafts.forEach((draft, question) => {
+      const choices = draft.map(choice => choice.trim()).filter(Boolean);
+      if (choices.length) question.choices = choices; else delete question.choices;
+    });
+  }
+
   function renderCollection(parent, title, values, draw, create) {
     const area = makeElement('section');
     area.className = 'editor-section';
@@ -208,15 +216,21 @@ export function mountSpiele(container, storage) {
   function renderEditorContent() {
     editorContentHost.replaceChildren();
     const game = editorGame;
-    const drawQuestion = (box, question) => {
-      box.append(
+    const drawQuestion = (box, question, withChoices = false) => {
+      const fields = [
         makeField('Frage / Impuls', question.prompt, value => { question.prompt = value; }),
-        makeField('Antwort für die Lehrkraft', question.answer, value => { question.answer = value; }),
-        makeField('Punkte', question.points ?? 100, value => { question.points = Number(value); })
-      );
+        makeField('Antwort für die Lehrkraft', question.answer, value => { question.answer = value; })
+      ];
+      if (withChoices) {
+        const draft = editorChoiceDrafts.get(question) || [...(question.choices || []), '', '', ''].slice(0, 3);
+        editorChoiceDrafts.set(question, draft);
+        fields.push(...[0, 1, 2].map(index => makeField(`Falsche Antwort ${index + 1} (optional)`, draft[index] || '', value => { draft[index] = value; })));
+      }
+      fields.push(makeField('Punkte', question.points ?? 100, value => { question.points = Number(value); }));
+      box.append(...fields);
     };
     if (game.type === 'tug' || game.type === 'wheel') {
-      renderCollection(editorContentHost, 'Frage', game.content.questions, drawQuestion, () => ({ id: id(), prompt: '', answer: '', points: 100 }));
+      renderCollection(editorContentHost, 'Frage', game.content.questions, (box, question) => drawQuestion(box, question, game.type === 'tug'), () => ({ id: id(), prompt: '', answer: '', points: 100 }));
     }
     if (game.type === 'jeopardy') {
       renderCollection(editorContentHost, 'Kategorie', game.content.categories, (box, category) => {
@@ -246,6 +260,7 @@ export function mountSpiele(container, storage) {
     activeCleanup();
     activeCleanup = () => {};
     editorGame = game;
+    editorChoiceDrafts = new Map();
     container.replaceChildren();
     const title = makeElement('h1', game.title || 'Neues Spiel');
     const form = makeElement('section');
@@ -273,20 +288,24 @@ export function mountSpiele(container, storage) {
     actions.className = 'actions';
     actions.append(
       makeButton('Validieren', () => {
+        compactChoiceDrafts();
         const errors = validateGame(game);
         setStatus(errors.length ? errors.join(' ') : 'Inhalt ist gültig.', errors.length ? 'error' : 'success');
       }),
       makeButton('Lokal speichern', () => {
+        compactChoiceDrafts();
         const errors = validateGame(game);
         if (errors.length) { setStatus(errors.join(' '), 'error'); return; }
         if (!store) { setStatus('Lokaler Speicher ist nicht verfügbar. Nicht gespeichert.', 'error'); return; }
         try { game.updatedAt = new Date().toISOString(); store.save(game); renderHome(); } catch (error) { setStatus(`Nicht gespeichert: ${error.message}`, 'error'); }
       }),
       makeButton('JSON exportieren', () => {
+        compactChoiceDrafts();
         const errors = validateGame(game);
         if (errors.length) setStatus(errors.join(' '), 'error'); else download(game);
       }),
       makeButton('Vorschau', () => {
+        compactChoiceDrafts();
         const errors = validateGame(game);
         if (errors.length) setStatus(errors.join(' '), 'error'); else play(structuredClone(game), true);
       })
@@ -323,8 +342,10 @@ export function mountSpiele(container, storage) {
   }
 
   function playTug(game, panel) {
+    panel.classList.add('tug-play-shell');
     let blue = 0;
     let red = 0;
+    let turn = 0;
     const indexes = [0, 0];
     let finished = false;
     const feedback = makeElement('p'); feedback.className = 'status';
@@ -344,7 +365,39 @@ export function mountSpiele(container, storage) {
     const redFigures = makeElement('div'); redFigures.className = 'tug-figures red-figures';
     blueFigures.append(createFigure('blue', 'one'), createFigure('blue', 'two'));
     redFigures.append(createFigure('red', 'one'), createFigure('red', 'two'));
-    stage.append(blueFigures, rope, redFigures);
+    const referenceSvg = document.createElementNS?.('http://www.w3.org/2000/svg', 'svg') || makeElement('svg');
+    referenceSvg.setAttribute('viewBox', '0 0 1200 360');
+    referenceSvg.setAttribute('role', 'img');
+    referenceSvg.setAttribute('aria-label', 'Zwei farbige Personen ziehen ein Seil mit sichtbarer Mittelmarkierung.');
+    referenceSvg.setAttribute('class', 'reference-arena-svg');
+    try { referenceSvg.className = 'reference-arena-svg'; } catch {}
+    const svgNode = (name, attrs, parent) => {
+      const node = document.createElementNS?.('http://www.w3.org/2000/svg', name) || makeElement(name);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+      parent?.append(node); return node;
+    };
+    const defs = svgNode('defs', {}, referenceSvg);
+    const gradient = svgNode('linearGradient', { id: 'tug-sky-ground', x1: '0', y1: '0', x2: '0', y2: '1' }, defs);
+    svgNode('stop', { 'stop-color': '#8ec9ed' }, gradient);
+    svgNode('stop', { offset: '.62', 'stop-color': '#dff1fb' }, gradient);
+    svgNode('stop', { offset: '.63', 'stop-color': '#9fca83' }, gradient);
+    svgNode('stop', { offset: '1', 'stop-color': '#6f9a5d' }, gradient);
+    svgNode('rect', { width: '1200', height: '360', fill: 'url(#tug-sky-ground)' }, referenceSvg);
+    svgNode('path', { d: 'M372 248Q600 256 828 248', fill: 'none', stroke: '#f5f4ed', 'stroke-width': '10' }, referenceSvg);
+    svgNode('circle', { cx: '600', cy: '254', r: '17', fill: '#e86e4a', stroke: '#172e38', 'stroke-width': '4' }, referenceSvg);
+    const blueSvg = svgNode('g', { fill: '#3b96d1', stroke: '#233e61', 'stroke-width': '4' }, referenceSvg);
+    svgNode('circle', { cx: '280', cy: '135', r: '26', fill: '#ffe0b7' }, blueSvg);
+    svgNode('path', { d: 'M-26 26Q0 -29 28 23', transform: 'translate(280 105)', fill: '#174d84', stroke: 'none' }, blueSvg);
+    svgNode('path', { d: 'M242 192Q280 171 318 192L324 269H237Z' }, blueSvg);
+    svgNode('path', { d: 'M256 270l-22 72m62-72 20 72', fill: 'none', 'stroke-width': '26', 'stroke-linecap': 'round' }, blueSvg);
+    svgNode('path', { d: 'M308 203l64 45', fill: 'none', stroke: '#ffe0b7', 'stroke-width': '18', 'stroke-linecap': 'round' }, blueSvg);
+    const orangeSvg = svgNode('g', { fill: '#e17b4b', stroke: '#583f49', 'stroke-width': '4' }, referenceSvg);
+    svgNode('circle', { cx: '920', cy: '135', r: '26', fill: '#f1c69b' }, orangeSvg);
+    svgNode('path', { d: 'M-26 26Q0 -29 28 23', transform: 'translate(920 105)', fill: '#65412c', stroke: 'none' }, orangeSvg);
+    svgNode('path', { d: 'M882 192Q920 171 958 192L964 269H877Z' }, orangeSvg);
+    svgNode('path', { d: 'M896 270l-22 72m62-72 20 72', fill: 'none', 'stroke-width': '26', 'stroke-linecap': 'round' }, orangeSvg);
+    svgNode('path', { d: 'M892 203l-64 45', fill: 'none', stroke: '#f1c69b', 'stroke-width': '18', 'stroke-linecap': 'round' }, orangeSvg);
+    stage.append(referenceSvg, blueFigures, rope, redFigures);
     const teamGrid = makeElement('div'); teamGrid.className = 'team-grid tug-teams';
     const tugLayout = makeElement('div'); tugLayout.className = 'tug-layout';
     const teams = [
@@ -360,39 +413,74 @@ export function mountSpiele(container, storage) {
       const input = makeElement('input'); input.type = 'text'; input.autocomplete = 'off'; input.inputMode = 'text';
       const answerId = `tug-answer-${team.color}`; input.id = answerId; label.htmlFor = answerId;
       label.append(makeElement('span', `${team.name} Antwort`), input); wrapper.append(prompt, progress, label);
-      const button = makeButton(`${team.name} antworten`, () => {
-        if (finished || indexes[teamIndex] >= game.content.questions.length) return;
-        const value = normalizeAnswer(input.value);
-        if (!value) { feedback.textContent = `${team.name}: Bitte gib eine Antwort ein.`; feedback.className = 'status error'; input.focus?.(); return; }
+      const choiceHost = makeElement('div'); choiceHost.className = 'tug-choices'; wrapper.append(choiceHost);
+      const button = makeButton(`${team.name} antworten`, () => submit(input.value), 'team');
+      const submit = value => {
+        if (finished || indexes[teamIndex] >= game.content.questions.length || teamIndex !== turn) return;
+        if (!normalizeAnswer(value)) { feedback.textContent = `${team.name}: Bitte gib eine Antwort ein.`; feedback.className = 'status error'; input.focus?.(); return; }
         const question = game.content.questions[indexes[teamIndex]];
-        const correct = value === normalizeAnswer(question.answer);
+        const correct = normalizeAnswer(value) === normalizeAnswer(question.answer);
         if (correct) team.add();
-        indexes[teamIndex] += 1;
-        input.value = '';
+        indexes[teamIndex] += 1; input.value = ''; turn = teamIndex === 0 ? 1 : 0;
         feedback.textContent = correct ? `${team.name} hat richtig geantwortet.` : `${team.name}: Falsch – die nächste Frage ist bereit.`;
-        feedback.className = correct ? 'status success' : 'status error';
-        update();
-      }, 'team');
+        feedback.className = correct ? 'status success' : 'status error'; update();
+      };
       input.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault?.(); button.click(); } });
       wrapper.append(button); teamGrid.append(wrapper);
-      return { prompt, progress, input, button };
+      return { prompt, progress, input, button, choiceHost, submit };
     });
+    const sharedPanel = makeElement('section'); sharedPanel.className = 'tug-question-panel';
+    const sharedHeading = makeElement('h2');
+    const sharedPrompt = makeElement('p'); sharedPrompt.className = 'question';
+    const sharedProgress = makeElement('progress');
+    const sharedAnswerHost = makeElement('div'); sharedAnswerHost.className = 'tug-shared-answer';
+    const sharedNext = makeButton('Weiter →', () => { feedback.textContent = ''; update(); }, 'next');
+    sharedPanel.append(sharedHeading, sharedPrompt, sharedProgress, sharedAnswerHost, sharedNext);
     const update = () => {
       finished = indexes.every(index => index >= game.content.questions.length);
-      answerFields.forEach(({ prompt, progress, input, button }, teamIndex) => {
+      answerFields.forEach(({ prompt, progress, input, button, choiceHost, submit }, teamIndex) => {
         const question = game.content.questions[indexes[teamIndex]];
         prompt.textContent = question ? question.prompt : 'Alle Fragen beantwortet.';
         progress.value = indexes[teamIndex];
-        input.disabled = !question || finished; button.disabled = !question || finished;
+        const choices = question?.choices?.filter(choice => normalizeAnswer(choice)) || [];
+        choiceHost.replaceChildren();
+        choices.length && shuffle([question.answer, ...choices]).forEach(choice => choiceHost.append(makeButton(choice, () => submit(choice), 'choice')));
+        choiceHost.hidden = !choices.length;
+        input.hidden = Boolean(choices.length);
+        input.disabled = !question || finished || Boolean(choices.length) || turn !== teamIndex; button.hidden = Boolean(choices.length); button.disabled = !question || finished || turn !== teamIndex;
+        choiceHost.querySelectorAll?.('button').forEach(choiceButton => { choiceButton.disabled = !question || finished || turn !== teamIndex; });
       });
       if (finished) feedback.textContent = blue === red ? 'Unentschieden!' : blue > red ? 'Team Blau gewinnt!' : 'Team Rot gewinnt!';
       score.textContent = `Team Blau: ${blue} · Team Rot: ${red}`;
       rope.style.setProperty('--rope-position', `${50 + (red - blue) * 12}%`);
       if (blue > red) stage.classList.add('blue-pull'); else stage.classList.remove('blue-pull');
       if (red > blue) stage.classList.add('red-pull'); else stage.classList.remove('red-pull');
+      const activeQuestion = game.content.questions[indexes[turn]];
+      sharedHeading.textContent = finished ? 'Duell beendet' : `Team ${turn === 0 ? 'Blau' : 'Rot'} ist am Zug`;
+      sharedPrompt.textContent = activeQuestion?.prompt || 'Alle Fragen beantwortet.';
+      sharedProgress.max = game.content.questions.length; sharedProgress.value = indexes[turn];
+      sharedAnswerHost.replaceChildren();
+      if (activeQuestion && !finished) {
+        const choices = activeQuestion.choices?.filter(choice => normalizeAnswer(choice)) || [];
+        if (choices.length) {
+          shuffle([activeQuestion.answer, ...choices]).forEach(choice => sharedAnswerHost.append(makeButton(choice, () => answerFields[turn].submit(choice), 'choice')));
+        } else {
+          const label = makeElement('label'); label.className = 'field';
+          const input = makeElement('input'); input.type = 'text'; input.id = 'tug-shared-input'; input.autocomplete = 'off';
+          label.append(makeElement('span', 'Antwort'), input); sharedAnswerHost.append(label, makeButton('Antwort prüfen', () => answerFields[turn].submit(input.value), 'team'));
+          input.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault?.(); answerFields[turn].submit(input.value); } });
+        }
+      }
+      sharedNext.hidden = !activeQuestion || finished || !feedback.textContent;
+      sharedPanel.append(feedback, sharedNext);
     };
-    tugLayout.append(teamGrid, stage);
-    panel.append(makeElement('p', 'Beide Teams erhalten eigene Fragen und bewegen sich unabhängig durch den Fragenpool. Leerzeichen und Groß-/Kleinschreibung werden bei der Prüfung nicht berücksichtigt; falsche Antworten zählen nicht und geben die nächste Frage frei.'), tugLayout, feedback, score);
+    tugLayout.append(sharedPanel, stage);
+    const controls = makeElement('div'); controls.className = 'actions tug-controls';
+    controls.append(
+      makeButton('Tauziehen neu starten', () => { blue = 0; red = 0; turn = 0; indexes[0] = 0; indexes[1] = 0; finished = false; feedback.textContent = ''; update(); }),
+      makeButton('Vollbild', async () => { try { if (document.fullscreenElement) await document.exitFullscreen?.(); else await document.documentElement.requestFullscreen?.(); } catch { feedback.textContent = 'Vollbild ist hier nicht verfügbar.'; feedback.className = 'status error'; } })
+    );
+    panel.append(makeElement('p', 'Die Teams wechseln sich mit eigenen Fragen ab; richtige Antworten bewegen das Seil sichtbar. Leerzeichen und Groß-/Kleinschreibung werden bei der Prüfung nicht berücksichtigt; falsche Antworten zählen nicht und geben die nächste Frage frei.'), tugLayout, controls, feedback, score);
     update();
   }
 

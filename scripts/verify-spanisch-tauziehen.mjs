@@ -88,10 +88,12 @@ for (let seed = 1; seed <= 32; seed++) {
 }
 
 const game = createGame(() => 0, 3);
+assert.equal(game.turn, 0, 'green team starts the alternating turn order');
 start(game, 1000);
 assert.equal(game.phase, 'playing');
 assert.equal(answer(game, 0, 0, game.teamQuestions[0][0].correct, 1001), true);
 assert.equal(game.position, -1);
+assert.equal(game.turn, 0, 'turn changes only after the answer is advanced');
 assert.equal(game.teams[0].score, 1);
 const snapshot = JSON.stringify(game);
 assert.equal(answer(game, 0, 0, game.teamQuestions[0][0].correct, 1001), false);
@@ -102,6 +104,7 @@ assert.equal(game.teams[1].score, 0);
 assert.equal(game.teams[1].feedback.correct, false);
 assert.equal(advance(game, 0, 1001), true);
 assert.equal(game.teams[0].index, 1);
+assert.equal(game.turn, 1, 'advance hands the turn to the other team');
 assert.equal(answer(game, 0, 0, 0, 1001), false, 'stale touch must not answer a new question');
 assert.equal(advance(game, 0, 1001), false);
 for (let i = 1; i < 5; i++) {

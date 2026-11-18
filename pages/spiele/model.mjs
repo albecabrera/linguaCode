@@ -5,6 +5,7 @@ export const MAX_COLLECTION_ITEMS = 1000;
 export const MAX_IMPORT_BYTES = 1024 * 1024;
 
 const hasText = value => typeof value === 'string' && value.trim().length > 0 && value.length <= MAX_TEXT_LENGTH;
+const normalizeAnswer = value => String(value ?? '').normalize('NFKC').trim().replace(/\s+/g, ' ').toLocaleLowerCase('de-DE');
 const uniqueIds = values => values.every(hasText) && new Set(values).size === values.length;
 const stamp = () => new Date().toISOString();
 export const id = () => globalThis.crypto?.randomUUID?.() || `game-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -47,13 +48,18 @@ function validCollection(value) {
   return Array.isArray(value) && value.length <= MAX_COLLECTION_ITEMS;
 }
 
-function questionErrors(questions, label = 'Fragen') {
+function questionErrors(questions, label = 'Fragen', allowChoices = false) {
   if (!validCollection(questions) || !questions.length) return [`${label} dürfen nicht leer sein.`];
   if (!uniqueIds(questions.map(question => question && question.id))) return [`${label} benötigen eindeutige IDs.`];
   return questions.flatMap(question => {
     if (!question || typeof question !== 'object' || Array.isArray(question)) return ['Eine Frage ist ungültig.'];
     if (!hasText(question.prompt) || !hasText(question.answer)) return ['Eine Frage ist ungültig.'];
     if (question.points !== undefined && (!Number.isInteger(question.points) || question.points < 1 || question.points > 10000)) return ['Eine Frage ist ungültig.'];
+    if (allowChoices && question.choices !== undefined) {
+      if (!Array.isArray(question.choices) || question.choices.length > 3 || question.choices.some(choice => !hasText(choice))) return ['Antwortmöglichkeiten sind ungültig.'];
+      const normalized = [question.answer, ...question.choices].map(normalizeAnswer);
+      if (new Set(normalized).size !== normalized.length) return ['Antwortmöglichkeiten müssen eindeutig sein und dürfen nicht der richtigen Antwort entsprechen.'];
+    }
     return [];
   });
 }
@@ -62,7 +68,8 @@ export function validateGame(game) {
   const errors = baseErrors(game);
   if (!game || typeof game !== 'object' || Array.isArray(game)) return errors;
   if (!game.content || typeof game.content !== 'object' || Array.isArray(game.content) || !TYPES.has(game.type)) return errors;
-  if (game.type === 'tug' || game.type === 'wheel') errors.push(...questionErrors(game.content.questions));
+  if (game.type === 'tug') errors.push(...questionErrors(game.content.questions, 'Fragen', true));
+  if (game.type === 'wheel') errors.push(...questionErrors(game.content.questions));
   if (game.type === 'jeopardy') {
     const categories = game.content.categories;
     if (!validCollection(categories) || categories.length < 2) errors.push('Jeopardy benötigt mindestens zwei Kategorien.');
